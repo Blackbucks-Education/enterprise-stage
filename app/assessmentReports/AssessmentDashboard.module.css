@@ -1,0 +1,287 @@
+.mainContainer {
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  background: white;
+  padding: 2rem 1.75rem;
+  flex-grow: 1;
+}
+.css1 {
+  background-color: rgb(215, 214, 214);
+  padding: 1.75rem;
+}
+.roww{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.marginr{
+  margin-right: 10px;
+}
+
+.circularImage {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto 20px;
+}
+
+.mainCard {
+.cardRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px; /* Optional: Adds space between the cards */
+}
+
+.card {
+  flex: 1;
+}
+
+.fadedCard {
+  opacity: 0.5;
+}
+
+    background-color: white;
+    border-radius: 15px; /* Rounded border for the main card */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    width: 100%; /* Ensure the card takes up the full width available */
+    margin-top: 0px;
+
+}
+
+.message {
+  font-size: 16px;
+  color: #333;
+}
+
+.internshipContainer {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.pagination {
+  margin: 20px;
+  text-align: center;
+}
+
+.pagination button {
+  padding: 10px 20px;
+  margin: 0 5px;
+  border: none;
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.searchContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.searchInput {
+  padding: 10px 10px;
+  border: 1px solid #ccc;
+  border-radius: 30px;
+  outline: none;
+  font-size: 16px;
+  flex: 1;
+  width: 500px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.tableHead {
+  background-color: #7962bd;
+}
+
+.tableCell {
+  padding: 10px;
+  font-size: 14px;
+  border-bottom: 1px solid #ddd;
+}
+
+.tableHeader {
+  padding: 10px;
+  color: white;
+}
+
+.tableRow:hover {
+  background-color: #f9f9f9;
+}
+
+.actions img {
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+.circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  background-image: url('/img/blackbuckslogo.jpg');
+  display: inline-block;
+}
+
+.view {
+  background-color: #D3FB52;
+  color: #333;
+  padding: 10px 15px;
+  border: 2px solid #A1C900;
+  border-radius: 50px;
+  cursor: pointer;
+  margin-right: 10px;
+  font-size: 12px;
+  font-weight: bold;
+  text-decoration: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.view:hover {
+  background-color: #D3FB52;
+}
+
+.leftAlign {
+  text-align: left;
+}
+
+.centerAlign {
+  text-align: center;
+}
+
+.loader {
+  width: 50px;
+  padding: 8px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #25b0b0;
+  animation: rotate 1s infinite linear;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 768px) {
+  .searchContainer {
+    flex-direction: column;
+  }
+
+  .searchInput {
+    width: 100%;
+  }
+}
+
+.tableHead th:first-child {
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+.tableHead th:last-child {
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.searchContainer {
+  display: flex;
+  justify-content: flex-start; /* Align the search bar to the left */
+  margin-bottom: 20px; /* Add some space below the search bar */
+}
+
+.searchBarWrapper {
+  position: relative;
+  display: inline-block;
+  width: 400px; /* Set a specific width for the search bar */
+}
+
+.searchInput {
+  width: 100%;
+  padding: 10px 15px 10px 40px; /* Adjust padding to accommodate the icon on the left */
+  border: 1px solid #ccc;
+  border-radius: 20px; /* Rounded borders */
+  font-size: 14px;
+  transition: border-color 0.3s; /* Smooth transition for border color */
+}
+
+.searchInput:focus {
+  border-color: #7962bd; /* Change border color on focus (optional) */
+  outline: none; /* Remove outline on focus */
+}
+
+.searchIcon {
+  position: absolute;
+  left: 10px; /* Position the icon on the left */
+  top: 50%;
+  transform: translateY(-50%); /* Center the icon vertically */
+  color: #888;
+  font-size: 16px;
+  pointer-events: none; /* Prevent the icon from being clickable */
+}
+
+
+
+
+.f14{
+  font-size: 14px;
+}
+.grey {
+    color: rgba(0, 0, 0, 0.7);
+}
+
+.shimmerContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.shimmerRow {
+  display: flex;
+  padding: 15px; /* Increased padding for a more spacious look */
+  margin: 5px 0;
+  border-radius: 8px; /* Rounded corners */
+  background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+  animation: shimmer 1.5s infinite;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+
+
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0; /* Start position for shimmer */
+  }
+  100% {
+    background-position: 200px 0; /* End position for shimmer */
+  }
+}
+.column{
+  display: flex;
+  flex-direction: column;
+}
+
+
+
+
+

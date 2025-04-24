@@ -1,0 +1,80 @@
+.skeleton-card {
+  background-color: rgba(240, 240, 240, 0.7); /* Light grey background with reduced opacity */
+  border-radius: 8px;
+  padding: 16px;
+  width: 100%;
+  max-width: 300px; /* Adjust based on your card width */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 16px;
+  position: relative; /* Needed for positioning the shimmer */
+  overflow: hidden; /* Hide overflow for shimmer effect */
+}
+
+.skeleton-title,
+.skeleton-value,
+.skeleton-info,
+.skeleton-college-count,
+.skeleton-link {
+  background-color: rgba(224, 224, 224, 0.5); /* Placeholder grey with reduced opacity */
+  border-radius: 4px;
+  margin: 8px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Define individual skeleton sizes */
+.skeleton-title {
+  height: 20px; /* Height for title */
+  width: 70%; /* Width for title */
+}
+
+.skeleton-value {
+  height: 30px; /* Height for value */
+  width: 40%; /* Width for value */
+}
+
+.skeleton-info {
+  height: 16px; /* Height for additional info */
+  width: 80%; /* Width for additional info */
+}
+
+.skeleton-college-count {
+  height: 16px; /* Height for college count */
+  width: 60%; /* Width for college count */
+}
+
+.skeleton-link {
+  height: 16px; /* Height for link */
+  width: 50%; /* Width for link */
+}
+
+/* Shimmer Animation */
+@keyframes shimmer {
+  0% {
+      background-position: -200px 0;
+  }
+  100% {
+      background-position: 200px 0;
+  }
+}
+
+.skeleton-title::before,
+.skeleton-value::before,
+.skeleton-info::before,
+.skeleton-college-count::before,
+.skeleton-link::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.5) 50%,
+      rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 200px 100%;
+  animation: shimmer 1.5s infinite;
+}

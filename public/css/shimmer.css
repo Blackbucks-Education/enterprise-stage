@@ -1,0 +1,50 @@
+.shimmer-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.shimmer-table th, .shimmer-table td {
+  padding: 10px;
+  border: 1px solid #ddd; /* Optionally add borders for table layout */
+}
+
+.shimmer-wrapper {
+  position: relative;
+  overflow: hidden;
+  background-color: #f6f7f8;
+  height: 40px; /* Adjust the height based on your needs */
+}
+
+.shimmer {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #f6f7f8 25%, #e0e0e0 50%, #f6f7f8 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+
+.shimmer-checkbox {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #f6f7f8 25%, #e0e0e0 50%, #f6f7f8 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.shimmer-text {
+  display: inline-block;
+  height: 16px;
+  width: 150px;
+  background-color: #e0e0e0;
+  margin-bottom: 10px;
+}

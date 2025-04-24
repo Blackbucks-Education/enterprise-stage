@@ -1,0 +1,379 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+
+*{
+  font-family: 'Roboto';
+}
+
+.container {
+    display: flex;
+    justify-content: center; /* Center the main card */
+    padding: 20px;
+    margin-top: 0;
+}
+
+.mainCard {
+  .cardRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px; /* Optional: Adds space between the cards */
+}
+
+.card {
+  flex: 1;
+}
+
+.fadedCard {
+  opacity: 0.5;
+}
+
+    background-color: #fff;
+    border-radius: 15px; /* Rounded border for the main card */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    width: 100%; /* Ensure the card takes up the full width available */
+    margin-top: 0px;
+
+}
+
+.card {
+   
+    border: 1px solid #ccc; /* Border color */
+    border-radius: 10px;
+    padding: 20px;
+    margin: 10px;
+    transition: opacity 0.3s ease-in-out, background-color 0.3s ease-in-out;
+}
+
+.fadedCard {
+    background-color: #d3d3d3; /* Light grey background color */
+    border: 1px solid #ccc; /* Border color */
+    opacity: 0.5; /* Apply fading effect */
+    pointer-events: none; /* Make the card non-interactive */
+}
+
+.cardHeader {
+  
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+    text-align: left;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between; /* Ensure space is evenly distributed */
+    gap: 16px; /* Space between the cards in the row */
+}
+
+.cardContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 16px; /* Space between the vertically stacked cards */
+}
+
+.icon {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 20px;
+   
+}
+
+.image {
+    padding-right: 6px;
+}
+
+.icon h1 {
+    font-size: 14px;
+    color: grey;
+}
+
+.select-container {
+    margin-right: 10px;
+    flex: 1;
+}
+
+.select-container .react-select__control {
+    border-radius: 20px; /* Rounded corners for search boxes */
+}
+
+.compare-button {
+    background-color: #d3fb52;
+    color: #333;
+    padding: 10px 15px;
+    border: 2px solid #a1c900;
+    border-radius: 50px;
+    cursor: pointer;
+    margin-right: 10px;
+    font-size: 12px;
+    font-weight: bold;
+    text-decoration: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.graph-card {
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin: 10px;
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.placeholder {
+    background-color: rgba(200, 200, 200, 0.2); /* Light transparent shade */
+    color: #999; /* Light text color */
+}
+
+.placeholder h4 {
+    color: #999; /* Ensure header is also light */
+}
+
+.select-container {
+    width: 45%;
+}
+
+.row .card {
+    flex: 0 0 48%; /* Each card takes up 48% of the width with space between them */
+}
+
+.category-select {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .category-select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(38, 143, 255, 0.5);
+    outline: none;
+  }
+
+  .filter-container {
+    display: flex;
+    justify-content: flex-end; /* Aligns the content to the right */
+    margin-bottom: 20px;
+  }
+  
+  .filter-select {
+    border: 2px solid #ccc;
+    border-radius: 15px;
+    padding: 5px 12px;
+    font-size: 16px;
+    outline: none;
+    background-color: #7962BD; /* Background color for the dropdown */
+    color: white; /* Text color */
+    transition: border-color 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .filter-select option {
+    background-color: white; /* No background color for dropdown values */
+    color: black; /* Text color for dropdown values */
+  }
+  
+  
+  .filter-select:focus {
+    border-color: #8884d8; /* Change the color on focus */
+  }
+
+  .circular-progress {
+    position: relative;
+    display: block;
+    margin: 20px auto;
+  }
+  
+  .circular-progress-label {
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    text-anchor: middle;
+    dominant-baseline: middle;
+  }
+  
+  .filter-container {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .filter-select {
+    background-color: #d3fb52;
+    color: #333;
+    padding: 10px 15px;
+    border: 2px solid #a1c900;
+    border-radius: 50px;
+    cursor: pointer;
+    margin-right: 10px;
+    font-size: 12px;
+    font-weight: bold;
+    text-decoration: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, box-shadow 0.3s;
+  }
+  
+  .circular-progress-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap; /* Ensure the items don't wrap to the next line */
+    gap: 20px; /* Optional: Add some space between progress bars */
+  }
+  
+  .circular-progress-item {
+    display: flex;
+    flex-direction: column; /* Stack label and progress bar vertically */
+    align-items: center;
+  }
+  
+  
+  .circular-progress text {
+    font-family: Arial, sans-serif;
+  }
+  
+  .circular-progress .inner-label {
+    fill: #00bfff; /* Adjust to inner circle color */
+    font-size: 14px;
+  }
+  
+  .circular-progress .outer-label {
+    fill: #ffa500; /* Adjust to outer circle color */
+    font-size: 14px;
+  }
+
+  .heading{
+    font-size: 24px;
+    margin-top:10px;
+    margin-bottom: 10px;
+  }
+
+  Select{
+    max-width:30%;
+  }
+
+  .comparison-container {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+  
+  .bar-chart-container {
+    flex: 2;
+    margin-right: 20px; /* Space between the graph and the filter cards */
+    margin-left: 30px;
+  }
+  
+  .filter-cards-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+  }
+  
+  .filter-card {
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    border-left: 5px solid #a1c900; /* Add this line for the left border color */
+    border-radius: 15px;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    text-align: center;
+    font-size: 16px;
+    max-width: 200px;
+    margin-left: 50px;
+    margin-top: 5px;
+   
+}
+  
+  .filter-card.active {
+    background-color: #d3fb52;
+    color: black;
+    
+  }
+  
+  .filter-card:hover {
+    background-color: #d3fb52;
+    color: black;
+  }
+
+  /* Add to compare.css or a separate CSS module */
+
+.performanceTableCard {
+  margin-top: 20px;
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+.cardRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px; /* Optional: Adds space between the cards */
+}
+
+.card {
+  flex: 1;
+}
+
+.fadedCard {
+  opacity: 0.5;
+}
+
+/* Add this to compare.css */
+
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.5) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+.shimmer-placeholder {
+  background-color: #e0e0e0; /* Light gray background or any color you prefer */
+  border-radius: 4px; /* Adjust based on your design */
+  height: 200px; /* Set height according to your component */
+  width: 100%; /* Set width to match your component */
+}
+
+
+
+  
+
+  
+  
+  
+  
+  
+
+
+  
+
+  
+  
+  
+  

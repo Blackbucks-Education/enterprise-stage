@@ -1,0 +1,657 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
+}
+
+
+
+.bold{
+  font-weight: bold;
+}
+.main-container {
+  font-family: "Roboto", sans-serif;
+  background-color: #fff;
+  color: #333;
+  padding: 10px;
+}
+
+/* Header Section */
+/* Header Section */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #1f2937;
+  color: white;
+  padding: 15px 30px;
+  border-bottom-left-radius: 50px;
+  border-bottom-right-radius: 50px;
+  height: 200px; /* Increased height for more coverage */
+  position: relative;
+}
+
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dashboard-nav a {
+  color: white;
+  text-decoration: none;
+  margin: 0 15px;
+  font-weight: 500;
+}
+
+.dashboard-nav a:hover {
+  text-decoration: underline;
+}
+.college-name {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #f3efef;
+  margin-bottom: 0;
+}
+
+.college-icon {
+  font-size: 1.5rem;
+  color: #f5f1f1; /* Icon color */
+}
+
+
+/* Stats Container */
+.stats-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px 10px;
+  flex-wrap: wrap;
+  margin: -30px 30px 20px; /* Pull up to overlap the header section */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 1; /* Ensure it appears on top of the header */
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  border-right:2px solid #e2e5e7;
+  padding: 10px;
+  width:32%;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.user-icon{
+  font-size: 14px;
+  color: #0e1643;
+  margin-right: 5px;
+}
+.card h3 {
+  font-size: 1.25em;
+  margin-bottom: 3px;
+  white-space: nowrap;       /* Prevent text from wrapping */
+  overflow: hidden;          /* Hide the overflow text */
+  text-overflow: ellipsis;   /* Show ellipsis for overflow text */
+  text-align: left;          /* Align text to the left */
+  max-width: 100%;           /* Ensure it doesn’t exceed the card width */
+  display: block;            /* Make sure the text is treated as a block element */
+}
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.15), -6px -6px 12px rgba(255, 255, 255, 0.85);
+  border-radius: 10px;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  font-size: 1.1rem;
+  color: #4caf50; /* Default icon color */
+  margin-bottom: 0px;
+  margin-right: 10px;
+}
+.iconheader{
+  margin: 0px 10px;
+  font-size: 1rem;
+  color: #282829;
+}
+
+.card:nth-child(1) .icon {
+  color: #57320d; /* Orange for Internships */
+}
+
+.card:nth-child(2) .icon {
+  color: #0e1643; /* Blue for Unique Students */
+}
+
+.card:nth-child(3) .icon {
+  color: #4e1612; /* Red for Paid Students */
+}
+.card.card:nth-child(3){
+  border: none;
+}
+
+
+.stat-number{
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin: 0;
+  color: #0e1643;
+}
+
+.sub{
+  font-size: 0.8rem;
+  font-weight: normal;
+  color: #666;
+  margin: 0;
+}
+h2 {
+  font-size: 1.5rem;
+  margin: 10px 0;
+  font-weight: bold;
+  color: #333;
+}
+
+hr {
+  border: none;
+  height: 2px;
+  background: #ddd;
+  margin: 10px 0;
+}
+
+p {
+  font-size: 1.2rem;
+  color: #555;
+}
+
+
+.dashboard-container {
+  width: 100%;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: rgba(246, 246, 246, 1);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  border-width: 1px;
+  border-radius: .75rem;
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.overview-container {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+}
+
+/* Left Section */
+.students-by-year {
+  padding: 20px;
+  border-radius: 10px;
+  width: 40%;
+  background-color: #fff;
+  border-width: 1px;
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  max-height: 450px;
+}
+.chart-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.donut-chart {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+}
+
+.donut-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.donut-center span {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.year-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 300px;
+  overflow-y: scroll;
+  scrollbar-width: none;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.students-by-year h2 {
+  margin-bottom: 10px;
+  font-weight: 600;
+  font-size: 18px;
+  color: #666;
+}
+
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  background-color: #f4f2f2;
+  border-radius: 4px;
+  padding: 10px;
+  gap: 10px;
+  width: 200px;
+}
+
+.legend-circle {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.green {
+  background: #28a745;
+}
+
+.orange {
+  background: #fd7e14;
+}
+
+.purple {
+  background: #6f42c1;
+}
+
+.count {
+  margin-left: auto;
+  font-weight: bold;
+}
+
+/* Right Section */
+.students-by-branch {
+  flex: 1;
+  padding: 20px;
+  background-color: #fff;
+  border-width: 1px;
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  border-radius: 10px;
+  width: 70%;
+  max-height: 450px;
+  overflow-y: scroll; /* Enable scrolling */
+  scrollbar-width: none; /* For Firefox */
+}
+
+.students-by-branch::-webkit-scrollbar {
+  display: none; /* For Chrome, Safari, and Edge */
+}
+
+.students-by-branch h2 {
+  margin-bottom: 10px;
+  font-weight: 600;
+  font-size: 18px;
+  color: #666;
+}
+
+/* ViewMore.css */
+.view-more-btn {
+  padding: 8px 16px;
+  background-color: #1b1766;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.view-more-btn:hover {
+  background-color: #3e2b8d;
+}
+
+/* StudentsByBranch.css */
+.branch-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 items per row */
+  gap: 16px; /* Optional: Adds spacing between grid items */
+  margin-top: 16px;
+}
+
+.branch-container .branch-item {
+  margin-bottom: 15px;
+}
+
+.branch-item {
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.branch-details {
+  display: flex;
+  justify-content: space-between;
+}
+
+.branch-name {
+  font-weight: bold;
+}
+
+.branch-count {
+  margin-left: auto;
+  color: #a4a4a4;
+}
+
+.progress-bar {
+  width: 100%;
+  background-color: #f0f0f0; /* Light grey background */
+  height: 20px;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-top: 5px;
+}
+
+.progress {
+  display: block;
+  height: 100%;
+  border-radius: 5px;
+}
+
+.heading{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.view-all-btn {
+  background-color: #f3f1f1;
+  color: black;
+  border-width: 1px;
+  border-radius: 5px;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+.view-all-btn.highlighted {
+  background-color: #0b243e; /* Change to the color you want for the highlighted state */
+  color: #fff;
+}
+
+.view-all-btn:hover {
+  background-color: #0b243e;
+  color: white;
+}
+
+.internship-status-container {
+  background-color: rgba(246, 246, 246, 1);
+  padding: 20px;
+  border-radius: 8px;
+  font-family: Arial, sans-serif;
+  margin: 10px 24px;
+  border-width: 1px;
+  overflow-y: scroll;
+  max-height: 600px;
+}
+.internship-status-container::-webkit-scrollbar {
+  width: 6px; /* Reduce scrollbar width */
+  height: 10px;
+}
+
+.internship-status-container::-webkit-scrollbar-thumb {
+  background-color: #c8c3c3;
+  border-radius: 10px;
+}
+
+.internship-status-container::-webkit-scrollbar-thumb:hover {
+  background-color: #adacac;
+}
+.internship-status-container .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.internship-status-container .header h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.internship-status-container .view-all-btn , .download-btn{
+  background-color: #fff;
+  color: black;
+  border-width: 1px;
+  border-radius: 5px;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+.internship-status-container .view-all-btn.highlighted , .download-btn:hover{
+  background-color: #0b243e; /* Change to the color you want for the highlighted state */
+  color: #fff;
+}
+.internship-status-container hr{
+  height: 1px;  
+  padding: 0;
+  margin: 0;
+}
+.internship-status-container .view-all-btn:hover {
+  background-color: #0b243e;
+  color: white;
+}
+
+.internship-status-container .cards-container {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.internship-status-container .card {
+  background-color: white;
+  border: 1px solid #e3e6f0;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  width: 32%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  transition: none;
+}
+.internship-status-container .card {
+  transform: none;
+}
+
+
+.internship-status-container .card h3 {
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 0 0 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.internship-status-container .card p {
+  color: #6c757d;
+  font-size: 0.9rem;
+  margin: 0 0 15px;
+}
+
+.internship-status-container .students {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  color: #6c757d;
+}
+
+.internship-status-container .students i {
+  margin-right: 8px;
+  font-size: 1rem;
+}
+
+.internship-status-container .view-report-btn {
+  background-color: #f7f9fa;
+  color: black;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  align-self: flex-start;
+}
+
+.internship-status-container .view-report-btn:hover {
+  background-color: #0a2849;
+  color: white;
+}
+
+
+
+
+
+
+
+.internship-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.internship-table th,
+.internship-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.internship-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 90%;
+  max-height: 90%;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666;
+}
+
+
+
+.participant-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 20px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.participant-table th,
+.participant-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.participant-table th {
+  background-color: #f8f8f8;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.85em;
+  letter-spacing: 0.5px;
+}
+
+.participant-table tr:last-child td {
+  border-bottom: none;
+}
+
+.participant-table tbody tr:hover {
+  background-color: #f5f5f5;
+}
+
+/* Remove vertical lines */
+.participant-table td,
+.participant-table th {
+  border-right: none;
+}
+
+/* Add some padding to the table container for better mobile view */
+.popup {
+  padding: 20px;
+}
+
+@media (max-width: 768px) {
+  .popup {
+    padding: 15px;
+  }
+
+  .participant-table th,
+  .participant-table td {
+    padding: 8px 10px;
+  }
+}
+

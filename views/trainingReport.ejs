@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Customized Trainings</title>
+    <link rel="stylesheet" href="css/training_overview.css" />
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/nav_log.css">
+    
+    <link rel="icon" type="image/x-icon" href="img/sidebar logo.png" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+    <link rel="stylesheet" href="css/trainCommon.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+    const dashboardLink = document.getElementById("dashboard-link");
+    const manageStudentsLink = document.getElementById("manage-students-link");
+    const overlay = document.getElementById("overlay");
+    const closeBtn = document.getElementById("close-btn");
+
+    function showPopup(event) {
+        event.preventDefault();
+        overlay.style.display = "flex";
+    }
+
+    function hidePopup() {
+        overlay.style.display = "none";
+    }
+
+    dashboardLink.addEventListener("click", showPopup);
+    manageStudentsLink.addEventListener("click", showPopup);
+    closeBtn.addEventListener("click", hidePopup);
+    overlay.addEventListener("click", function(event) {
+        if (event.target === overlay) {
+            hidePopup();
+        }
+    });
+});
+
+    </script>
+    <style>
+        /* Overlay styles */
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Popup styles */
+.popup {
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    text-align: center;
+    position: relative;
+}
+
+/* Close button styles */
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+    </style>
+  </head>
+
+  <body>
+    <script>
+      window.userRole = "<%= user.role %>";
+    </script>
+    <script src="js/rolebase.js"></script>
+    
+    <div class="supercss">
+      <div class="sidebar">
+        <a class="logo" style="text-align: center;align-items:center;padding:5px">
+          <img src="img/sidebar logo.png" alt="Logo" style="width: 58px; max-width: 70px;height:80px;">
+       </a> 
+       <a href="myDashboard" class="menu-item" id="dashboard-link">
+            <img src="img/dash_white.png" alt="dash" style="max-width:22px; height:22px"><span style="color:white">Dashboard</span>
+        </a>
+         <a href="employabilityReport" class="menu-item">
+                <img src="img/emp.png" alt="dash" style="max-width:18px; height:20px"><span>Employability</span>
+            </a>
+        <a href="https://admin.hackathon.blackbucks.me"  class="menu-item" >
+            <img alt="Assessment icon" src="img/assessment.png" style="max-width:19px; height:19.5px">
+            <span>Assessments</span></a>
+       
+         <a href="jobsDashboard" class="menu-item">
+           <img src="img/jobs.png" alt="jobs" style="max-width:20px; height:21px"><span>Jobs</span>
+        </a>
+        <a href="https://admin.hackathon.blackbucks.me/createAndManageCourse/"  class="menu-item" >
+            <img alt="course icon" src="img/course.png" style="max-width:19px; height:20px"> 
+            <span>Course</span></a>
+        <a href="https://admin.hackathon.blackbucks.me/lessonPlan/"  class="menu-item" >
+            <img alt="lessonplan icon" src="img/lessonplan.png" style="max-width:23px; height:18px">
+            <span>Lesson Plan</span></a>
+        
+                <a href="trainingsDashboard" class="menu-item active" style="background-color: #88EB4C;">
+            <img src="img/trainings_black.png" alt="trainings" style="max-width:27px; height:21px"><span style="color: black;font-weight:bold">Trainings</span>
+        </a>
+                 <a href="internshipsDashboard" class="menu-item">
+                    <img
+                      src="img/internship_whiteicon.png"
+                      alt="manage"
+                      style="width: 20px; height: auto"
+                    /><span>Internships</span>
+                  </a>
+                <a href="https://admin.hackathon.blackbucks.me/createAndManageLabTest/"  class="menu-item" >
+                    <img alt="vpl icon" src="img/vpl.png" style="max-width:19px; height:17px">
+                    <span>VPL</span></a>
+       
+     </div>
+       
+         <div class="css">
+          <div class="css0">
+            <div id="navbar-container"></div>
+        </div>
+         <div class="css1">
+    <div class="main-container">
+      <div class="roww marginr">
+        <img
+          src="img/traininggrey.png"
+          alt="internship icon"
+          style="width: 14px; height: 14px; margin-right: 5px"
+        />
+        <a href="trainingsDashboard" style="text-decoration: none;">
+          <p class="grey f14 marginr" style="margin: 0;">
+            Trainings <i class="fa-solid fa-chevron-right f10 marginr grey"></i>
+          </p></a>
+        <p class="f14"><span id="training-title"></span> Dashboard</p>
+      </div>
+
+      <!-- <div class="banner">
+        <div class="banner-text">
+          <img id="banner-img" alt="">
+         
+        </div>
+    </div> -->
+      <h3 class="f22 font600"><span id="title"></span> Overall Dashboard</h3>
+      <div class="section2 column1">
+        <div class="section2_1 roww">
+          <div class="section2_1_1">
+            <p class="font600 f16">Student Training Enrollments</p>
+            <div>
+              <div class="section2_inner_section">
+                <div class="roww">
+                  <h4 class="f22 font600 marginr" id="batch-count"></h4>
+                  <p class="f12">Students</p>
+                </div>
+                
+                <div style="float: right">
+                  <p
+                    class="f12" id="showStudentsList" 
+                    style="color: #53acfd; text-decoration: underline; cursor: pointer;">
+                    Show Students list
+                  </p>
+                </div>
+                <div id="studentPopup" style="display: none; position: fixed; top: 10%; left: 20%; width: 50%; height: 100%; z-index: 1; border-radius: 20px;">
+                  <div class="table-responsive"  style="width: 100%; box-shadow: 0 4px 6px rgba(0,0,0,0.4); background-color: #fff; padding: 20px; margin-left: 100px; height: 400px; overflow-y: auto; border-radius: 20px;">
+                    <span class="close" style="float: right; font-weight: bold; cursor: pointer;">x</span>
+                    <br><br>
+                    <p>Students Enrolled In the Training</p>
+                      <table id="studentTable" class="table">
+                          <thead>
+                              <tr>
+                                  <th>Batch ID</th>
+                                  <th>Name</th>
+                                  <th>Email</th>
+                                  <th>Reg No</th>
+                                  <th>Phone</th>
+                              </tr>
+                          </thead>
+                          <tbody id="studentData">
+                          </tbody>
+                      </table>
+                  </div>
+              </div>
+              </div>
+              <!-- HTML to display batch details -->
+              <div class="batch-graph">
+                <div id="batch-container"></div>
+                <div id="batch-text-container"  style="width: 100%; display: flex;
+              flex-direction: row;"></div>
+            </div>
+            
+              
+            </div>
+          </div>
+
+          <div class="section2_1_2" >
+            <span class="f16 font600">Test Completion Metrics</span>
+          
+                <div style="width: 400px; height: 200px;margin-top: 10px; padding: 10px;" class="graph" >
+                  <div id="no-graph-overlay"></div>
+              <canvas id="myChart" width="400" height="200"></canvas>
+           </div>  
+          </div>
+        </div>
+        <div class="section2_2">
+         <div class="card_s2">
+          <div class="card_s2_div">
+            <div class="background-img-color">
+               <img src="img/feedback.png" alt="feedback">
+            </div>
+            <p class="f15 font600">Average <br> Feedback</p>
+          </div>
+          <div class="card_s2_div">
+            <span class="font600 f22" id="average-feedback">0</span>
+            <img src="img/feedback1.png" alt="feedback"></div>
+         </div>
+         <div class="card_s2">
+          <div class="card_s2_div">
+            <div class="background-img-color">
+               <img src="img/overall.png" alt="overall">
+            </div>
+            <p class="f15 font600">Overall <br> Interactiveness</p>
+          </div>
+          <div class="card_s2_div">
+            <span class="font600 f22" id="avg-interactiveness-percentage">0</span>
+            <img src="img/overall1.png" alt="overall"></div>
+         </div>
+         <div class="card_s2" style="display: none;">
+          <div class="card_s2_div">
+            <div class="background-img-color">
+               <img src="img/projects.png" alt="projects">
+            </div>
+            <p class="f16 font600">Projects & Case <br> Studies</p>
+          </div>
+          <div class="card_s2_div">
+            <span class="font600 f22" id="projectsandcs">0</span>
+            <img src="img/projects1.png" alt="projects"></div>
+         </div>
+        </div>
+      </div>
+
+      
+
+    <!-- Create a table element -->
+   
+
+
+    <div class="section3">
+      <h2 class="f16 font600">Phases Summary</h2>
+      <div class="table-container" style="position: relative;"> <!-- Wrapper for table and overlay -->
+        <div id="no-data-overlay" class="no-data-overlay"></div> <!-- Overlay positioned over the table -->
+        <table id="table-details">
+          <tbody id="table-body">
+            <!-- Table body will be populated dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    
+
+      <div class="section4">
+        <h2 class="f16 font600">Overall Top Students</h2>
+        <div id="no-students-data" class="top-students-table">
+          <div class="no-students-overlay"></div>
+           <table class="no-table-data">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Registration Number</th>
+              <th>Average Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="name-cell">
+                <div class="user-icon"><i class="fa-solid fa-user"></i></div>
+                John Doe
+              </td>
+              <td>john.doe@example.com</td>
+              <td>555-1234</td>
+              <td>REG123456</td>
+              <td>85%</td>
+            </tr>
+            <tr>
+              <td class="name-cell">
+                <div class="user-icon"><i class="fa-solid fa-user"></i></div>
+                Jane Smith
+              </td>
+              <td>jane.smith@example.com</td>
+              <td>555-5678</td>
+              <td>REG123457</td>
+              <td>90%</td>
+            </tr>
+            <tr>
+              <td class="name-cell">
+                <div class="user-icon"><i class="fa-solid fa-user"></i></div>
+                Emiley
+              </td>
+              <td>emily.johnson@example.com</td>
+              <td>555-8765</td>
+              <td>REG123458</td>
+              <td>88%</td>
+            </tr>
+            <tr>
+              <td class="name-cell">
+                <div class="user-icon"><i class="fa-solid fa-user"></i></div>
+                Michael Brown
+              </td>
+              <td>michael.brown@example.com</td>
+              <td>555-4321</td>
+              <td>REG123459</td>
+              <td>82%</td>
+            </tr>
+         
+          </tbody>
+        </table>
+        </div>
+
+        <div id="loading-shimmer" class="shimmer-wrapper" style="display: none;">
+          <!-- Shimmer rows mimic the structure of the table -->
+          <div class="shimmer-row"></div>
+          <div class="shimmer-row"></div>
+          <div class="shimmer-row"></div>
+          <div class="shimmer-row"></div>
+          <div class="shimmer-row"></div>
+          <div class="shimmer-row"></div>
+          <div class="shimmer-row"></div>
+          <div class="shimmer-row"></div>
+          <div class="shimmer-row"></div>
+          <!-- Add as many shimmer rows as needed to match the table's appearance -->
+        </div>
+        
+        <table id="student-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Registration Number</th>
+              <th>Average Score</th>
+            </tr>
+          </thead>
+          <tbody id="student-table-body">
+            <!-- table rows will be generated here -->
+          </tbody>
+        </table>
+        <div id="pagination-controls" class="pagination ">
+          <button id="prevPage" disabled>Previous</button>
+          <div id="pageNos"></div>
+          <button id="nextPage">Next</button>
+        </div>
+      </div>
+    </div>
+  
+    </div>
+    </div>
+    </div>
+  
+
+<script>
+async function fetchTrainingDetails() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const trainingId = urlParams.get('id');
+
+  if (!trainingId) {
+    document.getElementById('training-title').textContent = 'Invalid training ID';
+    return;
+  }
+
+  try {
+    const response = await fetch(`/api/training_overview/training/${trainingId}`);
+    const training = await response.json();
+
+    if (response.status !== 200) {
+      document.getElementById('training-title').textContent = 'Error fetching training details';
+      return;
+    }
+
+    renderTrainingDetails(training, trainingId);
+  } catch (error) {
+    console.error('Error fetching training details:', error);
+    document.getElementById('training-title').textContent = 'Error fetching training details';
+  }
+}
+
+function renderTrainingDetails(training, trainingId) {
+  document.getElementById('training-title').textContent = training.title;
+  document.getElementById('title').textContent = training.title;
+  // Add more HTML rendering code here as needed
+  const bannerImg = document.getElementById('banner-img');
+  bannerImg.src = training.banner;
+}
+  
+  window.onload = fetchTrainingDetails;
+
+  const urlParams = new URLSearchParams(window.location.search);
+const trainingId = urlParams.get('id');
+
+fetch(`/api/training_overview/batch_count/${trainingId}`)
+
+.then(response => response.json())
+   .then(data => {
+      const batchCountElement = document.getElementById('batch-count');
+      batchCountElement.innerText = `${data.batchCount}`;
+      console.log(trainingId);
+    })
+   .catch(error => {
+      console.error('Error fetching batch count:', error);
+    });
+
+    <!-- Create a container to display the batch details -->
+
+    const initialColors = ["#AC95EE", "#53ACFD", "#EED477"];
+
+// Function to generate a random color in hex format
+function getRandomColor() {
+  const letters = '0123456789ABCDEF';
+  let color = '#';
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
+// Define the shimmer UI HTML structure
+function createDummyDataUI() {
+    const dummyData = [
+        { batch: 'Batch 1', count: 100 },
+        { batch: 'Batch 2', count: 150 },
+        { batch: 'Batch 3', count: 200 },
+        { batch: 'Batch 4', count: 250 },
+        { batch: 'Batch 5', count: 300 }
+    ];
+
+    const wholeBatchDiv = document.getElementsByClassName('batch-graph')[0]; // Select the first element with the class name 'batch-graph'
+    const containerDiv = document.getElementById('batch-container');
+    const textContainerDiv = document.getElementById('batch-text-container');
+    const colors = ['rgb(172, 149, 238)', 'rgb(197, 173, 244)', 'rgb(149, 129, 226)', 'rgb(220, 200, 255)', 'rgb(185, 162, 242)'];
+
+    const totalCount = dummyData.reduce((acc, item) => acc + item.count, 0);
+
+    // Create batch divs for dummy data
+    const batchDivs = dummyData.map((item, index) => {
+        const batchDiv = document.createElement('div');
+        const widthPercentage = Math.log(item.count) / Math.log(totalCount) * 100; // Logarithmic scale
+        batchDiv.style.width = `${widthPercentage}%`;
+        batchDiv.style.backgroundColor = colors[index % colors.length];
+        batchDiv.style.height = '61px';
+        batchDiv.style.margin = '2px';
+        batchDiv.style.borderRadius = '5px';
+        batchDiv.style.position = 'relative';
+
+        return batchDiv;
+    });
+
+    containerDiv.innerHTML = '';
+    batchDivs.forEach(batchDiv => containerDiv.appendChild(batchDiv));
+
+    // Create text divs for dummy data
+    const textDivs = dummyData.map((item, index) => {
+        const textDiv = document.createElement('div');
+        const widthPercentage = Math.log(item.count) / Math.log(totalCount) * 100;
+        textDiv.innerHTML = `${item.batch} <br> <div style="font-size:16px; font-weight:600">${item.count}</div>`;
+        textDiv.style.fontSize = "12px";
+        textDiv.style.width = `${widthPercentage}%`;
+        textDiv.style.margin = '2px';
+        return textDiv;
+    });
+
+    textContainerDiv.innerHTML = '';
+    textDivs.forEach(textDiv => textContainerDiv.appendChild(textDiv));
+
+    // Create a single overlay for the entire container
+    const overlay = document.createElement('div');
+    overlay.className = 'dummy-overlay';
+    overlay.style.position = 'absolute';
+    overlay.style.top = 0;
+    overlay.style.left = 0;
+    overlay.style.width = '100%';
+    overlay.style.height = '100%';
+    overlay.style.backgroundColor = 'rgba(253, 251, 251, 0.7)'; // Adjust color and opacity as needed
+
+    wholeBatchDiv.style.position = 'relative'; // Make the container a positioning context
+    wholeBatchDiv.appendChild(overlay); // Add overlay to the entire container
+}
+
+// Fetch batch details and update the UI
+fetch(`/api/training_overview/batch_details/${trainingId}`)
+    .then(response => response.json())
+    .then(data => {
+        const containerDiv = document.getElementById('batch-container');
+        const textContainerDiv = document.getElementById('batch-text-container');
+
+        // Clear previous content and overlay if it exists
+        containerDiv.innerHTML = '';
+        textContainerDiv.innerHTML = '';
+        const existingOverlay = document.querySelector('.overlay');
+        if (existingOverlay) existingOverlay.remove();
+
+        if (!data || data.length === 0) {
+            // Show dummy data if no data is present
+            createDummyDataUI();
+        } else {
+            const totalCount = data.reduce((acc, item) => acc + item.count, 0);
+            const colors = [
+                'rgb(172, 149, 238)',  // Original light purple
+                'rgb(197, 173, 244)',  // A slightly lighter purple
+                'rgb(149, 129, 226)',  // A deeper purple shade
+                'rgb(220, 200, 255)',  // A soft lavender shade
+                'rgb(185, 162, 242)'   // A medium lavender shade
+            ];
+
+            // Create batch divs
+            const batchDivs = data.map((item, index) => {
+                const batchDiv = document.createElement('div');
+                const widthPercentage = Math.log(item.count) / Math.log(totalCount) * 100; // Logarithmic scale
+                batchDiv.style.width = `${widthPercentage}%`;
+                batchDiv.style.backgroundColor = colors[index % colors.length];
+                batchDiv.style.height = '61px';
+                batchDiv.style.margin = '2px';
+                batchDiv.style.borderRadius = '5px';
+                batchDiv.style.position = 'relative';
+                return batchDiv;
+            });
+
+            batchDivs.forEach(batchDiv => containerDiv.appendChild(batchDiv));
+
+            // Create text divs
+            const textDivs = data.map((item, index) => {
+                const textDiv = document.createElement('div');
+                const widthPercentage = Math.log(item.count) / Math.log(totalCount) * 100;
+                textDiv.innerHTML = `${item.batch} <br> <div style="font-size:16px; font-weight:600">${item.count}</div>`;
+                textDiv.style.fontSize = "12px";
+                textDiv.style.width = `${widthPercentage}%`;
+                textDiv.style.margin = '2px';
+                return textDiv;
+            });
+
+            textDivs.forEach(textDiv => textContainerDiv.appendChild(textDiv));
+        }
+
+        // Create and add overlay to container after adding all content
+        const overlay = document.createElement('div');
+        overlay.className = 'overlay';
+        overlay.style.position = 'absolute'; // Ensures it covers the entire container
+        overlay.style.top = 0;
+        overlay.style.left = 0;
+        overlay.style.width = '100%';
+        overlay.style.height = '100%';
+        containerDiv.style.position = 'relative'; // Ensures the container can be a reference for the overlay
+        containerDiv.appendChild(overlay);
+    })
+    .catch(error => {
+        console.error('Error fetching batch details:', error);
+        // Show dummy data in case of error
+        createDummyDataUI();
+    });
+
+
+fetch(`/api/training_overview/cards_details/${trainingId}`)
+  .then(response => response.json())
+  .then(data => {
+    let averageFeedback = 0;
+    let avgInteractivenessPercentage = 0;
+
+    // Check if data exists and is not null
+    if (data && data.length > 0) {
+      averageFeedback = data[0].average_feedback || 0; // Default to 0 if the value is null or undefined
+      avgInteractivenessPercentage = data[0].avg_interactiveness_percentage || 0; // Default to 0 if null or undefined
+    }
+
+    // Update the HTML elements with the fetched data or default to 0
+    document.getElementById('average-feedback').innerHTML = `${averageFeedback}/5`;
+    document.getElementById('avg-interactiveness-percentage').innerHTML = `${avgInteractivenessPercentage}/100`;
+  })
+  .catch(error => {
+    console.error('Error fetching details:', error);
+    // Handle the error case, possibly by setting the default values
+    document.getElementById('average-feedback').innerHTML = `0/5`;
+    document.getElementById('avg-interactiveness-percentage').innerHTML = `0/100`;
+  });
+
+  fetch(`/api/training_overview/project_and_cs/${trainingId}`)
+ .then(response => response.json())
+ .then(data => {
+    const projectsandcase = data[0].count;
+    // Update the HTML elements with the fetched data
+    document.getElementById('projectsandcs').innerHTML = `${projectsandcase}`;
+  })
+ .catch(error => {
+    console.error('Error fetching details:', error);
+  });
+
+      async function fetchStudentDetails(trainingId) {
+    try {
+        const response = await fetch(`/api/training_overview/batch_students_data/${trainingId}`);
+        
+
+        console.log(trainingId);
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+
+        const data = await response.json();
+        
+        const tableBody = document.getElementById('studentTable').querySelector('tbody');
+        tableBody.innerHTML = ''; // Clear any existing rows
+        
+        data.forEach(student => {
+            const row = document.createElement('tr');
+            
+            const batchIdCell = document.createElement('td');
+            batchIdCell.textContent = student.batch_id;
+            row.appendChild(batchIdCell);
+            
+            const nameCell = document.createElement('td');
+            nameCell.textContent = student.name;
+            row.appendChild(nameCell);
+            
+            const emailCell = document.createElement('td');
+            emailCell.textContent = student.email;
+            row.appendChild(emailCell);
+            
+            const regnoCell = document.createElement('td');
+            regnoCell.textContent = student.regno;
+            row.appendChild(regnoCell);
+            
+            const phoneCell = document.createElement('td');
+            phoneCell.textContent = student.phone;
+            row.appendChild(phoneCell);
+            
+            tableBody.appendChild(row);
+        });
+    } catch (error) {
+        console.error('Error fetching student details:', error);
+    }
+}
+
+// Call the function with the training ID
+fetchStudentDetails(trainingId); // Replace '1' with the actual training ID you want to fetch data for
+document.getElementById("showStudentsList").addEventListener("click", function() {
+        document.getElementById("studentPopup").style.display = "block";
+        fetchStudentDetails(trainingId); // Pass the training ID to the function
+    });
+
+    // Add event listener to close the popup when clicked outside
+    document.addEventListener("click", function(event) {
+        if (event.target.id!== "showStudentsList" && event.target.id!== "studentPopup") {
+            document.getElementById("studentPopup").style.display = "none";
+        }
+    });
+
+//////////////////////////////////////////////////
+////////Graph Data////////////////////////
+document.addEventListener("DOMContentLoaded", function () {
+  const ctx = document.getElementById("myChart").getContext("2d");
+
+  // Function to get a pattern with vertical lines for shimmer effect on bars
+  function getPattern(ctx) {
+    const patternCanvas = document.createElement("canvas");
+    patternCanvas.width = 10; // Width of pattern
+    patternCanvas.height = 10; // Height of pattern
+    const patternContext = patternCanvas.getContext("2d");
+
+    // Draw vertical lines
+    patternContext.strokeStyle = "rgba(230, 229, 251, 1)"; // Grey color
+    patternContext.lineWidth = 2;
+    patternContext.beginPath();
+    patternContext.moveTo(2, 0);
+    patternContext.lineTo(2, 10);
+    patternContext.moveTo(6, 0);
+    patternContext.lineTo(6, 10);
+    patternContext.stroke();
+
+    return ctx.createPattern(patternCanvas, "repeat");
+  }
+
+  // Create a linear gradient for filled bars
+  function createLinearGradient(ctx) {
+    const gradient = ctx.createLinearGradient(0, 0, 0, 400); // Vertical gradient
+    gradient.addColorStop(0, "rgba(211, 251, 82, 0.1)");
+    gradient.addColorStop(0.5, "rgba(211, 251, 82, 0.8)");
+    gradient.addColorStop(1, "rgba(211, 251, 82, 1)");
+    return gradient;
+  }
+
+  // Function to render the chart with real data
+  function renderChartWithData(data) {
+    const completedData = [
+      data[0].total_event_count,
+      data[0].daily_tests,
+      data[0].grand_tests,
+      data[0].assignments,
+    ];
+    const originalTotalData = [
+      data[0].total_live_sessions,
+      data[0].total_assessments,
+      data[0].grand_tests,
+      data[0].assignments,
+    ];
+    // Ensure no negative values by clamping the value to 0 if less than 0
+  const totalData = originalTotalData.map((value, index) => 
+    Math.max(0, value - completedData[index])
+  );
+    const config = {
+      type: "bar",
+      data: {
+        labels: ["Live Sessions", "Daily Tests", "Weekly Tests", "Grand Tests"],
+        datasets: [
+          {
+            label: "Completed",
+            borderRadius: { topLeft: 5, topRight: 5, bottomLeft: 20, bottomRight: 20 },
+            backgroundColor: createLinearGradient(ctx),
+            data: completedData,
+            barThickness: 35,
+          },
+          {
+            label: "Remaining",
+            borderRadius: 5,
+            backgroundColor: getPattern(ctx),
+            data: totalData,
+            barThickness: 35,
+          },
+        ],
+      },
+      options: {
+        layout: { padding: { bottom: 20 } },
+        scales: {
+          x: {
+            stacked: true,
+            grid: { display: false },
+          },
+          y: {
+            ticks: { beginAtZero: true,  stepSize: 10, min: 0 },
+            stacked: true,
+            grid: { display: false },
+          },
+        },
+      },
+    };
+
+    // Create the chart
+    new Chart(ctx, config);
+  }
+
+  // Function to render the chart with dummy data
+
+  function renderChartWithDummyData() {
+    const dummyData = [30, 40, 40, 21]; // Dummy data
+
+    const config = {
+      type: "bar",
+      data: {
+        labels: ["Live Sessions", "Daily Tests", "Weekly Tests", "Grand Tests"],
+        datasets: [
+          {
+            label: "Completed",
+            borderRadius: { topLeft: 5, topRight: 5, bottomLeft: 20, bottomRight: 20 },
+            backgroundColor: createLinearGradient(ctx),
+            data: dummyData,
+            barThickness: 35,
+          },
+          {
+            label: "Remaining",
+            borderRadius: 5,
+            backgroundColor: getPattern(ctx),
+            data: dummyData,
+            barThickness: 35,
+          },
+        ],
+      },
+      options: {
+        layout: { padding: { bottom: 20 } },
+        scales: {
+          x: {
+            stacked: true,
+            grid: { display: false },
+          },
+          y: {
+            ticks: { stepSize: 10, min: 0 },
+            stacked: true,
+            grid: { display: false },
+          },
+        },
+        
+      },
+    };
+
+    // Create the chart
+    new Chart(ctx, config);
+  }
+
+  // Fetch data from API
+  fetch(`/api/training_overview/graph_details/${trainingId}`)
+    .then(response => response.json())
+    .then(data => {
+      if (data.length === 0) {
+        renderChartWithDummyData(); // Call function to render chart with dummy data
+        document.getElementById.style.display = 'no-graph-overlay';
+      } else {
+        renderChartWithData(data); // Call function to render chart with real data
+        document.getElementById('no-graph-overlay').style.display = 'none' ;
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      renderChartWithDummyData(); // Call function to render chart with dummy data in case of error
+      document.getElementById.style.display = 'no-graph-overlay';
+    });
+});
+
+
+
+
+//Table details about the data of the phases 
+const noDataOverlay = document.getElementById("no-data-overlay");
+const tableBody = document.getElementById("table-body");
+
+fetch(`/api/training_overview/table_details/${trainingId}`)
+  .then(response => response.json())
+  .then(data => {
+    if (data.length === 0) {
+      noDataOverlay.style.display = "block"; // Show overlay
+      showDummyData(); // Function to show dummy data
+    } else {
+      noDataOverlay.style.display = "none"; // Hide overlay
+      populateTableWithData(data); // Function to populate table with actual data
+    }
+  })
+  .catch(error => {
+    console.error("Error fetching details:", error);
+    noDataOverlay.style.display = "block"; // Show overlay in case of error
+    showDummyData(); // Show dummy data if there's an error
+  });
+
+function populateTableWithData(data) {
+  // Create table headers
+  const titles = data.map(row => row.title);
+  const newTableHead = document.createElement("tr");
+  const emptyCell = document.createElement("th");
+  emptyCell.textContent = "";
+  newTableHead.appendChild(emptyCell);
+
+  titles.forEach(title => {
+    const th = document.createElement("th");
+    th.textContent = title;
+    newTableHead.appendChild(th);
+  });
+
+  tableBody.appendChild(newTableHead);
+
+  // Create rows based on actual data
+  const previousHeaders = [
+    { text: "Live Sessions", className: "header-live-session" },
+    { text: "Assessments", className: "header-assessment" },
+    { text: "Daily Tests", className: "header-daily-tests" },
+    { text: "Grand Tests", className: "header-grand-tests" },
+    { text: "Employability Tests", className: "header-employability-tests" },
+    { text: "Assignments", className: "header-assignments" },
+    { text: "Feedback", counts: [0, 0, 0], className: "header-live-session" },
+{ text: "Interactiveness", counts: [0, 0, 0], className: "header-live-session" }
+  ];
+
+  previousHeaders.forEach((header, index) => {
+    const newRow = document.createElement("tr");
+    const newHeaderCell = document.createElement("td");
+
+    const span = document.createElement("span");
+    span.textContent = header.text;
+    span.style.textWrap = "nowrap";
+    span.classList.add(header.className);
+    newHeaderCell.appendChild(span);
+    newRow.appendChild(newHeaderCell);
+
+    data.forEach(row => {
+      const newCell = document.createElement("td");
+      switch (index) {
+        case 0:
+          newCell.textContent = row.live_session_count;
+          break;
+        case 1:
+          newCell.textContent = row.assessment_count;
+          break;
+        case 2:
+          newCell.textContent = row.daily_tests;
+          break;
+        case 3:
+          newCell.textContent = row.grand_tests;
+          break;
+        case 4:
+          newCell.textContent = row.mets;
+          break;
+        case 5:
+          newCell.textContent = row.assignments;
+          break;
+        case 6:
+          newCell.textContent = row.average_feedback || 0 ;
+          break;
+        case 7:
+          newCell.textContent = row.avg_interactiveness_percentage || 0;
+      }
+      newRow.appendChild(newCell);
+    });
+
+    tableBody.appendChild(newRow);
+  });
+
+  // Add "View Report" row
+  const viewReportRow = document.createElement("tr");
+  const emptyCell2 = document.createElement("td");
+  emptyCell2.textContent = "";
+  viewReportRow.appendChild(emptyCell2);
+
+  titles.forEach((title, index) => {
+    const viewReportCell = document.createElement("td");
+    const viewReportButton = document.createElement("button");
+    viewReportButton.textContent = "View Report";
+
+    viewReportButton.addEventListener("click", () => {
+      const phaseId = data[index].id; 
+      window.location.href = `trainingPhaseReport?phase_id=${phaseId}`;
+    });
+
+    viewReportCell.appendChild(viewReportButton);
+    viewReportRow.appendChild(viewReportCell);
+  });
+
+  tableBody.appendChild(viewReportRow);
+}
+
+function showDummyData() {
+  // Similar logic to populateTableWithData but with dummy data
+  const dummyTitles = ["Phase 1", "Phase 2", "Phase 3"];
+  const dummyTableHead = document.createElement("tr");
+  const dummyEmptyCell = document.createElement("th");
+  dummyEmptyCell.textContent = "";
+  dummyTableHead.appendChild(dummyEmptyCell);
+
+  dummyTitles.forEach(title => {
+    const th = document.createElement("th");
+    th.textContent = title;
+    dummyTableHead.appendChild(th);
+  });
+
+  tableBody.appendChild(dummyTableHead);
+
+  const dummyData = [
+    { text: "Live Session ", counts: [0, 0, 0], className: "header-live-session" },
+    { text: "Assessment", counts: [0, 0, 0], className: "header-assessment" },
+    { text: "Daily Tests", counts: [0, 0, 0], className: "header-daily-tests" },
+    { text: "Grand Tests", counts: [0, 0, 0], className: "header-grand-tests" },
+    { text: "Employability Tests", counts: [0, 0, 0], className: "header-employability-tests" },
+    { text: "Assignments", counts: [0, 0, 0], className: "header-assignments" },
+    { text: "Feedback", counts: [0, 0, 0], className: "header-live-session" },
+
+    { text: "Interactiveness", counts: [0, 0, 0], className: "header-live-session" }
+
+  ];
+
+  dummyData.forEach(rowData => {
+    const newRow = document.createElement("tr");
+    
+    const newHeaderCell = document.createElement("td");
+    const span = document.createElement("span");
+    span.textContent = rowData.text;
+    span.style.whiteSpace = "nowrap";  // Prevent text from wrapping
+    newHeaderCell.appendChild(span);
+    span.classList.add(rowData.className);  // Apply class only to the first <td>
+    newRow.appendChild(newHeaderCell);
+
+    rowData.counts.forEach(count => {
+      const newCell = document.createElement("td");
+      newCell.textContent = count;
+      newRow.appendChild(newCell);
+    });
+
+    tableBody.appendChild(newRow);
+  });
+
+  // Add dummy "View Report" row
+  const dummyViewReportRow = document.createElement("tr");
+  const dummyEmptyCell2 = document.createElement("td");
+  dummyEmptyCell2.textContent = "";
+  dummyViewReportRow.appendChild(dummyEmptyCell2);
+
+  dummyTitles.forEach(() => {
+    const dummyViewReportCell = document.createElement("td");
+    const dummyViewReportButton = document.createElement("button");
+    dummyViewReportButton.textContent = "View Report";
+    dummyViewReportButton.disabled = true; // Disable button for dummy data
+    dummyViewReportCell.appendChild(dummyViewReportButton);
+    dummyViewReportRow.appendChild(dummyViewReportCell);
+  });
+
+  tableBody.appendChild(dummyViewReportRow);
+}
+
+
+
+ let totalPages;
+let current = 1;
+const pageSize = 10;
+let data = [];
+
+fetch(`/api/training_overview/top_students/${trainingId}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((students) => {
+        document.getElementById('loading-shimmer').style.display = 'none'; // Hide shimmer UI
+
+        if (students.length === 0) {
+          document.getElementById('no-students-data').style.display = 'block'; // Show no data message
+          document.getElementById('student-table').style.display = 'none'; // Hide table
+          document.getElementById('pagination-controls').style.display = 'none'; // Hide pagination
+        } else {
+          data = students;
+          totalPages = Math.ceil(data.length / pageSize);
+          current = 1;
+
+          document.getElementById('no-students-data').style.display = 'none'; // Hide no data message
+          document.getElementById('student-table').style.display = 'table'; // Show table
+          document.getElementById('pagination-controls').style.display = 'flex'; // Show pagination
+
+          updatePaginationControls();
+          renderTable();
+        }
+      })
+      .catch((error) => {
+        console.error('There has been a problem with your fetch operation:', error);
+        document.getElementById('loading-shimmer').style.display = 'none'; // Hide shimmer UI
+        document.getElementById('no-students-data').style.display = 'block'; // Show error message
+        document.getElementById('student-table').style.display = 'none'; // Hide table
+        document.getElementById('pagination-controls').style.display = 'none'; // Hide pagination
+      });
+      document.getElementById('loading-shimmer').style.display = 'block';
+document.getElementById('student-table').style.display = 'none'; // Hide actual table during load
+document.getElementById('no-students-data').style.display = 'none'; 
+    function goToPrevPage() {
+      if (current > 1) {
+        current--;
+        updatePaginationControls();
+        renderTable();
+      }
+    }
+
+    function goToNextPage() {
+      if (current < totalPages) {
+        current++;
+        updatePaginationControls();
+        renderTable();
+      }
+    }
+
+    function updatePaginationControls() {
+      const prevPageButton = document.getElementById('prevPage');
+      const nextPageButton = document.getElementById('nextPage');
+      const pageNumbersDiv = document.getElementById('pageNos');
+
+      prevPageButton.disabled = current === 1;
+      nextPageButton.disabled = current === totalPages;
+
+      pageNumbersDiv.innerHTML = '';
+
+      let startPage = Math.max(1, current - 3);
+      let endPage = Math.min(totalPages, current + 3);
+
+      if (endPage - startPage < 6) {
+        if (startPage === 1) {
+          endPage = Math.min(startPage + 6, totalPages);
+        } else {
+          startPage = Math.max(endPage - 6, 1);
+        }
+      }
+
+      for (let page = startPage; page <= endPage; page++) {
+        const pageButton = document.createElement('span');
+        pageButton.textContent = page;
+        pageButton.className = 'page-btn';
+        if (page === current) {
+          pageButton.classList.add('active');
+        }
+        pageButton.addEventListener('click', () => {
+          current = page;
+          updatePaginationControls();
+          renderTable();
+        });
+        pageNumbersDiv.appendChild(pageButton);
+      }
+    }
+
+    function renderTable() {
+      const startIndex = (current - 1) * pageSize;
+      const endIndex = Math.min(startIndex + pageSize, data.length);
+
+      const tableBody = document.getElementById('student-table-body');
+      tableBody.innerHTML = '';
+
+      data.slice(startIndex, endIndex).forEach((student) => {
+        const tableRow = document.createElement('tr');
+        tableRow.innerHTML = `
+          <td class="name-cell">
+            <div class="user-icon"><i class="fa-solid fa-user"></i></div>
+            ${student.name}
+          </td>
+          <td>${student.email}</td>
+          <td>${student.phone}</td>
+          <td>${student.regno}</td>
+          <td>${student.average_score}%</td>
+        `;
+        tableBody.appendChild(tableRow);
+      });
+    }
+
+  </script>
+
+<script src="js/navbar_logout.js"></script>
+
+  </body>
+</html>
+
