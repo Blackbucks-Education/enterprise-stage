@@ -1,0 +1,168 @@
+/* Participant Graph Styles */
+
+.participant-cards-container {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.cards-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.participant-card {
+  flex: 1 1 calc(50% - 20px);
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  background: #fff;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-icon-container {
+  flex: 0 0 60px;
+}
+
+.card-logo {
+  width: 100%;
+}
+
+.card-text-container {
+  flex: 1;
+  padding: 0 10px;
+}
+
+.participationheader {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.card-percentage {
+  font-size: 12px;
+}
+
+.card-count-container {
+  display: flex;
+  align-items: center;
+}
+
+.count-icon {
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+}
+
+.card-value {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.additional-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.small-card {
+  flex: 1 1 calc(33% - 10px);
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  background: #f9f9f9;
+}
+
+.small-card-top {
+  display: flex;
+  align-items: center;
+}
+
+
+
+.small-card-heading {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.animated-clock {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.clock {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+}
+
+.clock-face {
+  fill: none;
+  stroke: #000;
+  stroke-width: 2;
+}
+
+.clock-hand {
+  stroke: #000;
+  stroke-width: 2;
+}
+
+.time-value {
+  font-size: 14px;
+}
+
+.questions-count {
+  display: flex;
+  align-items: center;
+  
+}
+
+
+
+.question-count-number {
+  font-size: 24px;
+  font-weight: bold;
+  color: #000;
+}
+
+
+.clock {
+  width: 30px; 
+  height: 30px;
+}
+
+.clock-face {
+  fill: none;
+  stroke: black;
+  stroke-width: 3; /* Make the clock face bold */
+}
+
+.clock-hand {
+  stroke: red;
+  stroke-width: 2; /* Make the clock hand bolder */
+  transform-origin: 50% 50%;
+  animation: rotate-hand 10s linear infinite;
+}
+
+@keyframes rotate-hand {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.question-count-icon{
+  width:30px;
+  height:auto;
+}

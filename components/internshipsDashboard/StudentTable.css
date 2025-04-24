@@ -1,0 +1,91 @@
+/* Main container for the table and shimmer effect */
+
+
+/* Style for the shimmer loader */
+.shimmer-loader {
+  width: 100%;
+  padding: 10px;
+  background: #f6f7f8;
+  border-radius: 5px;
+}
+
+/* Row style for shimmer effect */
+.shimmer-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px; /* Space between shimmer rows */
+}
+
+/* Individual cell style for shimmer effect */
+.shimmer-cell {
+  flex: 1;
+  height: 20px; /* Height of shimmer cells */
+  border-radius: 4px;
+  background: linear-gradient(90deg, #f6f7f8 0%, #e0e0e0 50%, #f6f7f8 100%);
+  background-size: 200% 100%; /* For the shimmer animation */
+  animation: shimmer 1.5s infinite;
+  margin-right: 10px; /* Space between cells */
+}
+
+/* Keyframes for shimmer animation */
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Table styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px; /* Margin for table */
+}
+
+/* Header and data cell styling */
+th, td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd; /* Bottom border for table cells */
+}
+
+/* Style for the name cell to include an icon */
+.name-cell {
+  display: flex;
+  align-items: center;
+}
+
+/* Style for the user icon */
+.user-icon {
+  margin-right: 8px;
+}
+
+/* Pagination controls */
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px; /* Margin for pagination */
+}
+
+.pagination button {
+  margin: 0 10px; /* Margin for buttons */
+  padding: 10px 15px;
+  background-color: #7962bd;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.pagination button:hover {
+  background-color: #5a4e97; /* Darker shade on hover */
+}
+
+/* Pagination number styling */
+.pagination span {
+  margin: 0 5px; /* Margin for page numbers */
+  cursor: pointer;
+}

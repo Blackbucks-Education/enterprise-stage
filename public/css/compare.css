@@ -1,0 +1,174 @@
+/* NewComponent.css */
+.container {
+  padding: 30px;
+  max-width: 90%;
+  margin: 20px auto;
+  font-family: Arial, sans-serif;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden; /* Prevent scrolling */
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Space between elements */
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.selectContainer {
+  margin-bottom: 30px;
+}
+
+.selectedItems {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.selectedItem {
+  background-color: #f7f7f7;
+  padding: 8px 12px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.selectedItem button {
+  background: none;
+  border: none;
+  color: #e74c3c;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.compareButton {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.compareButton:disabled {
+  background-color: #d6d6d6;
+  cursor: not-allowed;
+}
+
+.graphContainer, .tableContainer, .comparisonInsight {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+  max-width: 100%;
+  width: 100%;
+  flex: 1; /* Allow containers to grow and shrink */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Adjusted for flexible sizing */
+.graphContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Removed fixed height to prevent overflow */
+}
+
+.graphContainer canvas {
+  max-width: 100%; /* Ensure the graph fits within the container */
+  height: auto; /* Maintain aspect ratio */
+}
+
+.tableContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.tableContainer table {
+  width: 100%;
+  border-collapse: collapse;
+  /* Removed height to avoid vertical scrolling */
+}
+
+.tableContainer th, .tableContainer td {
+  border: 1px solid #ddd;
+  padding: 10px;
+}
+
+.tableContainer th {
+  background-color: #f0f0f0;
+  font-weight: bold;
+  text-align: left;
+}
+
+.comparisonInsight {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: auto; /* Removed fixed height */
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+.popupContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.popupContent {
+  background-color: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 90%;
+}
+
+.customRange {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.customRange input {
+  width: 48%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.applyButton, .cancelButton {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+.applyButton {
+  background-color: #4CAF50;
+  color: white;
+  margin-right: 10px;
+}
+
+.cancelButton {
+  background-color: #f44336;
+  color: white;
+}

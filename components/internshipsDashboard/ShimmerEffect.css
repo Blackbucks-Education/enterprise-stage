@@ -1,0 +1,29 @@
+/* Shimmer effect */
+.shimmer {
+    background: #f6f7f8;
+    background-image: linear-gradient(90deg, #f6f7f8 0px, #e0e0e0 40px, #f6f7f8 80px);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+  
+  .shimmer-text {
+    width: 150px;
+    height: 16px;
+    border-radius: 4px;
+  }
+  
+  .shimmer-banner {
+    width: 100%;
+    height: 200px;
+    border-radius: 8px;
+  }
+  
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+  

@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="img/sidebar logo.png" type="image/x-icon" />
+    <link rel="stylesheet" href="css/nav_log.css" />
+    <link rel="stylesheet" href="css/common.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
+    <title>Feedback Overview</title>
+  </head>
+  <body>
+    <script>
+      window.userRole = "<%= user.role %>";
+    </script>
+    <script src="js/rolebase.js"></script>
+  
+     <style>
+       .roww{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.marginr{
+    margin-right: 10px;
+}
+
+  a{
+    color: black;
+  }
+
+  a:hover, a.active{
+    text-decoration: none;
+    color: black;
+  }
+
+h1 {
+    color: #333;
+    text-align: center;
+}
+
+
+.marginl{
+  margin-left: 10px;
+}
+.f12{
+  font-size: 12px;
+}
+
+.f10{
+  font-size: 10px;
+}
+
+
+.grey{
+  color: rgba(0, 0, 0, 0.7) !important;
+  font-size: 12px !important;
+}
+.f14{
+  font-size: 14px;
+}
+
+.f18{
+  font-size: 18px;
+}
+
+.f22{
+  font-size: 22px;
+}
+
+.font600{
+  font-weight: 600;
+}
+
+
+.margin0{
+  margin: 0;
+}
+      .settings{
+      
+          background-color: #D3FB52;
+          color: #000;
+          text-decoration: none;
+          margin-right: 5px;
+          display: flex;
+          align-items: center;
+          padding: 7px 20px;
+          border-radius: 30px;
+          cursor: pointer;
+          border: 1px solid rgba(0, 0, 0, 0.5);
+      }
+      
+      .settings:hover,
+      .settings:active,
+      .settings:focus{
+          text-decoration: none;
+          background-color: #7962BD;
+          color: white;
+          font-weight: 600;
+          border: 1px solid rgba(0, 0, 0, 0.5);
+      }
+             .row {
+          display: flex;
+          flex-wrap: nowrap;
+          width: 100%;
+          justify-content: space-between;
+      }
+      
+      .column {
+          width: 50%;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+      }
+      
+      .col-md-12 {
+          flex: 1;
+          margin-top: 0;
+      }
+      
+      .copy-link-container {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          background-color: white;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+      
+      input[type="text"] {
+          display: flex;
+          border: none;
+          border-right: 1px solid #ccc;
+          margin: 2px;
+          border-radius: 5px 0 0 5px;
+          outline: none;
+          width: 90%;
+          font-size: 16px;
+          padding: 5px;
+      }
+      
+      #copyButton, #downloadCsvButton, .btn {
+          background-color: #b9a4f9;
+          border: none;
+          padding: 18px;
+          color: black;
+          cursor: pointer;
+          margin: 0;
+          border-radius: 0 5px 5px 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+      }
+      
+      button:hover {
+          background-color: #7962BD;
+          color: white;
+      }
+      
+      button:active {
+          background-color: #7962BD;
+          color: white;
+      }
+      
+      button i {
+          font-size: 16px;
+      }
+      
+      .toast {
+                  visibility: hidden; /* Hidden by default */
+                  min-width: 250px;
+                  background-color: #85fcac;
+                  border: 1px solid green;
+                  color: #000;
+                  text-align: center;
+                  border-radius: 10px;
+                  padding: 16px;
+                  position: fixed;
+                  z-index: 1;
+                  left: 50%;
+                  top: 30px;
+                  font-size: 17px;
+                  transform: translateX(-50%);
+                  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                  transition: visibility 0s, opacity 0.5s linear; /* Add transition for fade effect */
+                  opacity: 0; /* Start with opacity 0 */
+              }
+      
+      
+      .toast.show {
+          visibility: visible;
+          animation: fadein 0.5s, fadeout 0.5s 2.5s;
+      }
+      
+      @keyframes fadein {
+          from {top: 0; opacity: 0;}
+          to {top: 30px; opacity: 1;}
+      }
+      
+      @keyframes fadeout {
+          from {top: 30px; opacity: 1;}
+          to {top: 0; opacity: 0;}
+      }
+      
+      .card {
+          display: flex;
+          flex-direction: column;
+          
+          justify-content: space-between;
+      }
+      
+      .card-body.cardss {
+          display: flex;
+          align-items: center;
+      }
+      
+      .circle {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          background-color: #f0f0f0;
+          margin: 10px;
+      }
+      .column h5{
+        padding: 10px;
+      }
+      .column h5, .column p {
+          margin: 0;
+          text-wrap: nowrap;
+          padding: 10px;
+       
+      }
+      
+      .mt-4 {
+          margin-top: 0;
+      }
+      
+      #feedbackChart {
+          width: 100%;
+          height: 250px;
+      }
+           .cardss{
+                   background: rgb(255,255,255);
+                  background: linear-gradient(120deg, rgba(255,255,255,1) 55%, rgba(121,98,189,1) 100%);
+                 border-left:3px solid #7962BD;
+                  overflow: hidden;
+                  border-radius: 5px;
+                  display: flex;
+                  align-items: center;
+                  flex-direction: row;
+                  flex-wrap: nowrap;
+              }
+      
+              .custom-card-style {
+          margin-top: 0 !important; /* Override any default margin-top */
+          height: 100%; /* Ensure the card fills its parent height */
+      }
+      
+      .card-body {
+          height: 100%; /* Ensure the card body fills the card's height */
+      }
+      
+      .circle {
+          width: 40px; /* Adjust circle size as needed */
+          height: 40px;
+          background-color: #7962BD; /* Example background color */
+          border-radius: 50%; /* Rounded circle */
+          display: flex;
+          justify-content: center;
+          align-items: center;
+      }
+      
+      .fa-solid {
+          color: white; /* Example color */
+          font-size: 20px; /* Example font size */
+      }
+      
+              .card-text{
+                  font-weight: 700;
+                  font-size: 18px;
+                  color: rgba(0,0,0,0.7);
+              }
+      
+              .feedback-table{
+                  width: 100%;
+                  border-radius: 10px;
+                  overflow: hidden;
+              }
+      
+              .table{
+                  width: 100%;
+                  border-collapse: collapse;
+                  margin-bottom: 0;
+              }
+      
+              thead{
+                  background-color: #7962BD;
+                  color: white;
+                  padding: 10px;
+                  height: 40px;
+                  border: none;
+              }
+
+              tbody,tr,td{
+                border: 1px solid #838181;
+              }
+
+              td{
+               padding: 10px;
+              }
+
+
+
+              .card-title{
+             font-size: 1.25rem;
+              }
+             
+              .card-text{
+                font-size: 1.1;
+              }
+          </style>
+
+<div class="supercss">
+  <div class="sidebar">
+    <a
+      class="logo"
+      style="text-align: center; align-items: center; padding: 5px"
+    >
+      <img
+        src="img/sidebar logo.png"
+        alt="Logo"
+        style="width: 58px; max-width: 70px; height: 80px"
+      />
+    </a>
+    <a href="myDashboard" class="menu-item" id="dashboard-link">
+      <img
+        src="img/dash_white.png"
+        alt="dash"
+        style="max-width: 22px; height: 22px"
+      /><span style="color: white">Dashboard</span>
+    </a>
+    <a href="employabilityReport" class="menu-item">
+      <img
+        src="img/emp.png"
+        alt="dash"
+        style="max-width: 18px; height: 20px"
+      /><span>Employability</span>
+    </a>
+    <a href="https://admin.hackathon.blackbucks.me" class="menu-item">
+      <img
+        alt="Assessment icon"
+        src="img/assessment.png"
+        style="max-width: 19px; height: 19.5px"
+      />
+      <span>Assessments</span></a
+    >
+
+    <a href="jobsDashboard" class="menu-item">
+      <img
+        src="img/jobs.png"
+        alt="jobs"
+        style="max-width: 20px; height: 21px"
+      /><span>Jobs</span>
+    </a>
+    <a
+      href="https://admin.hackathon.blackbucks.me/createAndManageCourse/"
+      class="menu-item"
+    >
+      <img
+        alt="course icon"
+        src="img/course.png"
+        style="max-width: 19px; height: 20px"
+      />
+      <span>Course</span></a
+    >
+    <a
+      href="https://admin.hackathon.blackbucks.me/lessonPlan/"
+      class="menu-item"
+    >
+      <img
+        alt="lessonplan icon"
+        src="img/lessonplan.png"
+        style="max-width: 23px; height: 18px"
+      />
+      <span>Lesson Plan</span></a
+    >
+
+    <a
+      href="trainingsDashboard"
+      class="menu-item active"
+      style="background-color: #88eb4c"
+    >
+      <img
+        src="img/trainings_black.png"
+        alt="trainings"
+        style="max-width: 27px; height: 21px"
+      /><span style="color: black; font-weight: bold">Trainings</span>
+    </a>
+    <a href="internshipsDashboard" class="menu-item">
+      <img
+        src="img/internship_whiteicon.png"
+        alt="manage"
+        style="width: 20px; height: auto"
+        style="width: 20px; height: auto"
+      /><span>Internships</span>
+    </a>
+    <a
+      href="https://admin.hackathon.blackbucks.me/createAndManageLabTest/"
+      class="menu-item"
+    >
+      <img
+        alt="vpl icon"
+        src="img/vpl.png"
+        style="max-width: 19px; height: 17px"
+      />
+      <span>VPL</span></a
+    >
+  </div>
+
+  <div class="css">
+    <div class="css0">
+      <div class="navbar">
+        <div class="nav1"></div>
+        <div class="nav2">
+          <a
+            href="https://admin.hackathon.blackbucks.me/manageStudents/"
+          >
+            <div class="chakra-stack css-nr8aow">
+              <img
+                alt="Manage Users"
+                src="img/newManageUsers.svg"
+                class="chakra-image css-0"
+              />
+            </div>
+          </a>
+          <a
+            href="https://admin.hackathon.blackbucks.me/tpCalendar/"
+            style="margin-left: 1rem"
+          >
+            <div class="chakra-stack css-nr8aow">
+              <img
+                alt="Calendar"
+                src="img/newCalenderNavIcon.svg"
+                class="chakra-image css-0"
+              /></div
+          ></a>
+          <a
+            href="https://admin.hackathon.blackbucks.me/manageNotification/"
+            style="margin-left: 1rem"
+          >
+            <div class="chakra-stack css-nr8aow">
+              <div class="css-1edim3w">
+                <img
+                  alt="Notifications"
+                  src="img/newNotificationIcon.svg"
+                  class="chakra-image css-6su6fj"
+                />
+                <div class="css-1bac456">
+                  <div class="css-1rkwksi">1</div>
+                </div>
+              </div>
+            </div>
+          </a>
+          <button type="button" class="navbtn" id="userButton">
+            <span class="user-details">
+              <div class="user">
+                <span class="user-profile">
+                  <i
+                    class="fa-solid fa-circle-user"
+                    style="font-size: 30px"
+                  ></i>
+                </span>
+                <div class="username">
+                  <p class="userN"></p>
+                  <p class="userR"></p>
+                </div>
+              </div>
+            </span>
+            <span class="chakra-button__icon css-1hzyiq5">
+              <svg
+                viewBox="0 0 16 16"
+                style="height: 12px !important; width: 12px !important"
+                aria-hidden="true"
+                focusable="false"
+                fill="currentColor"
+                xmlns="http://www.w3.org/2000/svg"
+                color="black"
+                class="css-1eamic5 ex0cdmw0"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+                ></path>
+              </svg>
+            </span>
+          </button>
+
+          <button
+            type="button"
+            class="logoutbtn"
+            id="logoutButton"
+            style="display: none"
+          >
+            Log out
+          </button>
+        </div>
+
+        <script>
+          document.addEventListener("DOMContentLoaded", () => {
+            const userButton = document.getElementById("userButton");
+            const logoutButton = document.getElementById("logoutButton");
+
+            userButton.addEventListener("click", () => {
+              if (logoutButton.style.display === "none") {
+                logoutButton.style.display = "flex";
+                logoutButton.style.top = `${
+                  userButton.offsetTop + userButton.offsetHeight
+                }px`;
+                logoutButton.style.left = `${userButton.offsetLeft}px`;
+              } else {
+                logoutButton.style.display = "none";
+              }
+            });
+
+            logoutButton.addEventListener("click", () => {
+              // Add your logout logic here
+              console.log("User logged out");
+            });
+          });
+        </script>
+      </div>
+    </div>
+    <div class="css1">
+
+      <div class="main-container">
+        <div class="roww marginr" style="margin: 20px;">
+            <img src="img/edit.png" alt="internship icon" style="width: 14px; height: 14px; margin-right: 5px">
+           <a href="feedbackDashboard" style="text-decoration: none;"> <p class="grey f14 marginr" style="margin: 0;">
+            Feedback <i class="fa-solid fa-chevron-right f10 marginr grey"></i>
+          </p></a>
+            <p class="f14" style="margin: 0;" id="btitle">Event Report</p>
+          </div>
+   
+          
+    <div class="container">
+      
+        <div id="toast"></div>
+        <h2 id="title" style="text-align: center; margin-top: 70px; margin-bottom: 40px;"></h2>
+        <div class="row" style="align-items: center; height: 200px;">
+            <!-- Left Column with Cards -->
+            <div class="column" style="width: 50%; height: 100%; display: flex; flex-direction: column;">
+                <!-- First Card -->
+                <div class="col-md-12" style="flex: 1; height: 40%; margin-bottom: 30px; margin: 10px;">
+                    <div class="card custom-card-style">
+                        <div class="card-body cardss">
+                            <div class="circle">
+                                <i class="fa-solid fa-users"></i>
+                            </div>
+                            <div class="column" style="margin-left: 15px;">
+                                <h5 class="card-title" style="font-size: 1.25rem;">Average Interactivness</h5>
+                                <p class="card-text"><span id="avginteactiveness"></span>/100</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Second Card -->
+                <div class="col-md-12" style="flex: 1; height: 40%; display: flex; flex-direction: column-reverse; margin: 10px;">
+                    <div class="card custom-card-style">
+                        <div class="card-body cardss">
+                            <div class="circle">
+                                <i class="fa-solid fa-thumbs-up"></i>
+                            </div>
+                            <div class="column" style="margin-left: 15px;">
+                                <h5 class="card-title">Average Feedback</h5>
+                                <p class="card-text" ><span id="averageFeedback"></span>/5</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Right Column with Chart -->
+            <div class="column" style="width: 50%;  height: 100%; padding-right: 0;">
+                <div class="col-md-12 card mt-0" style="padding: 0; height: 100%;  margin: 10px;">
+                    <div class="card-body" style="width: 100%; height: 100%;">
+                        <canvas id="feedbackChart" height="130px"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+      
+
+        <div class="row" >
+            <div class="col mt-4">
+                <div class="table-responsive">
+                    <div class="feedback-table">
+                        <div style="display: flex;
+                        flex-direction: row; align-items: center; margin-left: 5px; float: right; margin-bottom: 20px; width: 100%; margin-top:20px; justify-content: space-between;">
+                         <div class="col-md-18 mb-3" style="width: 100%;">
+                    <div class="copy-link-container">
+                    <input type="text" id="linkInput" value="https://example.com" readonly>
+                     <button id="copyButton" title="Copy to clipboard">
+                         <i class="fa fa-copy"></i>
+                    </button>
+            </div>
+                        </div>
+                        
+                        <button class="btn btn-primary mb-3" style="float: right; border-radius: 30px;white-space:inherit; text-wrap: nowrap; background-color: #fff;margin-left: 5px; color: black; border: 1px solid rgba(0, 0, 0, 0.5);"> <i class="fa-solid fa-users" style="color: black; font-size: 12px;"></i>
+                         <span  id="studentCount"></span></button>
+                        <button id="downloadCsvButton" class="btn btn-primary mb-3" style="float: right;margin-left: 5px;  text-wrap:nowrap; border-radius: 30px; background-color: #D3FB52; color: black; border: 1px solid rgba(0, 0, 0, 0.5);">Download CSV</button>
+                    </div>
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Registration Number</th>
+                                <th>Feedback</th>
+                                <th>Interactive</th>
+                                <th>Learned</th>
+                                <th>Comments</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentDetails"></tbody>
+                    </table></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="logoutModal" class="modal" style="display: none">
+  <div class="modal-content">
+    <p class="question">Are you sure you want to logout?</p>
+    <div class="logout-div"></div>
+    <div class="modal-buttons">
+      <button id="cancelLogout">Cancel</button>
+      <button id="confirmLogout">Yes</button>
+    </div>
+  </div>
+</div>
+      </div>
+      </div>
+      </div>
+
+
+    
+<script>
+  document.getElementById('copyButton').addEventListener('click', function() {
+      const linkInput = document.getElementById('linkInput');
+      linkInput.select();
+      linkInput.setSelectionRange(0, 99999); // For mobile devices
+  
+      navigator.clipboard.writeText(linkInput.value).then(() => {
+          showToast('Link copied to clipboard!');
+      }).catch(err => {
+          console.error('Failed to copy: ', err);
+      });
+  });
+  
+  function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.className = 'toast show';
+      setTimeout(() => {
+          toast.className = toast.className.replace('show', '');
+      }, 3000);
+  }
+  
+  function redirectToSettings() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const id = urlParams.get('eventId');
+      const newUrl = `editFeedbackForm?eventId=${id}`;
+      window.location.href = newUrl;
+  }
+  
+  document.getElementById('downloadCsvButton').addEventListener('click', function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const eventId = urlParams.get('eventId');
+      if (eventId) {
+          window.location.href = `api/feedbackoverview/downloadCsv/${eventId}`;
+      } else {
+          console.error('Event ID is missing.');
+          alert('Event ID is missing.');
+      }
+  });
+  
+  document.addEventListener('DOMContentLoaded', () => {
+      const studentCountElement = document.getElementById('studentCount');
+      const averageFeedbackElement = document.getElementById('averageFeedback');
+      const averageStudentInteractiveness = document.getElementById('avginteactiveness')
+      const studentDetailsTable = document.getElementById('studentDetails');
+      const feedbackChartCanvas = document.getElementById('feedbackChart').getContext('2d');
+      const urlParams = new URLSearchParams(window.location.search);
+      const eventId = urlParams.get('eventId');
+      let page = 1;
+      const limit = 20;
+      let isFetching = false;
+  
+      if (!eventId) {
+          console.error('Event ID is missing.');
+          alert('Event ID is missing.');
+          return;
+      }
+  
+      fetch(`api/feedbackoverview/event/${eventId}`)
+      .then(response => {
+          if (!response.ok) {
+              throw new Error('Failed to fetch feedback URL');
+          }
+          return response.json();
+      })
+      .then(data => {
+          const linkInput = document.getElementById('linkInput');
+          linkInput.value = data.feedback_url;
+          
+          const title = document.getElementById('title');
+          const btitle = document.getElementById('btitle');
+          title.textContent = data.event_title;
+          btitle.textContent = data.event_title;
+      })
+      .catch(error => console.error('Error fetching feedback URL:', error));
+  
+      fetch(`api/feedbackoverview/feedbackData/${eventId}`)
+      .then(response => {
+          if (!response.ok) {
+              throw new Error('Failed to fetch feedback data');
+          }
+          return response.json();
+      })
+      .then(feedbackData => {
+          averageFeedbackElement.textContent = ` ${feedbackData.averageRating}`;
+          averageStudentInteractiveness.textContent = `${feedbackData.averageInteractivePercentage}`
+  
+          const feedbackCounts = Object.values(feedbackData.feedbackData);
+  
+          new Chart(feedbackChartCanvas, {
+      type: 'pie',
+      data: {
+          labels: Object.keys(feedbackData.feedbackData),
+          datasets: [{
+              label: 'Feedback Counts',
+              data: feedbackCounts,
+              backgroundColor: [
+                  'rgba(75, 192, 192, 0.5)',
+                  'rgba(255, 206, 86, 0.5)',
+                  'rgba(54, 162, 235, 0.5)',
+                  'rgba(255, 99, 132, 0.5)',
+                  'rgba(153, 102, 255, 0.5)',
+              ],
+              borderColor: [
+                  'rgba(75, 192, 192, 1)',
+                  'rgba(255, 206, 86, 1)',
+                  'rgba(54, 162, 235, 1)',
+                  'rgba(255, 99, 132, 1)',
+                  'rgba(153, 102, 255, 1)',
+              ],
+              barPercentage: 0.8,
+              minBarLength: 2,
+              borderWidth: 1,
+              borderWidth: 1,
+          borderRadius: 5,
+          barThickness: 50,
+          borderSkipped: false
+             // Add border radius to the bars
+          }]
+      },
+      options: {
+          responsive: true,
+          maintainAspectRatio: false,
+           plugins: {
+              legend: {
+                  display: true,
+                  position: 'right',
+                  labels: {
+                      color: 'rgba(0,0,0,0.7)',
+                      padding: 15,
+                      usePointStyle: true,
+                      pointStyle: 'rectRounded'
+                  }
+              }
+          }
+      }
+  });
+        const fetchEventReport = () => {
+              if (isFetching) return;
+              isFetching = true;
+              fetch(`api/feedbackoverview/eventReport/${eventId}?page=${page}&limit=${limit}`)
+                  .then(response => {
+                      if (!response.ok) {
+                          throw new Error('Failed to fetch event report');
+                      }
+                      return response.json();
+                  })
+                  .then(eventReport => {
+                      studentCountElement.textContent = `Total Students: ${eventReport.student_count}`;
+                      eventReport.students.forEach(student => {
+                          const row = document.createElement('tr');
+                          row.innerHTML = `
+                              <td>${student.registration_number}</td>
+                              <td>${student.feedback}</td>
+                              <td>${student.interactive}</td>
+                              <td>${student.learn_today}</td>
+                              <td>${student.comments}</td>
+                          `;
+                          studentDetailsTable.appendChild(row);
+                      });
+                      page++;
+                      isFetching = false;
+                  })
+                  .catch(error => {
+                      console.error('Error fetching event report:', error);
+                      studentCountElement.textContent = 'Error fetching event report';
+                      isFetching = false;
+                  });
+          };
+  
+          fetchEventReport();
+  
+          window.addEventListener('scroll', () => {
+              if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 && !isFetching) {
+                  fetchEventReport();
+              }
+          });
+      })
+      .catch(error => {
+          console.error('Error fetching feedback data:', error);
+          feedbackChartCanvas.innerHTML = '<p>Error fetching feedback data</p>';
+      });
+  });
+  </script>
+ <!-----------User Details Fetching---------------------->
+ <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // Function to get the value of a cookie by name
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(";").shift();
+    }
+
+    // Get the JWT token from the cookie
+    const token = getCookie("userAdminToken");
+
+    if (token) {
+      // Decode the JWT token
+      const decoded = jwt_decode(token);
+
+      // Display the username and role
+      document.querySelector(".userN").textContent = decoded.email;
+      document.querySelector(".userR").textContent = decoded.role;
+    } else {
+      // Handle the case where the token is not found
+      document.querySelector(".userN").textContent = "No user logged in";
+      document.querySelector(".userR").textContent = "";
+    }
+  });
+</script>
+<!---------Logout module----------->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const logoutButton = document.getElementById("logoutButton");
+    const logoutModal = document.getElementById("logoutModal");
+    const modalContent = logoutModal.querySelector(".modal-content");
+    const confirmLogoutButton =
+      modalContent.querySelector("#confirmLogout");
+    const cancelLogoutButton = modalContent.querySelector("#cancelLogout");
+
+    logoutButton.addEventListener("click", function (event) {
+      event.preventDefault(); // Prevent the default behavior of the button
+
+      // Show the modal
+      logoutModal.style.display = "block";
+
+      // Add event listeners to the modal buttons
+      confirmLogoutButton.addEventListener("click", function () {
+        // If user confirms, navigate to /logout
+        window.location.href = "/logout";
+        logoutModal.style.display = "none"; // Hide the modal
+      });
+
+      cancelLogoutButton.addEventListener("click", function () {
+        // If user cancels, hide the modal
+        logoutModal.style.display = "none";
+      });
+
+      // Add event listener to the close span
+      closeSpan.addEventListener("click", function () {
+        logoutModal.style.display = "none"; // Hide the modal
+      });
+
+      // Add event listener to the modal itself to close when clicked outside
+      window.addEventListener("click", function (event) {
+        if (event.target === logoutModal) {
+          logoutModal.style.display = "none"; // Hide the modal
+        }
+      });
+    });
+  });
+</script>
+      </body>
+      </html>
+      

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="sidebarmobile.css">
+    <title>Mobile Sidebar</title>
+</head>
+<body>
+
+    <button class="hamburger-menu" onclick="toggleSidebar()">&#9776;</button>
+
+    <aside class="sidebar-mobile" id="mobileSidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <img src="img/taptapmobile.svg" alt="TaPTaP" />
+                <span class="taptap-heading">TaPTaP</span>
+            </div>
+            <button class="close-sidebar" onclick="toggleSidebar()">
+                &#10005;
+            </button>
+        </div>
+
+        <nav>
+            <ul>
+                <li>
+                    <img src="img/dashmobile.svg" alt="Dashboard" class="icon" />
+                    <a href="myDashboard">Dashboard</a>
+                </li>
+                <li>
+                    <img src="img/empmobile.svg" alt="Employability" class="icon" />
+                    <a href="employabilityReport">Employability</a>
+                </li>
+                <li>
+                    <img src="img/assessmentmobile.svg" alt="Assessments" class="icon" />
+                    <a href="https://admin.hackathon.blackbucks.me">Assessments</a>
+                </li>
+                <li>
+                    <img src="img/jobsmobile.svg" alt="Jobs" class="icon" />
+                    <a href="jobsDashboard">Jobs</a>
+                </li>
+                <li>
+                    <img src="img/coursemobile.svg" alt="Course" class="icon" />
+                    <a href="https://admin.hackathon.blackbucks.me/createAndManageCourse/">Course</a>
+                </li>
+                <li>
+                    <img src="img/lessonplanmobile.svg" alt="Lesson Plan" class="icon" />
+                    <a href="https://admin.hackathon.blackbucks.me/lessonPlan/">Lesson Plan</a>
+                </li>
+                <li>
+                    <img src="img/trainingmobile.svg" alt="Trainings" class="icon" />
+                    <a href="trainingsDashboard">Trainings</a>
+                </li>
+                <li>
+                    <img src="img/internshipsmobile.svg" alt="Internships" class="icon" />
+                    <a href="internshipsDashboard">Internships</a>
+                </li>
+                <li>
+                    <img src="img/vplmobile.svg" alt="VPL" class="icon" />
+                    <a href="https://admin.hackathon.blackbucks.me/createAndManageLabTest/">VPL</a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="footer">
+            <img src="img/LOGOUT.svg" alt="Logo" class="logo-image" />
+        </div>
+    </aside>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('mobileSidebar');
+            sidebar.classList.toggle('open');
+        }
+    </script>
+
+</body>
+</html>

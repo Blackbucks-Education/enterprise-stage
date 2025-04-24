@@ -1,0 +1,34 @@
+.tableContainer {
+    padding: 20px;
+}
+
+.performanceTable {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px; /* Reduced font size */
+}
+
+.performanceTable th, 
+.performanceTable td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.performanceTable th {
+    background-color: #463466;
+    color: white;
+}
+
+.showMoreBtn {
+    background: none;
+    border: none;
+    color: #0070f3;
+    cursor: pointer;
+    font-size: 12px; /* Smaller font for the button */
+    margin-left: 10px;
+}
+
+.showMoreBtn:hover {
+    text-decoration: underline;
+}

@@ -1,0 +1,154 @@
+/* StudentTable.css */
+
+.table-container {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  border-radius: 8px;
+  background-color: rgba(246, 246, 246, 1);
+  padding: 20px;
+  overflow-x: auto;
+  border-width: 1px;
+  scrollbar-width: none;
+}
+
+.table{
+  border-width: 1px;
+  border-radius: 10px;
+  overflow: hidden;
+  width: 100%;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  overflow-x: auto;
+  background-color: white;
+  scrollbar-width: none;
+}
+
+th,
+td {
+  padding: 12px 16px;
+  font-size: 14px;
+}
+
+td{
+  text-align: center;
+}
+
+th {
+  background-color: #ffffff;
+  color: #abaaaa;
+  border-bottom: 1px solid #ddd;
+  font-weight: normal;
+
+}
+
+tr:nth-child(even) {
+  background-color: #faf9fc;
+ 
+}
+
+tr:hover {
+  background-color: #e9f8fc;
+}
+
+.avatar {
+  font-weight: 500;
+  text-align: center;
+  background-color: #e0e0f7;
+  color: #000;
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 35px;
+  height: 35px;
+  margin: 10px;
+}
+.name,.email{
+  text-align: start;
+}
+.badge {
+  display: inline-block; /* Ensures consistent alignment */
+  width: 60px; /* Set the same width for all badges */
+  text-align: center; /* Centers text within the badge */
+  padding: 3px 0; /* Adjust vertical padding */
+  border-radius: 30px; /* For rounded corners */
+  color: black; /* Text color */
+  font-size: 10px; /* Font size */
+}
+.badge.A\+\+ {
+ color: #7b00ff;
+ background-color: #f3f2fa;
+ border: 1px solid #6200ff;
+}
+
+.badge.A\+ {
+  color: #7e3e6c;
+  background-color: #f7f2f7;
+  border: 1px solid #785973;
+ }
+
+
+.badge.A {
+  color: #28a745;
+  background-color: #e9f8ed;
+  border: 1px solid #28a745;
+}
+
+.badge.B {
+ color: #e1aa04;
+ background-color: #fefcf5;
+ border: 1px solid #ffc107;
+}
+
+.badge.C {
+  color: #dc3545;
+  background-color: #ffe7e9;
+  border: 1px solid #dc3545;
+}
+
+.badge.F {
+  color: #76151e;
+  background-color: #ffe7e9;
+  border: 1px solid #6e131c;
+}
+
+.pagination {
+  display: flex;
+  justify-content:end;
+  align-items: center;
+  margin-top: 20px;
+  overflow-x: scroll;
+}
+
+.pagination button {
+  margin: 0 5px;
+  padding: 8px 12px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.pagination button.active {
+  background-color: #1b1766;
+  border-radius: 4px;
+  color: #fff;
+  font-weight: bold;
+}
+
+.pagination button:disabled {
+  cursor: not-allowed;
+  background-color: #e4e4e4;
+}
+
+.pagination .ellipsis {
+  padding: 8px 12px;
+  cursor: default;
+  background-color: #fff;
+  border: none;
+}

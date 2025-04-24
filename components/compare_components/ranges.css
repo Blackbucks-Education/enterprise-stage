@@ -1,0 +1,162 @@
+.ranges-graph-container {
+  padding: 20px;
+}
+
+.graph-controls-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.filter-buttons-container {
+  display: flex;
+  gap: 10px; /* Space between buttons */
+}
+
+.filter-button{
+  color: rgb(121, 98, 189);
+  border-color: rgb(121, 98, 189);
+}
+
+.filter-button.active {
+  background-color: rgb(121, 98, 189);
+  color: white;
+}
+
+.filter-button:hover {
+  background-color: rgb(121, 98, 189,0.5);
+  color: white;
+}
+
+.customize-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.range-input-container {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  align-items: center;
+}
+
+.range-input {
+  width: 80px;
+  padding: 5px; /* Add padding for spacing inside the input */
+  border: 1px solid #ccc; /* Border around input */
+  border-radius: 5px; /* Rounded corners */
+  outline: none; /* Remove default outline */
+  transition: border-color 0.3s ease; /* Smooth border color change on focus */
+}
+
+.range-input:focus {
+  border-color: rgb(121, 98, 189); /* Border color on focus */
+}
+
+.remove-range-button {
+  background-color: transparent; /* No background color */
+  color: #d32f2f; /* Red color for the - symbol */
+  border: 2px solid #d32f2f; /* Red border color */
+  border-radius: 50%;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  padding: 0;
+  margin-left: 10px;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.remove-range-button:hover {
+  background-color: #f5f5f5; /* Light grey background on hover */
+}
+
+
+.customize-popup {
+  display: none;
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  z-index: 9999;
+}
+
+.customize-popup.show {
+  display: block;
+}
+
+/* Your existing CSS styles */
+
+.add-range-button {
+  color: rgb(121, 98, 189);
+  margin-left: 5px;
+  border: 2px solid rgb(121, 98, 189); /* Circle border color */
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  cursor: pointer;
+  background-color: white;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  margin-bottom: 10px;
+}
+
+.add-range-button:hover {
+  background-color: rgb(121, 98, 189, 0.1); /* Light background on hover */
+}
+
+/* Other existing CSS styles */
+
+
+.popup-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.save-ranges-button {
+  background-color: rgb(121, 98, 189);
+}
+
+.cancel-ranges-button {
+  color: #ff5c5c;
+}
+
+.bar-chart-container {
+  height: 300px;
+  margin-top: 20px;
+}
+
+.range-customize-button {
+ background-color: white;
+  color: rgb(121, 98, 189);
+  border-color: rgb(121, 98, 189);
+  font-weight: bold;
+  text-transform: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.range-customize-button:hover {
+  background-color: rgb(121, 98, 189,0.5);
+  color: white;
+}
+
+.range-customize-button:active {
+  background-color: rgb(121, 98, 189);
+  color: white;
+}
+
+

@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>College</title>
+  <link rel="stylesheet" href="css/nav_log.css" />
+  <link rel="shortcut icon" href="img/sidebar logo.png" type="image/x-icon">
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastify-js/1.12.0/toastify.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastify-js/1.12.0/toastify.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
+
+</head>
+<style>
+
+
+.main-container{
+  padding: 40px;
+}
+
+.toastify {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+h2 {
+    margin-top: 0;
+    font-size: 24px;
+    color: #333;
+}
+.search-container {
+    position: relative;
+    width: 100%;
+}
+
+.dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none;
+}
+
+.dropdown-item {
+    padding: 8px;
+    cursor: pointer;
+}
+
+.dropdown-item:hover {
+    background-color: #f1f1f1;
+}
+.gallery-container {
+    margin-top: 20px;
+}
+
+.gallery-preview , .icon-preview, .banner-preview{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.gallery-preview div , .icon-preview div{
+    position: relative;
+    max-width: 100px;
+    max-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+}
+
+.banner-preview div{
+    position: relative;
+    max-width: 90%;
+    max-height: 210px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+}
+
+.gallery-preview img, .icon-preview img{
+    max-width: 90px;
+    max-height: 90px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.banner-preview img {
+    max-width: 1200px;
+    max-height: 210px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+}
+
+.delete-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color:black !important;
+    border: none;
+    cursor: pointer;
+    border-radius: 50% !important;
+    font-size: 10px;
+    padding: 5px !important;
+    color: white;
+}
+
+#imageNamesInput {
+    margin-bottom: 10px;
+    font-size: 12px;
+}
+label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="file"],
+input[type="number"],
+textarea,
+select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    outline: none;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* button {
+  background-color: #7962BD ;
+    color: #fff;
+    border: none;
+
+    cursor: pointer;
+    transition: background-color 0.3s;
+} */
+
+
+/* button:hover {
+    background-color: #794ea4;
+} */
+
+.form-step {
+    display: none;
+}
+
+.form-step-active {
+    display: block;
+}
+
+#coursesContainer .course {
+    margin-bottom: 40px;
+    background-color: #f0ebff;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+button.btn-prev,
+button.btn-next {
+    margin-right: 10px;
+}
+
+.btn-prev{
+  background-color: #88EB4C !important;
+  color: black !important;
+}
+
+.btn-next {
+  background-color: #7962BD !important;
+    color: #fff;
+    border: none;
+    padding: 8px 22px !important;
+    border-radius: 30px !important;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+
+.btn-next:hover {
+    background-color: #794ea4;
+}
+
+
+</style>
+<body>
+    <div class="supercss">
+    <div class="sidebar">
+        <a class="logo" style="text-align: center; align-items: center; padding: 5px">
+          <img src="img/sidebar logo.png" alt="Logo" style="width: 58px; max-width: 100%; height: 90px" />
+        </a>
+        <a href="myDashboard" style="background-color: transparent">
+          <div class="menu-item active">
+            <img src="img/dash_white.png" alt="dash" style="max-width: 22px; height: 22px" />
+            <span style="color: white">Dashboard</span>
+          </div>
+        </a>
+        <a href="employabilityReport" class="menu-item">
+          <img src="img/emp.png" alt="employability" style="max-width: 18px; height: 20px" /><span>Employability</span>
+        </a>
+        <a href="https://admin.hackathon.blackbucks.me" class="menu-item">
+          <img alt="Assessment icon" src="img/assessment.png" style="max-width: 19px; height: 19.5px" />
+          <span>Assessments</span></a>
+  
+        <a href="jobsDashboard" class="menu-item">
+          <img src="img/jobs.png" alt="jobs" style="max-width: 20px; height: 21px" /><span>Jobs</span>
+        </a>
+        <a href="https://admin.hackathon.blackbucks.me/createAndManageCourse/" class="menu-item">
+          <img alt="course icon" src="img/course.png" style="max-width: 19px; height: 20px" />
+          <span>Course</span></a>
+        <a href="https://admin.hackathon.blackbucks.me/lessonPlan/" class="menu-item">
+          <img alt="lessonplan icon" src="img/lessonplan.png" style="max-width: 23px; height: 18px" />
+          <span>Lesson Plan</span></a>
+  
+        <a href="trainingsDashboard" class="menu-item">
+          <img src="img/trainings.png" alt="trainings" style="max-width: 27px; height: 21px" /><span>Trainings</span>
+        </a>
+        <a href="internshipsDashboard" class="menu-item">
+          <img src="img/internship_whiteicon.png" alt="manage"
+            style="width: 20px; height: auto" /><span>Internships</span>
+        </a>
+        <a href="https://admin.hackathon.blackbucks.me/createAndManageLabTest/" class="menu-item">
+          <img alt="vpl icon" src="img/vpl.png" style="max-width: 19px; height: 17px" />
+          <span>VPL</span></a>
+      </div>
+
+      <div class="css">
+        <div class="css0">
+          <div id="navbar-container"></div>
+        </div>
+        <div class="css1">
+        <div class="main-container">
+            <div class="container">
+                <form id="collegeForm">
+                    <!-- Step 1 -->
+                    <div class="form-step form-step-active">
+                        <h2>Step 1: College Information</h2>
+                        <div class="search-container">
+                        <label for="collegeSearch">Name:</label>
+                        <input type="text" id="collegeSearch" name="collegeSearch" placeholder="College Name" onkeyup="filterColleges()">
+                        <input type="text" id="college_id" name="college_id" readonly placeholder="Selected college id will appear here" hidden>
+                        <div class="dropdown" id="collegeDropdown">
+                            <!-- Dropdown options will be dynamically inserted here -->
+                        </div>
+                    </div>
+
+                    <div class="gallery-container">
+                        <label for="gallery">Upload Gallery Images (up to 5):</label>
+                        <input type="file" id="gallery" name="gallery" accept="image/*" multiple onchange="previewGallery()">
+                        <input type="text" id="imageNamesInput" readonly placeholder="Selected image names will appear here">
+                        <div id="galleryPreview" class="gallery-preview">
+                            <!-- Image previews will be displayed here -->
+                        </div>
+
+                    
+                    </div>
+                
+
+                    <div class="icon-container">
+                    <label for="icon">Logo:</label>
+                    <input type="file" id="icon" name="icon" accept="image/*" onchange="previewIcon()">
+                    <div id="iconPreview" class="icon-preview">
+                        <!-- Icon image preview will be displayed here -->
+                    </div>
+                </div>
+                
+                <div class="banner-container">
+                    <label for="banner">Banner:</label>
+                    <input type="file" id="banner" name="banner" accept="image/*" onchange="previewBanner()">
+                    <div id="bannerPreview" class="banner-preview">
+                        <!-- Icon image preview will be displayed here -->
+                    </div>
+                </div>
+
+                        <label for="location">Location:</label>
+                        <input type="text" id="location" name="location">
+
+                        <label for="type">Type of College:</label>
+                        <select id="type" name="type">
+                        
+                        </select>
+                        
+
+                        <label for="description">Description about College:</label>
+                        <textarea id="description" name="description"></textarea>
+
+                        <button type="button" class="btn-next" id="college-next">Next</button>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="form-step">
+                        <h2>Step 2: Courses</h2>
+                        <div id="coursesContainer">
+                            <div class="course">
+                                <label for="courseName">Course Name:</label>
+                                <input type="text" id="courseName" name="courseName[]">
+
+                                <label for="courseDuration">Duration:</label>
+                                <input type="text" id="courseDuration" name="courseDuration[]">
+
+                                <label for="courseDescription">Description:</label>
+                                <input type="text" id="courseDescription" name="courseDescription[]">
+
+                                <label for="seatsOffered">Seats Offered:</label>
+                                <input type="number" id="seatsOffered" name="seatsOffered[]">
+
+                                <label for="medianSalary">Median Salary:</label>
+                                <select id="medianSalary" name="medianSalary[]" onchange="toggleMedianSalaryDescription(this)">
+                                    <option value="no">No</option>
+                                    <option value="yes">Yes</option>
+                                </select>
+                                <input type="text" class="medianSalaryDescription" name="medianSalaryDescription[]" placeholder="Enter description" style="display: none;">
+                            </div>
+                        </div>
+                        <button type="button" onclick="addCourse()">Add Another Course</button>
+                        <button type="button" class="btn-prev">Previous</button>
+                        <button type="button" class="btn-next">Next</button>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="form-step">
+                        <h2>Step 3: Infrastructure</h2>
+                        <label for="nirfDescription">Description for NIRF Ranking:</label>
+                        <textarea id="nirfDescription" name="nirfDescription"></textarea>
+
+                        <h3>Infrastructure Details:</h3>
+                        <label for="library">Library:</label>
+                        <select id="library" name="library" onchange="toggleInfrastructureDescription(this, 'libraryDescription')">
+                            <option value="no">No</option>
+                            <option value="yes">Yes</option>
+                        </select>
+                        <textarea id="libraryDescription" name="libraryDescription" placeholder="Enter description (up to 100 words)" style="display: none;"></textarea>
+
+                        <label for="hostel">Hostel:</label>
+                        <select id="hostel" name="hostel" onchange="toggleInfrastructureDescription(this, 'hostelDescription')">
+                            <option value="no">No</option>
+                            <option value="yes">Yes</option>
+                        </select>
+                        <textarea id="hostelDescription" name="hostelDescription" placeholder="Enter description (up to 100 words)" style="display: none;"></textarea>
+
+                        <label for="sportsComplex">Sports Complex:</label>
+                        <select id="sportsComplex" name="sportsComplex" onchange="toggleInfrastructureDescription(this, 'sportsComplexDescription')">
+                            <option value="no">No</option>
+                            <option value="yes">Yes</option>
+                        </select>
+                        <textarea id="sportsComplexDescription" name="sportsComplexDescription" placeholder="Enter description (up to 100 words)" style="display: none;"></textarea>
+
+                        <label for="labs">Labs:</label>
+                        <select id="labs" name="labs" onchange="toggleInfrastructureDescription(this, 'labsDescription')">
+                            <option value="no">No</option>
+                            <option value="yes">Yes</option>
+                        </select>
+                        <textarea id="labsDescription" name="labsDescription" placeholder="Enter description (up to 100 words)" style="display: none;"></textarea>
+
+                        <label for="cafeteria">Cafeteria:</label>
+                        <select id="cafeteria" name="cafeteria">
+                            <option value="no">No</option>
+                            <option value="yes">Yes</option>
+                        </select>
+
+                        <label for="gym">Gym:</label>
+                        <select id="gym" name="gym">
+                            <option value="no">No</option>
+                            <option value="yes">Yes</option>
+                        </select>
+
+                        <label for="medicalFacilities">Medical Facilities:</label>
+                        <select id="medicalFacilities" name="medicalFacilities">
+                            <option value="no">No</option>
+                            <option value="yes">Yes</option>
+                        </select>
+
+                        <label for="wifi">Wifi:</label>
+                        <select id="wifi" name="wifi">
+                            <option value="no">No</option>
+                            <option value="yes">Yes</option>
+                        </select>
+
+                        <label for="bus">Bus:</label>
+                        <select id="bus" name="bus">
+                            <option value="no">No</option>
+                            <option value="yes">Yes</option>
+                        </select>
+
+                        <button type="button" class="btn-prev">Previous</button>
+                        <button type="submit">Submit</button>
+            
+                    </div>
+                </form>
+            </div>
+        </div>
+</div>
+</div>
+</div>
+
+
+<script>
+let collegeId;
+
+
+//Access college id
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
+function decodeJWT(token) {
+    const payload = token.split('.')[1]; // Get the payload part of the JWT
+    const decodedPayload = atob(payload); // Decode Base64 payload
+    return JSON.parse(decodedPayload); // Parse it as JSON
+}
+
+
+const token = getCookie("userAdminToken");
+if (token) {
+    const decodedData = decodeJWT(token);
+    collegeId = decodedData.college;
+} else {
+    console.log("No token found in cookies");
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  fetchColleges();
+});
+
+async function fetchColleges() {
+  try {
+      const response = await fetch('/api/createCollege/colleges');
+      if (!response.ok) {
+          throw new Error('Network response was not ok');
+      }
+      const colleges = await response.json();
+      populateDropdown(colleges);
+  } catch (error) {
+      console.error('Error fetching colleges:', error);
+  }
+}
+
+function populateDropdown(colleges) {
+  const collegeDropdown = document.getElementById('collegeDropdown');
+  collegeDropdown.innerHTML = ''; // Clear existing options
+
+  colleges.forEach(college => {
+      const div = document.createElement('div');
+      div.className = 'dropdown-item';
+      div.textContent = college.name;
+      div.setAttribute('data-id', college.id);
+      div.onclick = () => selectCollege(college);
+      collegeDropdown.appendChild(div);
+  });
+}
+
+function filterColleges() {
+  const input = document.getElementById('collegeSearch');
+  const filter = input.value.toLowerCase();
+  const dropdown = document.getElementById('collegeDropdown');
+  const items = dropdown.getElementsByClassName('dropdown-item');
+
+  let hasResults = false;
+
+  for (let i = 0; i < items.length; i++) {
+      const txtValue = items[i].textContent || items[i].innerText;
+      if (txtValue.toLowerCase().indexOf(filter) > -1) {
+          items[i].style.display = '';
+          hasResults = true;
+      } else {
+          items[i].style.display = 'none';
+      }
+  }
+
+  dropdown.style.display = hasResults ? 'block' : 'none';
+}
+
+function selectCollege(college) {
+  const input = document.getElementById('collegeSearch');
+  input.value = college.collegeName;
+  const input1 = document.getElementById('college_id');
+  input1.value = college.collegeID;
+  console.log("selected college id:", input1.value);
+  document.getElementById('collegeDropdown').style.display = 'none';
+}
+
+  
+document.addEventListener('DOMContentLoaded', function() {
+    const nextButtons = document.querySelectorAll('.btn-next');
+    const prevButtons = document.querySelectorAll('.btn-prev');
+    const formSteps = document.querySelectorAll('.form-step');
+    const collegeForm = document.getElementById('collegeForm'); // Ensure this is correctly referenced
+    let currentStep = 0;
+    
+  
+    nextButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            if (currentStep === 0) {
+                // Validate college selection on the first step
+                const input = document.getElementById('collegeSearch');
+                const enteredValue = input.value.toLowerCase();
+                const dropdown = document.getElementById('collegeDropdown');
+                const items = dropdown.getElementsByClassName('dropdown-item');
+                let isValid = false;
+
+                for (let i = 0; i < items.length; i++) {
+                    if (items[i].textContent.toLowerCase() === enteredValue) {
+                        isValid = true;
+                        break;
+                    }
+                }
+
+                if (!isValid) {
+                    input.value = ''; // Clear the input
+                    document.getElementById('college_id').value = ''; // Clear the college id
+                    Toastify({
+                    text: 'Please select college name from dropdown',
+                    backgroundColor: 'red',
+                    className: 'error',
+                    duration: 3000, // Duration in milliseconds
+                }).showToast();
+        
+                    return;
+                }
+            }
+
+            // Proceed to the next step if valid or not the first step
+            if (currentStep < formSteps.length - 1) {
+                formSteps[currentStep].classList.remove('form-step-active');
+                currentStep++;
+                formSteps[currentStep].classList.add('form-step-active');
+            }
+        });
+    });
+
+
+    prevButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            if (currentStep > 0) {
+                formSteps[currentStep].classList.remove('form-step-active');
+                currentStep--;
+                formSteps[currentStep].classList.add('form-step-active');
+            }
+        });
+    });
+
+
+   // Handle Form Submission
+   collegeForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(collegeForm);
+
+        try {
+            const response = await fetch('/api/createCollege/createcollegeform', {
+                method: 'POST',
+                body: formData,
+            });
+
+             if (response.ok) {
+            Toastify({
+                text: 'College created successfully!',
+                backgroundColor: 'linear-gradient(to right, #00b09b, #96c93d)',
+                className: 'toastify info',
+                duration: 3000, // Duration in milliseconds
+            }).showToast();
+
+            // Add a delay before redirecting to allow the toast to be displayed
+            setTimeout(() => {
+                window.location.href = '/collegeDashboard'; // Redirect to collegeDashboard on success
+            }, 3000); // Match the delay with the toast duration
+        } else {
+                const errorData = await response.json();
+                Toastify({
+                        text: 'Error creating college: ' + errorData.message,
+                        backgroundColor: 'linear-gradient(to right, #ff5f6d, #ffc371)',
+                        className: 'toastify error',
+                        duration: 3000, // Duration in milliseconds
+                    }).showToast();
+            }
+        } catch (error) {
+          Toastify({
+                    text: 'An error occurred while creating the college: ' + error.message,
+                    backgroundColor: 'linear-gradient(to right, #ff5f6d, #ffc371)',
+                    className: 'toastify error',
+                    duration: 3000, // Duration in milliseconds
+                }).showToast();
+        }
+    });
+});
+
+
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+      // Fetch college types from the API
+      const response = await fetch('/api/update_college/fetchCollegeTypes');
+      const collegeTypes = await response.json();
+
+      // Get the <select> element
+      const selectElement = document.getElementById('type');
+
+      // Populate the <select> with options
+      collegeTypes.forEach(type => {
+        const option = document.createElement('option');
+        option.value = type.id;
+        option.textContent = type.college_type;
+        selectElement.appendChild(option);
+      });
+    } catch (error) {
+      console.error('Error fetching college types:', error);
+    }
+  });
+
+
+function addCourse() {
+    const coursesContainer = document.getElementById('coursesContainer');
+    const courseTemplate = `
+        <div class="course">
+            <label for="courseName">Course Name:</label>
+            <input type="text" id="courseName" name="courseName[]">
+            <label for="courseDuration">Duration:</label>
+            <input type="text" id="courseDuration" name="courseDuration[]">
+            <label for="courseDescription">Description:</label>
+            <input type="text" id="courseDescription" name="courseDescription[]">
+            <label for="seatsOffered">Seats Offered:</label>
+            <input type="number" id="seatsOffered" name="seatsOffered[]">
+            <label for="medianSalary">Median Salary:</label>
+            <select id="medianSalary" name="medianSalary[]" onchange="toggleMedianSalaryDescription(this)">
+                <option value="no">No</option>
+                <option value="yes">Yes</option>
+            </select>
+            <input type="text" class="medianSalaryDescription" name="medianSalaryDescription[]" placeholder="Enter description" style="display: none;">
+        </div>
+    `;
+    coursesContainer.insertAdjacentHTML('beforeend', courseTemplate);
+}
+
+function toggleMedianSalaryDescription(selectElement) {
+    const descriptionInput = selectElement.nextElementSibling;
+    if (selectElement.value === 'yes') {
+        descriptionInput.style.display = 'block';
+    } else {
+        descriptionInput.style.display = 'none';
+    }
+}
+
+function toggleInfrastructureDescription(selectElement, descriptionId) {
+    const descriptionElement = document.getElementById(descriptionId);
+    if (selectElement.value === 'yes') {
+        descriptionElement.style.display = 'block';
+    } else {
+        descriptionElement.style.display = 'none';
+    }
+}
+
+let selectedFiles = [];
+
+function previewGallery() {
+    const galleryInput = document.getElementById('gallery');
+    const files = Array.from(galleryInput.files);
+
+    if (files.length + selectedFiles.length > 5) {
+        alert('You can only upload up to 5 images.');
+        galleryInput.value = ''; // Clear the file input
+        return;
+    }
+
+    files.forEach(file => selectedFiles.push(file));
+
+    updateGalleryPreview();
+    updateImageNamesInput();
+}
+
+function updateGalleryPreview() {
+    const galleryPreview = document.getElementById('galleryPreview');
+    galleryPreview.innerHTML = ''; // Clear existing previews
+
+    selectedFiles.forEach((file, index) => {
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            const imgContainer = document.createElement('div');
+
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            imgContainer.appendChild(img);
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'delete-btn';
+            deleteBtn.textContent = 'x';
+            deleteBtn.onclick = () => removeImage(index);
+            imgContainer.appendChild(deleteBtn);
+
+            galleryPreview.appendChild(imgContainer);
+        }
+
+        reader.readAsDataURL(file);
+    });
+}
+
+function updateImageNamesInput() {
+    const imageNamesInput = document.getElementById('imageNamesInput');
+    const imageNames = selectedFiles.map(file => file.name).join(', ');
+    imageNamesInput.value = imageNames;
+}
+
+function removeImage(index) {
+    selectedFiles.splice(index, 1);
+
+    // Update the gallery preview and image names
+    updateGalleryPreview();
+    updateImageNamesInput();
+}
+
+function previewIcon() {
+    const iconInput = document.getElementById('icon');
+    const iconPreview = document.getElementById('iconPreview');
+    const file = iconInput.files[0];
+
+    if (file) {
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            iconPreview.innerHTML = ''; // Clear existing preview
+
+            const imgContainer = document.createElement('div');
+
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            imgContainer.appendChild(img);
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'delete-btn';
+            deleteBtn.textContent = 'x';
+            deleteBtn.onclick = () => removeIcon();
+            imgContainer.appendChild(deleteBtn);
+
+            iconPreview.appendChild(imgContainer);
+        }
+
+        reader.readAsDataURL(file);
+    }
+}
+
+function removeIcon() {
+    const iconInput = document.getElementById('icon');
+    const iconPreview = document.getElementById('iconPreview');
+    
+    iconInput.value = ''; // Clear the file input
+    iconPreview.innerHTML = ''; // Clear the preview
+}
+
+function previewBanner() {
+    const bannerInput = document.getElementById('banner');
+    const bannerPreview = document.getElementById('bannerPreview');
+    const file = bannerInput.files[0];
+
+    if (file) {
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            bannerPreview.innerHTML = ''; // Clear existing preview
+
+            const imgContainer = document.createElement('div');
+
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            imgContainer.appendChild(img);
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'delete-btn';
+            deleteBtn.textContent = 'x';
+            deleteBtn.onclick = () => removeBanner();
+            imgContainer.appendChild(deleteBtn);
+
+            bannerPreview.appendChild(imgContainer);
+        }
+
+        reader.readAsDataURL(file);
+    }
+}
+
+function removeBanner() {
+    const bannerInput = document.getElementById('banner');
+    const bannerPreview = document.getElementById('bannerPreview');
+    
+    bannerInput.value = ''; // Clear the file input
+    bannerPreview.innerHTML = ''; // Clear the preview
+}
+
+
+// function fetchCollegeData() {
+//     fetch('/api/colleges_list/data')
+//       .then(response => response.json())
+//       .then(data => {
+//         // Assuming the API returns a JSON object like { "collegeName": "College A" }
+//         document.getElementById('collegeSearch').value = data.collegeName;
+//       })
+//       .catch(error => console.error('Error fetching college data:', error));
+//   }
+
+//   // Call the function when the page loads or at a specific event
+// window.onload = fetchCollegeData;
+
+</script>
+  <script src="js/college_creation.js"></script>
+  <script src="js/navbar_logout.js"></script>
+
+</body>
+</html>

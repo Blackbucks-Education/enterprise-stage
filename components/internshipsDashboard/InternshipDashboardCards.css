@@ -1,0 +1,36 @@
+/* Shimmer loader styling for the cards */
+.shimmer-loader {
+    width: 100%;
+    padding: 20px; /* Padding around the shimmer effect */
+    background: #f6f7f8; /* Background color for shimmer */
+    border-radius: 5px; /* Rounded corners */
+  }
+  
+  /* Row style for shimmer effect */
+  .shimmer-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px; /* Space between shimmer rows */
+  }
+  
+  /* Individual cell style for shimmer effect */
+  .shimmer-cell {
+    flex: 1;
+    height: 60px; /* Height of shimmer cells (adjust based on card size) */
+    border-radius: 4px; /* Rounded corners */
+    background: linear-gradient(90deg, #f6f7f8 0%, #e0e0e0 50%, #f6f7f8 100%);
+    background-size: 200% 100%; /* For the shimmer animation */
+    animation: shimmer 1.5s infinite; /* Animation for shimmer effect */
+    margin-right: 15px; /* Space between shimmer cells */
+  }
+  
+  /* Keyframes for shimmer animation */
+  @keyframes shimmer {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
+  

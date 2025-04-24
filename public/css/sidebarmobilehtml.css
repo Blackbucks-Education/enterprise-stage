@@ -1,0 +1,108 @@
+.sidebar-mobile {
+    width: 255px;
+    background-color: white;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: -100%;
+    transition: left 0.3s ease;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+    z-index: 50; /* Ensure the sidebar is above the overlay */
+}
+
+.sidebar-mobile.open {
+    left: 0;
+}
+
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    margin-left: 8px;
+    margin-top: 0;
+}
+
+.sidebar-header .logo {
+    display: flex;
+    align-items: center;
+}
+
+.sidebar-header .close-sidebar {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding-right: 20px;
+    padding-bottom: 5px;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin-left: 20px;
+    margin-top: 10px;
+}
+
+nav ul li {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: rgba(37, 37, 37, 0.67);
+    margin-left: 10px;
+    font-size: 14px;
+}
+
+.footer {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo-image {
+    margin-left: 10px;
+}
+
+.taptap-heading {
+    font-size: 14px;
+    font-weight: 500;
+    margin-left: 9px;
+    color: #1A202C;
+}
+
+/* Hamburger Menu Styles */
+.hamburger-menu {
+    display: none; /* Hidden by default */
+    background: none;
+    border: none;
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    z-index: 2000; /* Ensure it's on top */
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .hamburger-menu {
+        display: block;
+    }
+
+    .sidebar {
+        display: none;
+    }
+
+    .sidebar-mobile {
+        left: -100%;
+    }
+
+    .sidebar-mobile.open {
+        left: 0;
+    }
+}

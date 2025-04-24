@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jobs Dashboard</title>
+    <link rel="icon" type="image/x-icon" href="img/sidebar logo.png" />
+    <link rel="stylesheet" href="css/job_dashboard.css"> <!-- Linking to external CSS file -->
+    <link rel="stylesheet" href="css/nav_log.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="js/job_insights.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
+    <link rel="shortcut icon" href="img/sidebar logo.png" type="image/x-icon">
+    <style>
+        #noDataMessage {
+            display: none;
+            border: 1px solid rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            padding: 20px;
+            position: relative;
+            text-align: center;
+            font-size: 14px;
+            color: rgba(0, 0, 0, 0.7);
+        }
+
+        .job-card {
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            padding: 10px;
+            width: 30%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+        }
+
+        .nodata {
+
+            border: 1px solid rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            padding: 10px;
+            position: relative;
+            text-align: center;
+            font-size: 12px;
+            color: rgba(0, 0, 0, 0.7);
+            margin: 10px;
+        }
+
+        .roww {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+
+        .marginr {
+            margin-right: 10px;
+        }
+
+        .grey {
+            color: rgba(0, 0, 0, 0.7);
+        }
+
+        .f14 {
+            font-size: 14px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <script>
+        const defaultJobs =[
+        {
+            "job_post_id": 14,
+            "company_title": "CommerceIQ",
+            "create_at": "2024-03-28",
+            "drive_type": "BB Exclusive",
+            "job_post_title": "Software Development Engineer ",
+            "job_post_logo_url": "https://blackbucks-media.s3.ap-south-1.amazonaws.com/commerceiq_logo.jpg",
+            "description": "\u003Cp\u003E\u003Cstrong\u003ECompany name:&nbsp;\u003C/strong\u003ECommerceIQ\u003C/p\u003E\u003Cp\u003E\u003Cbr\u003E\u003C/p\u003E\u003Cp\u003E\u003Cstrong\u003EWeb:\u003C/strong\u003E&nbsp;\u003Ca href=\"https://commerceiq.ai/\" rel=\"noopener noreferrer\" target=\"_blank\" style=\"color: inherit;\"\u003Ehttps://commerceiq.ai/\u003C/a\u003E\u003C/p\u003E\u003Cp\u003E\u003Cstrong\u003ERole:&nbsp;\u003C/strong\u003ESoftware Development Engineer (Intern)\u003C/p\u003E\u003Cp\u003E\u003Cbr\u003E\u003C/p\u003E\u003Cp\u003E\u003Cstrong\u003EThe Role : \u003C/strong\u003ESoftware Development Engineer\u003C/p\u003E\u003Cp\u003E\u003Cbr\u003E\u003C/p\u003E\u003Cp\u003EAre you ready to power intelligent commerce?\u003C/p\u003E\u003Cp\u003E\u003Cbr\u003E\u003C/p\u003E\u003Cp\u003E\u003Cstrong\u003E@CommerceIQ, you will \u003C/strong\u003E\u003C/p\u003E\u003Cp\u003E\u003Cbr\u003E\u003C/p\u003E\u003Cp\u003E\u003Cstrong\u003EDesignation\u003C/strong\u003E&nbsp;- Intern - Software Engineering\u003C/p\u003E\u003Cp\u003E\u003Cstrong\u003ELocation\u003C/strong\u003E&nbsp;- Bangalore (Onsite)\u003C/p\u003E\u003Cp\u003E\u003Cstrong\u003EDuration\u003C/strong\u003E&nbsp;- Jan 15th - June 15th (6 months)\u003C/p\u003E\u003Cp\u003E\u003Cstrong\u003EBatches applicable\u003C/strong\u003E&nbsp;- 2024 pass outs.\u003C/p\u003E\u003Cp\u003E\u003Cbr\u003E\u003C/p\u003E\u003Cp\u003E\u003Cstrong\u003EKey Result Areas :\u003C/strong\u003E\u003C/p\u003E\u003Cp\u003E\u003Cbr\u003E\u003C/p\u003E\u003Cp\u003E1. You will be responsible for developing, testing, and releasing features within time and with&nbsp;\u003C/p\u003E\u003Cp\u003Ehigh quality that will drive revenue and margin impact to top brands.\u003C/p\u003E\u003Cp\u003E2. Working on building the omni channel retailer media management platform\u003C/p\u003E\u003Cp\u003EExperience : Freshers with atleast one prior internship/ project experience\u003C/p\u003E\u003Cp\u003E\u003Cbr\u003E\u003C/p\u003E\u003Cp\u003E\u003Cstrong\u003ESkillset :\u003C/strong\u003E\u003C/p\u003E\u003Cp\u003E\u003Cbr\u003E\u003C/p\u003E\u003Cp\u003E1. B.tech in Computer Science / Electronics Engineering, Mathematics, Statistics or similar&nbsp;\u003C/p\u003E\u003Cp\u003Edegree from a top-tier institution.\u003C/p\u003E\u003Cp\u003E2. Preferably looking for someone who has at least 3 months of internship/ project experience&nbsp;\u003C/p\u003E\u003Cp\u003Eworking in Java.\u003C/p\u003E\u003Cp\u003E\u003Cbr\u003E\u003C/p\u003E\u003Cp\u003E\u003Cstrong\u003EStipend:\u003C/strong\u003E&nbsp;30000 per month\u003C/p\u003E\u003Cp\u003E\u003Cbr\u003E\u003C/p\u003E\u003Cp\u003E\u003Cstrong\u003ECTC Range:\u003C/strong\u003E&nbsp;6 – 10 LP\u003C/p\u003E",
+            "salary_range_or_not_disclosed": "6.00 LPA - 9.00 LPA",
+            "employment_type": "fullTime",
+            "office_mode": "onsite",
+            "open_drive_link": null,
+            "drive_count": "1"
+        },
+        {
+            "job_post_id": 37,
+            "company_title": "Trimble",
+            "create_at": "2024-03-30",
+            "drive_type": "Open Drive",
+            "job_post_title": "Open Drive - Software Developer",
+            "job_post_logo_url": "https://blackbucks-media.s3.ap-south-1.amazonaws.com/Trimble_Blue_Logo17060031418951711784214839.jpg",
+            "salary_range_or_not_disclosed": "4.00 LPA - 9.00 LPA",
+            "employment_type": "fullTime",
+            "office_mode": "onsite",
+            "open_drive_link": "https://trimblecareers.trimble.com/careers/job/171818586118",
+            "drive_count": "1"
+        },
+        {
+            "job_post_id": 40,
+            "company_title": "Guidewire",
+            "create_at": "2024-03-30",
+            "drive_type": "Open Drive",
+            "job_post_title": "Open Drive - Internship – Consulting",
+            "job_post_logo_url": "https://blackbucks-media.s3.ap-south-1.amazonaws.com/guidewire_software_logo.jpg",
+            "salary_range_or_not_disclosed": "4.00 LPA - 6.00 LPA",
+            "employment_type": "internship",
+            "office_mode": "hybrid",
+            "open_drive_link": "https://jobs.lever.co/guidewire/c48d9459-0bd4-4eb0-a001-1ff722ff27e8?lever-source=Indeed",
+            "drive_count": "1"
+        },
+        {
+            "job_post_id": 42,
+            "company_title": "Deloitte",
+            "create_at": "2024-03-30",
+            "drive_type": "Open Drive",
+            "job_post_title": "Open Drive - Analyst Trainee",
+            "job_post_logo_url": "https://blackbucks-media.s3.ap-south-1.amazonaws.com/deloitte_logo.jpg",
+            "salary_range_or_not_disclosed": "4.00 LPA - 7.00 LPA",
+            "employment_type": "fullTime",
+            "office_mode": "onsite",
+            "open_drive_link": "https://deloitteconsultingnla.hirepro.in/engineeringhiring.html",
+            "drive_count": "1"
+        },
+        {
+            "job_post_id": 67,
+            "company_title": "Cognizant",
+            "create_at": "2024-04-01",
+            "drive_type": "Open Drive",
+            "job_post_title": "Graduate Trainee",
+            "job_post_logo_url": "https://blackbucks-media.s3.ap-south-1.amazonaws.com/images1712388225082-1725092650143.jpg",
+            "salary_range_or_not_disclosed": "2.00 LPA - 3.00 LPA",
+            "employment_type": "fullTime",
+            "office_mode": "onsite",
+            "open_drive_link": "https://tinyurl.com/cognizant-trainee",
+            "drive_count": "1"
+        },
+        {
+            "job_post_id": 70,
+            "company_title": "IBM",
+            "create_at": "2024-04-01",
+            "drive_type": "BB Exclusive",
+            "job_post_title": "Associate System Engineer",
+            "job_post_logo_url": "https://blackbucks-media.s3.ap-south-1.amazonaws.com/ibm_logo.jpg",
+            "salary_range_or_not_disclosed": "4.00 LPA - 5.00 LPA",
+            "employment_type": "fullTime",
+            "office_mode": "onsite",
+            "open_drive_link": null,
+            "drive_count": "1"
+        }
+                ]
+
+        window.userRole = "<%= user.role %>";
+      </script>
+      <script src="js/rolebase.js"></script>
+      
+      
+    <div class="supercss">
+
+        <div class="sidebar">
+            <a class="logo" style="text-align: center;align-items:center;padding:5px">
+                <img src="img/sidebar logo.png" alt="Logo" style="width: 58px; max-width: 70px;height:80px;">
+            </a>
+            <a href="myDashboard" class="menu-item" id="dashboard-link">
+                <img src="img/dash_white.png" alt="dash" style="max-width:22px; height:22px"><span
+                    style="color:white">Dashboard</span>
+            </a>
+            <a href="employabilityReport" class="menu-item">
+                <img src="img/emp.png" alt="dash" style="max-width:18px; height:20px"><span>Employbility</span>
+            </a>
+            <a href="https://admin.hackathon.blackbucks.me" class="menu-item">
+                <img alt="Assessment icon" src="img/assessment.png" style="max-width:19px; height:19.5px">
+                <span>Assessments</span></a>
+
+            <a href="jobsDashboard" class="menu-item" style="background-color: #88EB4C;">
+                <img src="img/jobs_black.png" alt="jobs" style="max-width:20px; height:21px"><span
+                    style="color:black;font-weight:bold">Jobs</span>
+            </a>
+            <a href="https://admin.hackathon.blackbucks.me/createAndManageCourse/" class="menu-item">
+                <img alt="course icon" src="img/course.png" style="max-width:19px; height:20px">
+                <span>Course</span></a>
+            <a href="https://admin.hackathon.blackbucks.me/lessonPlan/" class="menu-item">
+                <img alt="lessonplan icon" src="img/lessonplan.png" style="max-width:23px; height:18px">
+                <span>Lesson Plan</span></a>
+
+            <a href="trainingsDashboard" class="menu-item">
+                <img src="img/trainings.png" alt="trainings" style="max-width:27px; height:21px"><span>Trainings</span>
+            </a>
+            <a href="internshipsDashboard" class="menu-item">
+                <img src="img/internship_whiteicon.png" alt="manage"
+                    style="width: 20px; height: auto" /><span>Internships</span>
+            </a>
+            <a href="https://admin.hackathon.blackbucks.me/createAndManageLabTest/" class="menu-item">
+                <img alt="vpl icon" src="img/vpl.png" style="max-width:19px; height:17px">
+                <span>VPL</span></a>
+
+
+
+
+        </div>
+
+        <div class="css">
+            <div class="css0">
+                <div id="navbar-container"></div>
+            </div>
+            <div class="css1">
+                <div class="main-container">
+                    <div class="heading" style="display: flex;justify-content: space-between">
+                        <div class="roww marginr" style="padding-left: 35px;">
+                            <img src="img/jobsgrey.png" alt="internship icon"
+                                style="width: 14px; height: 14px; margin-right: 5px" />
+                            <p class="grey f14 marginr">
+                                Jobs Dashboard
+                            </p>
+                        </div>
+                        
+                    </div>
+                    <div style="display:flex; float: right;justify-content: end;">
+                        <a href="https://admin.hackathon.blackbucks.me/metLeaderboard/"><button
+                                class="create active"
+                                style="cursor:pointer;">Shortlist Students</button></a>
+                        <a href="https://admin.hackathon.blackbucks.me/createJobPost/"><button class="create"
+                                style="cursor:pointer;">Create Job Post</button></a>
+                        <a href="https://admin.hackathon.blackbucks.me/createAndManageJobPost/"><button
+                                class="create" style="cursor:pointer;">Manage Job
+                                Post</button></a>
+                        <a href="/bbjobs"><button
+                            class="create" style="cursor:pointer;">Jobs Posted By Blackbucks</button></a>
+                    </div>
+                    <!-- <div class="container"> -->
+
+                        <!-- <div class="section1"> -->
+
+                            <div class="bg-container">
+                                <div class="leffHalf">
+                                    <div class="right-frame">
+                                        <div class="section2card section2" >
+                                            <div class="right-frame-card-inner-section">
+                                            <div>
+                                                <strong style="margin:0;padding:0;font-size: 20px;font-weight: bold;"><span
+                                                    id="total-job-posts" style="color: #000000;">0</span></strong>
+                                            </div>
+                                            
+                                            <div>
+                                                <p style="font-size: 14px;margin:0;padding:0">Jobs Posted</p>
+                                            </div>
+    
+                                        </div>
+                                        
+                                        <div class="image-cont icon-cont-1">
+                                            <img src="https://img.icons8.com/?size=100&id=mqFdrKr9ksJK&format=png&color=ffffff" alt="placed students"
+                                                 class="right-frame-icon" style="margin-top: -4px;">
+                                        </div>
+                                        </div>
+    
+                                        <div class="section2card section3">
+                                          
+                                            <div  class="right-frame-card-inner-section">
+                                                <div>
+                                                <strong style="margin:0;padding:0;font-size: 20px;font-weight: bold;"><span
+                                                        id="average-job-applications-per-post"
+                                                        style="color: #000000;">0</span></strong>
+                                            
+                                                    </div>
+                                                    <div>
+                                                <p style="font-size: 14px;margin:0;padding:0">Avg. Applications</p></div>
+                                            </div>
+                                            <div class="image-cont icon-cont-1">
+                                                <img src="https://img.icons8.com/?size=100&id=61986&format=png&color=ffffff" alt="placed students"
+                                                     class="right-frame-icon">
+                                            </div>
+                                        </div>
+    
+                                        <div class="section2card section4" >
+                                            
+                                            <div  class="right-frame-card-inner-section">
+                                                <strong style="margin:0;padding:0;font-size: 20px;font-weight: bold;"><span
+                                                        id="appliedcount" style="color: #000000;">0</span></strong>
+                                            
+                                                <p style="font-size: 14px;margin:0;padding:0">Total Job Applications</p>
+                                            </div>
+                                            <div class="image-cont icon-cont-1">
+                                                <img src="https://img.icons8.com/?size=100&id=62773&format=png&color=ffffff" alt="placed students"
+                                                     class="right-frame-icon">
+                                            </div>
+                                        </div>
+    
+                                        <div class="section2card section5" >
+                                            
+                                            <div  class="right-frame-card-inner-section">
+                                                <strong style="margin:0;padding:0;font-size: 20px;font-weight: bold;"><span
+                                                         style="color: #000000;" id="highestPackage">0</span></strong>
+                                            
+                                                <p style="font-size: 14px;margin:0;padding:0" >Highest Package</p>
+                                            </div>
+                                            <div class="image-cont icon-cont-1">
+                                                <img src="https://img.icons8.com/?size=100&id=bGgLG7_QyQEk&format=png&color=ffffff" alt="placed students"
+                                                     class="right-frame-icon">
+                                            </div>
+                                        </div>
+    
+                                        <div class="section2card section6" >
+                                            
+                                            <div  class="right-frame-card-inner-section">
+                                                <strong style="margin:0;padding:0;font-size: 20px;font-weight: bold;"><span
+                                                         style="color: #000000;" id="averagePackage">0</span></strong>
+                                            
+                                                <p style="font-size: 14px;margin:0;padding:0" >Average Package</p>
+                                            </div>
+                                            <div class="image-cont icon-cont-1">
+                                                <img src="https://img.icons8.com/?size=100&id=BsvN7v_QcY_R&format=png&color=ffffff" alt="placed students"
+                                                     class="right-frame-icon">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- <div style="padding-left: 20px;padding-right: 20px;margin-top: 10px;margin-bottom: 20px;">
+                                        <h3 class="recent-job-post-heading">Recent Job Posts</h3>
+                                        <div class="leftHalf-jobs-container">
+                                        
+                                        </div>
+                                    </div> -->
+                                    
+                                </div>
+                                <!-- <div class="rightHalf">
+                                    <h3>Company job posts</h3>
+                                    <div class="each-company-count" id="each-company-count">
+                                        
+                                    </div>
+                                    
+                                </div> -->
+                            </div>
+
+                            <div style="padding-left: 0px;padding-right: 0px;margin-top: 30px;">
+                                <!-- <button class="create "  style="width: 250px;"> -->
+                                    <!-- <a href="bbjobs">View all jobs listed by blackbucks</a>
+                                </button> -->
+                            <!-- <div id="blackbucks-jobs-container" style="margin-top:10px; ">
+                                <div id="bb-jobs" style="display: none ; flex-wrap: wrap; column-gap: 10px; row-gap:10px;">
+                                </div>
+                            </div></div> -->
+        
+        
+                            <h2 style="margin-top: 20px;padding-left:30px;color: #1B1212;">Jobs Applied by Students</h2>
+        
+                            <!--Multiselect-->
+                            <div class="filters">
+                                <div class="filter-group">
+                                    <div class="label-card" onclick="toggleVisibility('drive-type-filter')">
+                                        <label for="drive-type-filter">Drive Type</label>
+                                        <div class="down-arrow"></div>
+                                    </div>
+        
+                                    <div id="drive-type-filter" class="dropdown-content">
+                                        <input type="text" id="drive-type-search" class="filter-search"
+                                            placeholder="Search Drive Types"><br>
+                                        <div class="clear-all" onclick="clearAllCheckboxes('drive-type-filter')">Clear All</div>
+                                    </div>
+                                </div>
+                                <div class="filter-group">
+                                    <div class="label-card" onclick="toggleVisibility('salary-range-filter')">
+                                        <label for="salary-range-filter">Salary Range</label>
+                                        <div class="down-arrow"></div>
+                                    </div>
+        
+                                    <div id="salary-range-filter" class="dropdown-content">
+                                        <input type="text" id="salary-range-search" class="filter-search"
+                                            placeholder="Search Salary Ranges"><br>
+                                        <div class="clear-all" onclick="clearAllCheckboxes('salary-range-filter')">Clear All
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="filter-group">
+                                    <div class="label-card" onclick="toggleVisibility('employment-type-filter')">
+                                        <label for="employment-type-filter">Employment Type</label>
+                                        <div class="down-arrow"></div>
+                                    </div>
+        
+                                    <div id="employment-type-filter" class="dropdown-content">
+                                        <input type="text" id="employment-type-search" class="filter-search"
+                                            placeholder="Search Employment Types"><br>
+                                        <div class="clear-all" onclick="clearAllCheckboxes('employment-type-filter')">Clear All
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="filter-group">
+                                    <div class="label-card" onclick="toggleVisibility('company-filter')">
+                                        <label for="company-filter">Company</label>
+                                        <div class="down-arrow"></div>
+                                    </div>
+        
+                                    <div id="company-filter" class="dropdown-content">
+                                        <input type="text" id="company-search" class="filter-search"
+                                            placeholder="Search Companies"><br>
+                                        <div class="clear-all" onclick="clearAllCheckboxes('company-filter')">Clear All</div>
+                                    </div>
+                                </div>
+        
+                            </div>
+        
+                            <!-- Job Container -->
+                            <div class="jobcontainer">
+                                <div class="card job-listing" id="job-posts-container" style="height: 95vh;">
+                                    <!-- Dynamically generated job posts will appear here -->
+                
+                                </div>
+                                <div class="card job-description" id="jobDescription" >
+                                    <h2>Welcome!</h2>
+                                    <p>Click on a job to see more details here.</p>
+                                </div>
+                            </div>
+        
+                            <script>
+        
+                                //filtering jobs
+                                document.addEventListener('DOMContentLoaded', () => {
+                                    fetch('/api/filter_jobs/all_data')
+                                        .then(response => response.json())
+                                        .then(data => {
+                                            const driveTypeFilter = document.getElementById('drive-type-filter');
+                                            const salaryRangeFilter = document.getElementById('salary-range-filter');
+                                            const employmentTypeFilter = document.getElementById('employment-type-filter');
+                                            const companyFilter = document.getElementById('company-filter');
+        
+                                            addCheckboxWithLimit(data.driveTypes, driveTypeFilter);
+                                            addCheckboxWithLimit(data.package, salaryRangeFilter);
+                                            addCheckboxWithLimit(data.employmentTypes, employmentTypeFilter);
+                                            addCheckboxWithLimit(data.companies, companyFilter);
+        
+                                            fetchData();
+        
+                                            // Add search functionality
+                                            addSearchFunctionality('drive-type-search', driveTypeFilter);
+                                            addSearchFunctionality('salary-range-search', salaryRangeFilter);
+                                            addSearchFunctionality('employment-type-search', employmentTypeFilter);
+                                            addSearchFunctionality('company-search', companyFilter);
+                                        })
+                                        .catch(error => {
+                                            console.error('Error fetching filter options:', error);
+                                        });
+        
+                                    function fetchData() {
+                                        const driveTypeCheckboxes = document.querySelectorAll('#drive-type-filter input[type="checkbox"]:checked');
+                                        const salaryRangeCheckboxes = document.querySelectorAll('#salary-range-filter input[type="checkbox"]:checked');
+                                        const employmentTypeCheckboxes = document.querySelectorAll('#employment-type-filter input[type="checkbox"]:checked');
+                                        const companyCheckboxes = document.querySelectorAll('#company-filter input[type="checkbox"]:checked');
+        
+                                        const driveTypes = Array.from(driveTypeCheckboxes).map(checkbox => checkbox.value);
+                                        const salaryRanges = Array.from(salaryRangeCheckboxes).map(checkbox => checkbox.value);
+                                        const employmentTypes = Array.from(employmentTypeCheckboxes).map(checkbox => checkbox.value);
+                                        const companies = Array.from(companyCheckboxes).map(checkbox => checkbox.value);
+        
+                                        const queryParams = new URLSearchParams();
+                                        if (driveTypes.length > 0) queryParams.append('driveTypes', driveTypes.join(','));
+                                        if (salaryRanges.length > 0) queryParams.append('salaryRanges', salaryRanges.join(','));
+                                        if (employmentTypes.length > 0) queryParams.append('employmentTypes', employmentTypes.join(','));
+                                        if (companies.length > 0) queryParams.append('companies', companies.join(','));
+        
+        
+                                        //filters fetch
+                                        fetch(`/api/job_posts/job_posts?${queryParams.toString()}`)
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                const jobPostsContainer = document.getElementById('job-posts-container');
+                                                const jobDescription = document.getElementById("jobDescription");
+                                                jobPostsContainer.innerHTML = '';
+        
+                                                if (data.length > 0) {
+                                                    // Populate the container with job posts
+                                                    data.forEach(jobPost => {
+                                                        const jobPostElement = createJobPostElement(jobPost);
+                                                        jobPostsContainer.appendChild(jobPostElement);
+                                                    });
+        
+                                                    // Automatically display the first job description and add active class
+                                                    const firstJobPost = data[0];
+                                                    document.querySelector('.job').classList.add('active');
+                                                    updateJobDescription(firstJobPost);
+                                                } else {
+                                                    // No job posts returned from the API
+                                                    jobPostsContainer.innerHTML = '<p class="nodata">No job applications have been submitted by students from this college.</p>';
+        
+                                                    // Handle the error by displaying default jobs
+                                                    defaultJobs.forEach(jobPost => {
+                                                        const jobPostElement = createDefaultJobElement(jobPost);  // Create a function to generate default job elements
+                                                        jobPostsContainer.appendChild(jobPostElement);
+                                                    });
+                                                }
+                                            })
+                                            .catch(error => {
+                                                console.error('Error fetching data:', error);
+                                                // jobPostsContainer.innerHTML = 'Error Fetching Data'
+        
+                                                const jobPostsContainer = document.getElementById('job-posts-container');
+                                                const jobDescription = document.getElementById('jobDescription');
+        
+                                                // Clear the container in case of an error
+                                                jobPostsContainer.innerHTML = '';
+        
+                                                // Display default jobs in case of an error
+                                                defaultJobs.forEach(jobPost => {
+                                                    const jobPostElement = createDefaultJobElement(jobPost);  // Create a function to generate default job elements
+                                                    jobPostsContainer.appendChild(jobPostElement);
+                                                });
+        
+                                                jobDescription.innerHTML = `
+                                                    <div style="display:flex;gap:20px;flex-direction:column;justify-content:center;align-items:center;height:80vh">
+                                                        <img src="https://i.pinimg.com/564x/ad/75/8b/ad758b1edf2e8d819e3107102ce90b5b.jpg" alt="not-found" style="height:270px;width:300px"/>
+                                                        <h1 style="font-size:24px;">No jobs found. </h1>
+                                                    </div>
+                                                `
+                                            });
+        
+                                            // Helper function to create default job elements
+                                            function createDefaultJobElement(jobPost) {
+                                                const jobPostElement = document.createElement('div');
+                                                jobPostElement.className = 'job default-job';
+                                                jobPostElement.style.borderBottom = "1px solid #848482";
+        
+                                                jobPostElement.innerHTML = `
+                                                    <img src="${jobPost.job_post_logo_url}" alt="${jobPost.company_title} logo">
+                                                    <div class="job-info">
+                                                        <h2>${jobPost.job_post_title}</h2> 
+                                                        <p>${jobPost.company_title}</p>
+                                                        ${jobPost.drive_type === "BB Exclusive" ? `
+                                                            <div style="background-color: #8A2BE2; width: 100px; color: #ffffff; padding: 0.25rem 0.5rem; border-radius: 999rem; font-size: 0.75rem; font-weight: 500; display: flex; align-items: center; border: 2px solid gold;">
+                                                                <span style="margin-right: 0.25rem; margin-top: -0.25rem; display: flex; align-items: center;">
+                                                                    👑 
+                                                                </span>
+                                                                ${jobPost.drive_type}
+                                                            </div>
+                                                        ` : `
+                                                            <div style="background-color: #d3d3d3; width: 100px; color: black; padding: 0.25rem 0.5rem; border-radius: 999rem; font-size: 0.75rem; font-weight: 500; display: flex; align-items: center; justify-content: center;">
+                                                                ${jobPost.drive_type}
+                                                            </div>
+                                                        `}
+                                                        <ul class="details-list">
+                                                            <li><i class="fa-solid fa-indian-rupee-sign" style="color: #000000;"></i> ${jobPost.salary_range_or_not_disclosed}</li>
+                                                            <li><i class="fa-regular fa-clock" style="color: #000000;"></i> ${jobPost.employment_type}</li>
+                                                            <li><i class="fa-regular fa-building" style="color: #000000;"></i> ${jobPost.office_mode}</li>
+                                                            <li><i class="fa-regular fa-user" style="color: #000000;"></i> Drive Count: ${jobPost.drive_count}</li>
+                                                        </ul>
+                                                    </div>
+                                                `;
+        
+                                                return jobPostElement;
+                                            }
+        
+        
+        
+        
+        
+                                        // Function to create default job elements
+                                       
+                                    }
+        
+                                    function createCheckbox(option) {
+                                        const checkbox = document.createElement('input');
+                                        checkbox.type = 'checkbox';
+                                        checkbox.value = option;
+                                        const label = document.createElement('label');
+                                        label.textContent = option;
+                                        const div = document.createElement('div');
+                                        div.appendChild(checkbox);
+                                        div.appendChild(label);
+                                        return div;
+                                    }
+        
+                                    function addCheckboxWithLimit(options, filterContainer) {
+                                        const limit = 5;
+                                        options.slice(0, limit).forEach(option => {
+                                            const checkbox = createCheckbox(option);
+                                            checkbox.addEventListener('change', fetchData);
+                                            filterContainer.appendChild(checkbox);
+                                        });
+        
+                                        if (options.length > limit) {
+                                            const showMoreButton = document.createElement('div');
+                                            showMoreButton.classList.add('show-more');
+                                            showMoreButton.textContent = 'Show More';
+                                            showMoreButton.addEventListener('click', function () {
+                                                options.slice(limit).forEach(option => {
+                                                    const checkbox = createCheckbox(option);
+                                                    checkbox.addEventListener('change', fetchData);
+                                                    filterContainer.appendChild(checkbox);
+                                                });
+                                                showMoreButton.style.display = 'none';
+                                            });
+                                            filterContainer.appendChild(showMoreButton);
+                                        }
+                                    }
+        
+        
+                                    //next Pagee 
+                                    fetch('/api/job_posts/job_posts')
+                                        .then(response => response.json())
+                                        .then(data => {
+        
+                                            const jobContainer = document.getElementById("bb-jobs");
+        
+                                            data.forEach(job => {
+                                                const jobHTML = `
+                                                        <div  class="job-card">
+                                                            <img src="${job.job_post_logo_url}" alt="${job.company_title} logo" style="width: 60px; height: 60px;"/>
+                                                            <h1 style="font-size: 16px; font-weight: bold;">${job.job_post_title}</h1>
+                                                            <h2 style="font-size: 12px; font-weight: bold;">Company Name: ${job.company_title}</h2>
+                                                            ${job.drive_type === "BB Exclusive" ? `
+                                                            <div style="background-color: #8A2BE2; width: 100px; color: #ffffff; padding: 0.25rem 0.5rem; border-radius: 999rem; font-size: 0.75rem; font-weight: 500; display: flex; align-items: center; border: 2px solid gold;">
+                                                                <span style="margin-right: 0.25rem; margin-top: -0.25rem; display: flex; align-items: center;">
+                                                                    👑 
+                                                                </span>
+                                                                ${job.drive_type}
+                                                            </div>
+                                                        ` : `<div style="background-color: #d3d3d3; width: 100px; color: black; padding: 0.25rem 0.5rem; border-radius: 999rem; font-size: 0.75rem; font-weight: 500; display: flex; align-items: center; justify-content:center">
+                                                                
+                                                                ${job.drive_type}
+                                                            </div>`}
+        
+                                                            <p style="font-size: 12px;"><strong>Employment Type:</strong> ${job.employment_type}</p>
+                                                            <p style="font-size: 12px;"><strong>Office Mode:</strong> ${job.office_mode}</p>
+                                                        </div>
+                                                    `;
+        
+                                                jobContainer.innerHTML += jobHTML;
+                                            });
+        
+                                            const jobsContainer = document.getElementById("blackbucks-jobs-container");
+                                          
+        
+                                            const marquee = document.createElement('marquee');
+                                            marquee.style.display = 'block';
+                                            marquee.style.whiteSpace = 'nowrap';
+                                            marquee.style.overflow = 'hidden';
+                                            marquee.style.width = '100%';
+                                            marquee.style.marginBottom="60px";
+                                            marquee.setAttribute('direction', 'right');  
+        
+                                            data.forEach(job => {
+                                                // Add job post logos to the marquee
+                                                const logoImg = document.createElement('img');
+                                                logoImg.src = job.job_post_logo_url;
+                                                logoImg.alt = `${job.company_title} logo`;
+                                                logoImg.style.width = '100px';
+                                                logoImg.style.height = '90px';
+                                                logoImg.style.margin = '20px';
+        
+                                                marquee.appendChild(logoImg);
+                                            })
+        
+                                            jobsContainer.prepend(marquee)
+                                            const headerContainer = document.createElement('div');
+                                            headerContainer.style.display = 'flex';
+                                            headerContainer.style.alignItems = 'center';
+                                            headerContainer.style.marginBottom = "40px";
+        
+                                            const header = document.createElement('h1');
+                                            header.style.fontSize = '24px';
+                                            header.style.marginLeft = '10px';
+                                            header.style.marginTop = '30px';
+                                            header.textContent = 'Blackbucks Top Recruiters';
+        
+                                            // <!-- <button class="create "  style="width: 250px;"> -->
+                                                            //     <!-- <a href="bbjobs">View all jobs listed by blackbucks</a>
+                                                            // </button> -->
+        
+                                            const button = document.createElement('button');
+                                            button.classList.add('create')
+                                            button.style.marginLeft = 'auto';  // Pushes the button to the far right
+                                            button.style.padding = '10px 20px';
+                                            button.style.fontSize = '14px';
+                                            button.style.cursor = 'pointer';
+                                            button.style.backgroundColor="#D3FB52";
+                                            button.style.border = 'none';
+                                            button.style.color = "black !important";
+        
+                                            const anchorEl = document.createElement('a');
+                                            anchorEl.textContent = 'Jobs at Blackbucks';
+                                            anchorEl.style.textDecoration = "none";
+                                            anchorEl.href = "bbjobs";
+                                            button.appendChild(anchorEl)
+        
+                                            headerContainer.appendChild(header);
+                                            headerContainer.appendChild(button);
+        
+                                            jobsContainer.prepend(headerContainer);
+        
+                                        })
+                                        .catch(error => {
+                                            console.error('Error fetching filter options:', error);
+                                        });
+        
+                                    function createJobPostElement(jobPost) {
+                                        const jobPostElement = document.createElement('div');
+                                        jobPostElement.className = 'job';
+                                        jobPostElement.addEventListener('click', function() {
+                                        updateJobDescription(jobPost);
+                                    });
+        
+                                        // Function to map employment type to custom text
+                                        function mapEmploymentType(employmentType) {
+                                            switch (employmentType.toLowerCase()) {
+                                                case 'fulltime':
+                                                    return 'Full-Time';
+                                                case 'internship':
+                                                    return 'Internship';
+                                                case 'interntohire':
+                                                    return 'Intern to Hire';
+                                                case 'parttime':
+                                                    return 'Part-Time';
+                                                default:
+                                                    return employmentType; // Use original value if no mapping found
+                                            }
+                                        }
+        
+                                        // Function to format salary range
+                                        function formatSalaryRange(salaryRange) {
+                                            // Remove ".00" if present
+                                            return salaryRange.replace(/\.00/g, '');
+                                        }
+                                        // Function to map office mode to custom text
+                                        function mapOfficeMode(officeMode) {
+                                            switch (officeMode.toLowerCase()) {
+                                                case 'onsite':
+                                                    return 'On-site';
+                                                case 'hybrid':
+                                                    return 'Hybrid';
+                                                case 'remote':
+                                                    return 'Remote';
+                                                default:
+                                                    return officeMode; // Use original value if no mapping found
+                                            }
+                                        }
+        
+                                        jobPostElement.innerHTML = `
+                                            <div class="company-logo-cont">
+                                                <img src="${jobPost.job_post_logo_url}" alt="${jobPost.company_title} logo">
+                                            </div>
+                                            <div class="job-info">
+                                                <h2>${jobPost.job_post_title}</h2>
+                                                <p>${jobPost.company_title}</p>
+                                                ${jobPost.drive_type === "BB Exclusive" ? `
+                                                    <div style="background-color: #8A2BE2; width: 90px; color: #ffffff; padding: 0.25rem 0.5rem; border-radius: 999rem; font-size: 0.75rem; font-weight: 500; display: flex; align-items: center; border: 2px solid gold;">
+                                                        <span style="margin-right: 0.25rem; margin-top: -0.25rem; display: flex; align-items: center;">
+                                                            👑 
+                                                        </span>
+                                                        ${jobPost.drive_type}
+                                                    </div>
+                                                ` : `<div style="background-color: #d3d3d3; width: 90px; color: black; padding: 0.25rem 0.5rem; border-radius: 999rem; font-size: 0.75rem; font-weight: 500; display: flex; align-items: center; justify-content:center">
+                                                        
+                                                        ${jobPost.drive_type}
+                                                    </div>`}
+                                                
+                                                <ul class="details-list">
+                                                    <li><i class="fa-solid fa-indian-rupee-sign" style="color: #000000;"></i> ${formatSalaryRange(jobPost.salary_range_or_not_disclosed)}</li>
+                                                    <li><i class="fa-regular fa-clock" style="color: #000000;"></i> ${mapEmploymentType(jobPost.employment_type)}</li>
+                                                    <li><i class="fa-regular fa-building" style="color: #000000;"></i> ${mapOfficeMode(jobPost.office_mode)}</li>
+                                                    <li><i class="fa-regular fa-user" style="color: #000000;"></i> Drive Count: ${jobPost.drive_count}</li>
+                                                </ul>
+                                            </div>
+                                        `;
+        
+        
+                                        jobPostElement.addEventListener('click', () => {
+                                            document.querySelectorAll('.job').forEach(job => job.classList.remove('active'));
+                                            jobPostElement.classList.add('active');
+                                        });
+        
+                                        return jobPostElement;
+                                    }
+        
+        
+        
+        
+                                    
+                                    
+                                    window.viewApplications = function (jobPostId) {
+                                        // Redirect user to another page with job_post_id parameter in the URL
+                                        window.location.href = `/jobApplications?job_post_id=${jobPostId}`;
+        
+                                    }
+        
+                                    window.closeJobDescription = function () {
+                                        const jobDescription = document.querySelector('.job-description');
+                                        const body = document.querySelector('body');
+        
+                                        if (window.innerWidth <= 768) {
+                                            body.classList.remove('freeze-scroll');
+                                            jobDescription.style.display = 'none';
+                                        }
+                                    }
+        
+                                    function addSearchFunctionality(searchId, filterContainer) {
+                                        const searchInput = document.getElementById(searchId);
+                                        searchInput.addEventListener('input', function () {
+                                            const filter = searchInput.value.toLowerCase();
+                                            const checkboxes = filterContainer.querySelectorAll('div');
+        
+                                            checkboxes.forEach(checkbox => {
+                                                const label = checkbox.querySelector('label').textContent.toLowerCase();
+                                                if (label.includes(filter)) {
+                                                    checkbox.style.display = '';
+                                                } else {
+                                                    checkbox.style.display = 'none';
+                                                }
+                                            });
+                                        });
+                                    }
+        
+                                    window.clearAllCheckboxes = function (filterId) {
+                                        const filterContainer = document.getElementById(filterId);
+                                        const checkboxes = filterContainer.querySelectorAll('input[type="checkbox"]');
+                                        checkboxes.forEach(checkbox => {
+                                            checkbox.checked = false;
+                                        });
+                                        fetchData();
+                                    }
+                                });
+        
+                                function toggleJobs() {
+                                    var div = document.getElementById("blackbucks-jobs-container");
+                                    if (div.style.display === "none") {
+                                        div.style.display = "block";
+                                    } else {
+                                        div.style.display = "none";
+                                    }
+                                }
+        
+                                // Add event listeners to filter labels
+                                document.addEventListener('DOMContentLoaded', function () {
+                                    const filterLabels = document.querySelectorAll('.label-card');
+                                    filterLabels.forEach(label => {
+                                        label.addEventListener('click', function () {
+                                            const dropdown = this.nextElementSibling;
+                                            const isVisible = window.getComputedStyle(dropdown).display !== 'none';
+        
+                                            // Hide all dropdown contents first
+                                            const allDropdowns = document.querySelectorAll('.dropdown-content');
+                                            allDropdowns.forEach(dropdown => {
+                                                if (dropdown !== this.nextElementSibling) {
+                                                    dropdown.style.display = 'none';
+                                                }
+                                            });
+        
+                                            // Toggle the visibility of the clicked dropdown content
+                                            dropdown.style.display = isVisible ? 'none' : 'block';
+                                        });
+                                    });
+                                });
+                            </script>
+        
+        
+                        </div>
+                            <!-- <div class="Right-half">
+                                <canvas id="jobChart" width="550" height="300"></canvas>
+                                <div id="noDataMessage" style="display: none;">No job applications have been submitted
+                                    by students from this college.
+                                </div>
+                                <div class="view-all-jobs-btn-cont">
+                                    <button class="create "  style="width: 250px;">
+                                        <a href="bbjobs">View all jobs listed by blackbucks</a>
+                                    </button>
+                                </div>
+                            </div> -->
+                        </div>
+                    </div>
+
+               
+
+               
+
+            <!-- </div> -->
+         
+        <!-- </div> -->
+    </div>
+    <!-- <script src="js/job_dashboard.js"></script> -->
+    <script src="js/jobsDashboard2.js"></script>
+    
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    </div>
+
+    </div>
+
+    </div>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+          async function fetchJobPostData() {
+            try {
+                const response = await fetch('api/job_insights/job_post_data');
+                const data = await response.json();
+
+                // Extract the necessary data
+                const labels = data.monthly_job_post_count.map(item => item.month_year.trim());
+                const jobCounts = data.monthly_job_post_count.map(item => item.post_count);
+
+                // Update the chart
+                updateChart(labels, jobCounts);
+            } catch (error) {
+                console.error('Error fetching job post data:', error);
+            }
+        }
+
+        function updateChart(labels, jobCounts) {
+            const canvas = document.getElementById('jobChart');
+            const noDataMessage = document.getElementById('noDataMessage');
+
+            if (jobCounts.length === 0) {
+                canvas.style.display = 'none';
+                noDataMessage.style.display = 'block';
+                return;
+            }
+
+            const ctx = canvas.getContext('2d');
+
+            const jobChart = new Chart(ctx, {
+                type: 'bar', // Defines chart type for the bar datasets
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Applied',
+                        data: [30, 60, 50, 80, 70, 90, 85, 70, 50],
+                        backgroundColor: '#7962bd',
+                        borderColor: '#7962bd',
+                        borderWidth: 1,
+                        yAxisID: 'y',
+                    }, {
+                        label: 'Placed',
+                        data: [20, 40, 30, 60, 50, 70, 65, 55, 35],
+                        backgroundColor: 'rgba(153, 102, 255, 0.6)',
+                        borderColor: 'rgba(153, 102, 255, 0.6)',
+                        borderWidth: 1,
+                        yAxisID: 'y',
+                    }, {
+                        label: 'Job Count',
+                        data: jobCounts,
+                        type: 'line', // This dataset is drawn as a line.
+                        fill: false,
+                        borderColor: '#ff914d',
+                        backgroundColor: '#ff914d',
+                        borderWidth: 2,
+                        yAxisID: 'y',
+                    }]
+                },
+                options: {
+                    responsive: false,
+                    maintainAspectRatio: false,
+                    animation: {
+                        duration: 0
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                display: false
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            clickable: false,
+                            labels: {
+                                color: 'rgba(0,0,0,0.7)',
+                                padding: 15,
+                                usePointStyle: true,
+                                pointStyle: 'rectRounded'
+                            }
+                        },
+                        tooltip: {
+                            enabled: false
+                        }
+                    },
+                    interaction: {
+                        mode: 'nearest',
+                        intersect: false,
+                        enabled: false
+                    }
+                }
+            });
+        }
+
+        // Fetch the data and update the chart on page load
+        window.onload = fetchJobPostData;
+
+
+    </script>
+
+    <script>
+        // Function to extract details of the first job post and update the job description
+        // window.addEventListener('DOMContentLoaded', (event) => {
+        //     const firstJob = document.querySelector('.job'); // Select the first job post
+        //     const title = firstJob.querySelector('h2').innerText; // Extract job title
+        //     const company = firstJob.querySelector('p:nth-of-type(1)').innerText; // Extract company name
+        //     const description = firstJob.querySelector('p:nth-of-type(2)').innerText; // Extract job description
+
+        //     // Call updateJobDescription function with extracted details
+        //     updateJobDescription(title, company, description);
+        // });
+
+
+
+        //LOADERS ADDED TO SECTIONS
+        function addLoadersToSections(sectionIds) {
+            sectionIds.forEach(id => {
+                const section = document.getElementById(id);
+                if (section === "jobChart") {
+                    const loader = document.createElement('div');
+                    loader.className = 'loader';
+                    section.insertAdjacentElement('afterend', loader);
+                }
+                else if (section) {
+                    const loaderContainer = document.createElement('div');
+                    loaderContainer.className = 'loader-container';
+
+                    const loader = document.createElement('div');
+                    loader.className = 'loader';
+                    loaderContainer.appendChild(loader);
+
+                    section.appendChild(loaderContainer);
+                }
+            });
+
+
+
+            // Remove loaders after a certain time (optional)
+            window.addEventListener('load', function () {
+                setTimeout(function () {
+                    sectionIds.forEach(id => {
+                        const section = document.getElementById(id);
+                        if (section) {
+                            const loader = section.querySelector('.loader');
+                            if (loader) {
+                                loader.style.display = 'none';
+                            }
+                        }
+                    });
+                }, 2000); // Adjust the timeout duration as needed
+            });
+        }
+
+        // IDs of the sections where loaders will be added
+        const sectionIds = [ 'jobChart', 'job-posts-container','blackbucks-jobs-container'];
+
+        // Call the function to add loaders to the sections
+        addLoadersToSections(sectionIds);
+
+    </script>
+
+
+
+
+
+    <script>
+         const updateJobDescription = (jobPost) =>{
+            
+            const jobDescription = document.getElementById('jobDescription');
+            const today = new Date();
+            const createdAtDate = new Date(jobPost.create_at);
+            const timeDifference = today.getTime() - createdAtDate.getTime();
+            const daysDifference = Math.floor(timeDifference / (1000 * 3600 * 24));
+            if (daysDifference === 0) {
+                displayText = 'Posted today';
+            } else if (daysDifference === 1) {
+                displayText = 'Posted 1 day ago';
+            } else {
+                displayText = `Posted ${daysDifference} days ago`;
+            }
+
+
+            jobDescription.innerHTML = `
+            <div class="job-post-header">
+                
+                <div class="logo-cont">
+                    <img src="${jobPost.job_post_logo_url}" alt="${jobPost.company_title} logo" class="company-logo">
+                    <p class="company-title">${jobPost.company_title}</p>
+                </div>
+                <h2 style="font-size:24px">${jobPost.job_post_title}</h2>
+                <div class="logo-cont" >
+                    <p class="company-title" style="color:darkgrey;font-weight:normal;font-size:14px">${displayText}</p>
+                </div>
+                <div style="display:flex;gap:20px">
+                    <div class="employment-type-cont">
+                        <img src="https://img.icons8.com/?size=100&id=123839&format=png&color=737373" class="employment-type-logo" alt="employment"/>
+                        <p class="employment-type">${jobPost.employment_type}</p>
+                    </div>
+                    <div class="employment-type-cont">
+                        <img src="https://img.icons8.com/?size=100&id=39358&format=png&color=737373" class="employment-type-logo" alt="employment"/>
+                        <p class="employment-type">${jobPost.office_mode}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="common-buttons" style="display: flex; flex-direction: row;margin-top:20px;">
+                <button class="view-applications-btn" onclick="viewApplications('${jobPost.job_post_id}')" style="cursor: pointer;">View Applications</button>
+                <a href="https://admin.hackathon.blackbucks.me/metLeaderboard/">
+                    <button class="shortlisted-students-btn2" style="cursor: pointer; margin-right: 30px;">Shortlist Students</button>
+                </a>
+            </div>
+            <div style="margin-top:30px;">
+            ${jobPost.description}
+            </div>
+            <div class="close-button" onclick="closeJobDescription()">X</div>
+
+            `
+
+
+            console.log(`calling update job descpription`,jobPost)
+        }
+    
+    </script>
+
+<script>
+    const allBBExclusive = [];
+    const allOpenDrive = [];
+    let highestPackage = 0;
+    let totalPackage = 0;
+    let jobPostCount = 0;
+    const recentJobPosts = [];
+
+    fetch(`/api/job_posts/job_posts`)
+        .then(response => response.json())
+        .then(data => {
+            // Assuming 'data' is an array of job post objects
+            const companyCounts = data.reduce((acc, jobPost) => {
+                const company = jobPost.company_title;
+                acc[company] = (acc[company] || 0) + 1;
+                return acc;
+            }, {});
+
+            // Loop through the job posts and categorize them
+            data.forEach((jobPost) => {
+                const salaryRange = jobPost.salary_range_or_not_disclosed;
+
+                if (salaryRange !== "Not disclosed" && salaryRange.includes(" - ")) {
+                    // Split the salary range and calculate the average of the range
+                    const [minSalary, maxSalary] = salaryRange.split(" - ").map(salary => parseFloat(salary));
+                    const averageSalary = (minSalary + maxSalary) / 2;
+
+                    // Check for the highest package
+                    if (maxSalary > highestPackage) {
+                        highestPackage = maxSalary;
+                    }
+
+                    // Accumulate total package and count of job posts
+                    totalPackage += averageSalary;
+                    jobPostCount++;
+                }
+
+                // Categorize job posts into Open Drive and BB Exclusive
+                if (jobPost.drive_type === "Open Drive") {
+                    allOpenDrive.push(jobPost);
+                } else {
+                    allBBExclusive.push(jobPost);
+                }
+            });
+
+            // Calculate the average package
+            const averagePackage = jobPostCount > 0 ? (totalPackage / jobPostCount).toFixed(2) : 0;
+
+            // Display company counts in the HTML
+            // const companyContainer = document.getElementById("each-company-count");
+            // companyContainer.innerHTML = "";  // Clear existing content
+
+            // Object.keys(companyCounts).forEach(company => {
+            //     const companyDiv = document.createElement("div");
+            //     companyDiv.classList.add("companyDiv");
+
+            //     const companyLogoDiv = document.createElement("div");
+            //     companyLogoDiv.classList.add("companyLogoDiv");
+
+            //     const jobPost = data.find(post => post.company_title === company);
+
+            //     const companyLogo = document.createElement("img");
+            //     companyLogo.src = jobPost?.job_post_logo_url || 'default-logo.png'; // Use fallback image if no logo
+            //     companyLogo.alt = company;
+            //     companyLogo.classList.add("company-logo-image");
+
+            //     const headingEl = document.createElement("h4");
+            //     headingEl.style.fontSize = "14px";
+            //     headingEl.style.fontWeight = "normal";
+            //     headingEl.textContent = company;
+
+            //     const countEl = document.createElement("p");
+            //     countEl.textContent = companyCounts[company];
+
+            //     companyLogoDiv.appendChild(companyLogo);
+            //     companyLogoDiv.appendChild(headingEl);
+
+            //     companyDiv.appendChild(companyLogoDiv);
+            //     companyDiv.appendChild(countEl);
+
+            //     companyContainer.appendChild(companyDiv);
+            // });
+
+            // Display highest and average packages in the HTML
+            document.getElementById("highestPackage").textContent = highestPackage + " LPA";
+            document.getElementById("averagePackage").textContent = averagePackage + " LPA";
+
+            // Sort job posts by date (assuming `date` is in ISO 8601 format or similar)
+            const sortedPosts = data.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            // Get the most recent 7 job posts
+            const recentPosts = sortedPosts.slice(0, 6);
+
+            // Push the most recent job posts into the recentJobPosts array
+            recentPosts.forEach(post => recentJobPosts.push(post));
+
+            // Display recent job posts in the HTML
+            // const recentJobPostsCont = document.querySelector('.leftHalf-jobs-container');
+            // recentJobPostsCont.innerHTML = "";  
+
+            // const recentJobHeading = document.createElement("h3");
+            // recentJobHeading.textContent = 'Recent Job Posts'
+
+            // recentJobPostsCont.appendChild(recentJobHeading);
+
+
+            // recentJobPosts.forEach(jobPost => {
+            //     const jobPostDiv = document.createElement("div");
+            //     jobPostDiv.classList.add("recent-job-post");
+
+                
+            //     jobPostDiv.innerHTML = `
+            //         <img src="${jobPost.job_post_logo_url}" alt="${jobPost.company_title} logo" class="recent-job-post-logo"/>
+            //         <div class="job-info">
+            //             <h2>${jobPost.job_post_title}</h2>
+            //             <p>${jobPost.company_title}</p>
+            //             ${jobPost.drive_type === "BB Exclusive" ? `
+            //                 <div style="background-color: #8A2BE2; width: 100px; color: #ffffff; padding: 0.25rem 0.5rem; border-radius: 999rem; font-size: 0.75rem; font-weight: 500; display: flex; align-items: center; border: 2px solid gold;">
+            //                     <span style="margin-right: 0.25rem; margin-top: -0.25rem; display: flex; align-items: center;">
+            //                         👑 
+            //                     </span>
+            //                     ${jobPost.drive_type}
+            //                 </div>
+            //             ` : `
+            //                 <div style="background-color: #d3d3d3; width: 100px; color: black; padding: 0.25rem 0.5rem; border-radius: 999rem; font-size: 0.75rem; font-weight: 500; display: flex; align-items: center; justify-content: center;">
+            //                     ${jobPost.drive_type}
+            //                 </div>
+            //             `}
+            //             <div class="recent-job-details-list">
+            //                 <li><i class="fa-solid fa-indian-rupee-sign" style="color: #000000;"></i> ${jobPost.salary_range_or_not_disclosed}</li>
+            //                 <li><i class="fa-regular fa-clock" style="color: #000000;"></i> ${jobPost.employment_type}</li>
+            //                 <li><i class="fa-regular fa-building" style="color: #000000;"></i> ${jobPost.office_mode}</li>
+            //                 <li><i class="fa-regular fa-user" style="color: #000000;"></i> Drive Count: ${jobPost.drive_count}</li>
+            //             </div>
+            //         </div>
+            //     `;
+
+
+            //     recentJobPostsCont.appendChild(jobPostDiv);
+            // });
+
+            // Log statistics in the console
+            console.log("Job Posts by Each Company:", companyCounts);
+            console.log("Open Drive Job Posts:", allOpenDrive);
+            console.log("BB Exclusive Job Posts:", allBBExclusive);
+            console.log("Highest Package:", highestPackage, "LPA");
+            console.log("Average Package:", averagePackage, "LPA");
+            console.log("Recent Job Posts:", recentJobPosts);
+        })
+        .catch(error => console.error('Error fetching job posts:', error));
+</script>
+
+
+    </div>
+    <script src="js/navbar_logout.js"></script>
+
+</body>
+
+</html>
