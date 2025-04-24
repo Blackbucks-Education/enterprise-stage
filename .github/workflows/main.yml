@@ -16,7 +16,7 @@ jobs:
       - name: Log in to Amazon ECR
         id: ecr_login
         run: |
-          aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 241533151560.dkr.ecr.ap-south-1.amazonaws.com/taptapenterprise
+          aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 894026808979.dkr.ecr.ap-south-1.amazonaws.com
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -24,7 +24,7 @@ jobs:
       - name: Build, tag, and push Docker image
         run: |
           # Define the image tag
-          IMAGE_TAG=241533151560.dkr.ecr.ap-south-1.amazonaws.com/taptapenterprise:latest
+          IMAGE_TAG=894026808979.dkr.ecr.ap-south-1.amazonaws.com/taptapenterprise-stage:latest
 
           # Build the Docker image
           docker build -t $IMAGE_TAG .
@@ -35,8 +35,8 @@ jobs:
       - name: Deploy to ECS
         run: |
           aws ecs update-service \
-            --cluster taptapdev \
-            --service taptapenterprise \
+            --cluster taptapdev123 \
+            --service taptapenterprise-Service \
             --force-new-deployment \
             --region ap-south-1
         env:
