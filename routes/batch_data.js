@@ -20,6 +20,7 @@ const createSQLQuery = (params) => {
     } = params;
 
     
+    
     let sqlQuery = `
     WITH userhackathonreport AS (
         SELECT
