@@ -19,6 +19,7 @@ const createSQLQuery = (params) => {
         gradPercentage
     } = params;
 
+    
     let sqlQuery = `
     WITH userhackathonreport AS (
         SELECT
