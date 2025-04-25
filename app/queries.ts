@@ -6,12 +6,12 @@ import { unstable_cache } from 'next/cache';
 
 export async function getNoOfCandidates(collegeId) {
   if (!collegeId) return null;
-  const cacheKey = `noOfCandidates_${collegeId}`;
-  const cachedData = await getCachedData(cacheKey);
-  if (cachedData) {
-    console.log(`Cache hit for key ${cacheKey}`);
-    return cachedData;
-  }
+  // const cacheKey = `noOfCandidates_${collegeId}`;
+  // const cachedData = await getCachedData(cacheKey);
+  // if (cachedData) {
+  //   console.log(`Cache hit for key ${cacheKey}`);
+  //   return cachedData;
+  // }
 
   const result = await readPool.query(`
     SELECT COUNT(*) AS total_enrolled_candidates
@@ -22,19 +22,19 @@ export async function getNoOfCandidates(collegeId) {
 
   const data = result?.rows[0]?.total_enrolled_candidates || 0;
 
-  await setCachedData(cacheKey, data);
-  console.log(`Cache set for key ${cacheKey}`);
+  // await setCachedData(cacheKey, data);
+  // console.log(`Cache set for key ${cacheKey}`);
   return data;
 }
 
 export async function getVariousYears(collegeId) {
   if (!collegeId) return null;
-  const cacheKey = `variousYears_${collegeId}`;
-  const cachedData = await getCachedData(cacheKey);
-  if (cachedData) {
-    console.log(`Cache hit for key ${cacheKey}`);
-    return cachedData;
-  }
+  // const cacheKey = `variousYears_${collegeId}`;
+  // const cachedData = await getCachedData(cacheKey);
+  // if (cachedData) {
+  //   console.log(`Cache hit for key ${cacheKey}`);
+  //   return cachedData;
+  // }
   const result = await readPool.query(`
     SELECT
       COUNT(*) AS total_enrolled_candidates,
@@ -59,20 +59,20 @@ export async function getVariousYears(collegeId) {
 
   const data = result?.rows || [{ total_enrolled_candidates: 0, YOP: 'Not Provided' }];
 
-  await setCachedData(cacheKey, data);
-  console.log(`Cache set for key ${cacheKey}`);
+  // await setCachedData(cacheKey, data);
+  // console.log(`Cache set for key ${cacheKey}`);
   return data;
 }
 
 export async function getVariousBranches(collegeId) {
   if (!collegeId) return null;
-  const cacheKey = `variousBranches_${collegeId}`;
-  const cachedData = await getCachedData(cacheKey);
-  if (cachedData) {
-    console.log(`Cache hit for key ${cacheKey}`);
-    console.log(cachedData,"var");
-    return cachedData;
-  }
+  // const cacheKey = `variousBranches_${collegeId}`;
+  // const cachedData = await getCachedData(cacheKey);
+  // if (cachedData) {
+  //   console.log(`Cache hit for key ${cacheKey}`);
+  //   console.log(cachedData,"var");
+  //   return cachedData;
+  // }
   const result = await readPool.query(`
     SELECT
       COUNT(*) AS total_enrolled_candidates,
@@ -98,19 +98,19 @@ export async function getVariousBranches(collegeId) {
 
   const data = result?.rows || [{ total_enrolled_candidates: 0, BTechBranch: 'Not Provided' }];
 
-  await setCachedData(cacheKey, data);
-  console.log(`Cache set for key ${cacheKey}`);
+  // await setCachedData(cacheKey, data);
+  // console.log(`Cache set for key ${cacheKey}`);
   return data;
 }
 
 export async function getEnrollments(collegeId) {
   if (!collegeId) return null;
-  const cacheKey = `enrollments_${collegeId}`;
-  const cachedData = await getCachedData(cacheKey);
-  if (cachedData) {
-    console.log(`Cache hit for key ${cacheKey}`);
-    return cachedData;
-  }
+  // const cacheKey = `enrollments_${collegeId}`;
+  // const cachedData = await getCachedData(cacheKey);
+  // if (cachedData) {
+  //   console.log(`Cache hit for key ${cacheKey}`);
+  //   return cachedData;
+  // }
 
   const totallyEnrolled = await readPool.query(`
     SELECT COUNT(*)
@@ -139,19 +139,19 @@ export async function getEnrollments(collegeId) {
     totallyStarted: totallyStarted?.rows[0]?.count || 0,
   };
 
-  await setCachedData(cacheKey, data);
-  console.log(`Cache set for key ${cacheKey}`);
+  // await setCachedData(cacheKey, data);
+  // console.log(`Cache set for key ${cacheKey}`);
   return data;
 }
 
 export async function getAssessments(collegeId) {
   if (!collegeId) return null;
-  const cacheKey = `assessments_${collegeId}`;
-  const cachedData = await getCachedData(cacheKey);
-  if (cachedData) {
-    console.log(`Cache hit for key ${cacheKey}`);
-    return cachedData;
-  }
+  // const cacheKey = `assessments_${collegeId}`;
+  // const cachedData = await getCachedData(cacheKey);
+  // if (cachedData) {
+  //   console.log(`Cache hit for key ${cacheKey}`);
+  //   return cachedData;
+  // }
 
   const result = await readPool.query(`
    select tt.name, count(user_id) from user_hackathon_participation uhp
@@ -165,19 +165,19 @@ export async function getAssessments(collegeId) {
 
   const data = result?.rows || [{ name: 'No Data', count: 0 }];
 
-  await setCachedData(cacheKey, data);
-  console.log(`Cache set for key ${cacheKey}`);
+  // await setCachedData(cacheKey, data);
+  // console.log(`Cache set for key ${cacheKey}`);
   return data;
 }
 
 export async function getAssessmentsPar(collegeId) {
   if (!collegeId) return null;
-  const cacheKey = `assessmentsPar_${collegeId}`;
-  const cachedData = await getCachedData(cacheKey);
-  if (cachedData) {
-    console.log(`Cache hit for key ${cacheKey}`);
-    return cachedData;
-  }
+  // const cacheKey = `assessmentsPar_${collegeId}`;
+  // const cachedData = await getCachedData(cacheKey);
+  // if (cachedData) {
+  //   console.log(`Cache hit for key ${cacheKey}`);
+  //   return cachedData;
+  // }
 
   const result = await readPool.query(`
     SELECT
@@ -205,18 +205,18 @@ export async function getAssessmentsPar(collegeId) {
     last_2_months_count: 0
   }];
 
-  await setCachedData(cacheKey, data);
-  console.log(`Cache set for key ${cacheKey}`);
+  // await setCachedData(cacheKey, data);
+  // console.log(`Cache set for key ${cacheKey}`);
   return data;
 }
 export async function getTapTap(collegeId) {
   if (!collegeId) return null;
-  const cacheKey = `tapTap_${collegeId}`;
-  const cachedData = await getCachedData(cacheKey);
-  if (cachedData) {
-    console.log(`Cache hit for key ${cacheKey}`);
-    return cachedData;
-  }
+  // const cacheKey = `tapTap_${collegeId}`;
+  // const cachedData = await getCachedData(cacheKey);
+  // if (cachedData) {
+  //   console.log(`Cache hit for key ${cacheKey}`);
+  //   return cachedData;
+  // }
 
   const { rows: lessonplan } =
     await readPool.query(`select lp.lesson_plan_type, count(*) from lesson_plan lp
@@ -238,8 +238,8 @@ export async function getTapTap(collegeId) {
     courses: courses[0]?.count || 0,
   };
 
-  await setCachedData(cacheKey, data);
-  console.log(`Cache set for key ${cacheKey}`);
+  // await setCachedData(cacheKey, data);
+  // console.log(`Cache set for key ${cacheKey}`);
   return data;
 }
 

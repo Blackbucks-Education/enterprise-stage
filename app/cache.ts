@@ -16,12 +16,70 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 let CACHE_TABLE = 'CacheTable';
 let CACHE_EXPIRY_SECONDS = 1800; // Default cache expiry time in seconds (30 Minutes)
+const IS_CACHE_ENABLED = process.env.IS_CACHE_ENABLED !== 'false';
+
+
+
+// const getCachedData = async (key) => {
+//   const params = {
+//     TableName: CACHE_TABLE,
+//     Key: { cacheKey: key },
+//   };
+//   try {
+//     const result = await dynamoDb.get(params).promise();
+//     if (result.Item && result.Item.data) {
+//       const now = Math.floor(Date.now() / 1000);
+//       if (result.Item.ttl < now) {
+//         console.log(`Cache for key ${key} has expired.`);
+//         return null;
+//       }
+//       console.log(`Cache hit for key ${key}`);
+//       const decompressedData = await decompressData(Buffer.from(result.Item.data, 'base64'));
+//       return decompressedData;
+//     }
+//     console.log(`Cache miss for key ${key}`);
+//     return null;
+//   } catch (error) {
+//     console.error(`Error getting cached data for key ${key}:`, error);
+//     throw error;
+//   }
+// };
+
+// const setCachedData = async (key, data, expirySeconds = CACHE_EXPIRY_SECONDS) => {
+//   if (data === undefined || data === null) {
+//     throw new Error(`Cannot cache undefined or null data for key ${key}`);
+//   }
+//   try {
+//     const compressedData = await compressData(data);
+//     const params = {
+//       TableName: CACHE_TABLE,
+//       Item: {
+//         cacheKey: key,
+//         data: compressedData.toString(), 
+//         ttl: Math.floor(Date.now() / 1000) + expirySeconds,
+//       },
+//     };
+//     await dynamoDb.put(params).promise();
+//     console.log(`Cache set for key ${key} and will expire in ${expirySeconds} seconds.`);
+//   } catch (error) {
+//     console.error(`Error setting cached data for key ${key}:`, error);
+//     throw error;
+//   }
+// };
+
+
 
 const getCachedData = async (key) => {
+  if (!IS_CACHE_ENABLED) {
+    console.log(`Cache disabled. Skipping get for key ${key}`);
+    return null;
+  }
+
   const params = {
     TableName: CACHE_TABLE,
     Key: { cacheKey: key },
   };
+
   try {
     const result = await dynamoDb.get(params).promise();
     if (result.Item && result.Item.data) {
@@ -38,21 +96,28 @@ const getCachedData = async (key) => {
     return null;
   } catch (error) {
     console.error(`Error getting cached data for key ${key}:`, error);
-    throw error;
+    console.warn(`DynamoDB cache fetch skipped due to error:`, error.message || error);
+    return null;
   }
 };
 
 const setCachedData = async (key, data, expirySeconds = CACHE_EXPIRY_SECONDS) => {
+  if (!IS_CACHE_ENABLED) {
+    console.log(`Cache disabled. Skipping set for key ${key}`);
+    return;
+  }
+
   if (data === undefined || data === null) {
     throw new Error(`Cannot cache undefined or null data for key ${key}`);
   }
+
   try {
     const compressedData = await compressData(data);
     const params = {
       TableName: CACHE_TABLE,
       Item: {
         cacheKey: key,
-        data: compressedData.toString(), 
+        data: compressedData.toString(),
         ttl: Math.floor(Date.now() / 1000) + expirySeconds,
       },
     };
@@ -60,7 +125,7 @@ const setCachedData = async (key, data, expirySeconds = CACHE_EXPIRY_SECONDS) =>
     console.log(`Cache set for key ${key} and will expire in ${expirySeconds} seconds.`);
   } catch (error) {
     console.error(`Error setting cached data for key ${key}:`, error);
-    throw error;
+    console.warn(`DynamoDB cache set skipped due to error:`, error.message || error);
   }
 };
 
@@ -98,7 +163,23 @@ const configureCache = (table, expirySeconds) => {
   CACHE_EXPIRY_SECONDS = expirySeconds;
 };
 
+// const scheduleCacheRefresh = (key, refreshFunction, interval = '*/5 * * * *') => {
+//   cron.schedule(interval, async () => {
+//     console.log(`Scheduled refresh for cache key ${key}`);
+//     try {
+//       await refreshCache(key, refreshFunction);
+//     } catch (error) {
+//       console.error(`Scheduled refresh error for cache key ${key}:`, error);
+//     }
+//   });
+// };
+
 const scheduleCacheRefresh = (key, refreshFunction, interval = '*/5 * * * *') => {
+  if (!IS_CACHE_ENABLED) {
+    console.log(`Cache disabled. Skipping scheduled refresh for key ${key}`);
+    return;
+  }
+
   cron.schedule(interval, async () => {
     console.log(`Scheduled refresh for cache key ${key}`);
     try {
@@ -108,6 +189,7 @@ const scheduleCacheRefresh = (key, refreshFunction, interval = '*/5 * * * *') =>
     }
   });
 };
+
 
 export {
   getCachedData,
