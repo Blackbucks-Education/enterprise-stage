@@ -130,6 +130,11 @@ app.get("/", (req, res) => {
   res.redirect("/login");
 });
 
+app.get('/health', (req, res) => {
+  res.status(200).send('Healthy');
+});
+
+
 app.get("/login", (req, res) => {
   if (req.isAuthenticated() || req.cookies["userAdminToken"]) {
     return res.redirect("/myDashboard");
