@@ -7,19 +7,12 @@ const cacheManager = require('../utlis/cacheManager.js') // Ensure this path is 
 const pool = new Pool(dbConfig);
 const isAuthenticated = require('../jwtAuth.js');
 
-router.get('/main_cards',isAuthenticated, async (req, res) => {
+router.get('/main_cards', isAuthenticated, async (req, res) => {
   try {
     const collegeId = req.user.college || null;
 
     if (!collegeId) {
       return res.status(400).json({ error: 'College code is not set in the session.' });
-    }
-
-    const cacheKey = `main_cards-${collegeId}`;
-    const cachedData = await cacheManager.getCachedData(cacheKey);
-
-    if (cachedData) {
-      return res.status(200).json(cachedData);
     }
 
     // Initialize variables with default values
@@ -135,29 +128,6 @@ router.get('/main_cards',isAuthenticated, async (req, res) => {
       avg_emp_score: avgEmpScore
     };
 
-    // Cache the data in DynamoDB
-    await cacheManager.setCachedData(cacheKey, responseData);
-
-    // Schedule automatic cache refresh
-    cacheManager.scheduleCacheRefresh(cacheKey, async () => {
-      try {
-        const refreshedData = {
-          college_code: collegeId,
-          total_participants: (await pool.query(sqlTotalParticipants, [collegeId])).rows[0]?.total || 0,
-          total_participants_all: (await pool.query(sqlTotalParticipantsAll)).rows[0]?.total_participants || 0,
-          top_100_count: (await pool.query(sqlTop100Students, [collegeId])).rows[0]?.top_100_count || 0,
-          total_college_codes: (await pool.query(sqlTotalCollegeCodes)).rows[0]?.total || 0,
-          college_rank: (await pool.query(sqlFetchRank, [collegeId])).rows[0]?.rank || "Not available",
-          zero_scorers: (await pool.query(sqlZeroScores, [collegeId])).rows[0]?.zero_scorers || 0,
-          avg_emp_score: (await pool.query(sqlZeroScores, [collegeId])).rows[0]?.average_employability_score || 0
-        };
-        await cacheManager.setCachedData(cacheKey, refreshedData);
-        console.log(`Cache refreshed for key ${cacheKey}`);
-      } catch (refreshError) {
-        console.error('Error refreshing cache:', refreshError);
-      }
-    });
-
     // Send the response
     res.json(responseData);
   } catch (error) {
@@ -165,5 +135,6 @@ router.get('/main_cards',isAuthenticated, async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error', message: error.message });
   }
 });
+
 
 module.exports = router;

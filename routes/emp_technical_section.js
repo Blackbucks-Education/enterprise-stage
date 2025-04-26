@@ -8,21 +8,13 @@ const cacheManager = require('../utlis/cacheManager');
 const isAuthenticated = require('../jwtAuth.js');
 
 
-router.get('/coding_submissions',isAuthenticated, async (req, res) => {
+router.get('/coding_submissions', isAuthenticated, async (req, res) => {
   try {
     // Check if the college code is set in the session
     const college_id = req.user.college || null;
 
     if (!college_id) {
       return res.status(400).json({ error: 'College code is not set in the session.' });
-    }
-
-    // Check if data exists in cache
-    const cacheKey = `coding_submissions_${college_id}`;
-    const cachedData = await cacheManager.getCachedData(cacheKey);
-  
-    if (cachedData) {
-      return res.status(200).json(cachedData);
     }
 
     // SQL query to fetch the required data
@@ -61,7 +53,7 @@ router.get('/coding_submissions',isAuthenticated, async (req, res) => {
       JOIN
         college c ON u.college_id = c.id
       WHERE
-        c.is = $1
+        c.code = $1
       GROUP BY
         sub_domain, c.code;
     `;
@@ -69,18 +61,6 @@ router.get('/coding_submissions',isAuthenticated, async (req, res) => {
     // Execute the query with parameter binding
     const { rows } = await pool.query(sql, [college_id]);
 
-    // Cache the data in DynamoDB
-    await cacheManager.setCachedData(cacheKey, rows); // Cache data in DynamoDB
-
-      // Schedule automatic cache refresh
-      cacheManager.scheduleCacheRefresh(cacheKey, async () => {
-        const refreshedData = await pool.query(sql, [college_id]);
-        if (refreshedData.rows.length > 0) {
-          const rows = refreshedData.rows[0];
-          await cacheManager.setCachedData(cacheKey, rows);
-          console.log(`Cache refreshed for key ${cacheKey}`);
-        }
-      });
     // Send the response
     res.json(rows);
   } catch (error) {
@@ -88,5 +68,6 @@ router.get('/coding_submissions',isAuthenticated, async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error', message: error.message });
   }
 });
+
 
 module.exports = router;

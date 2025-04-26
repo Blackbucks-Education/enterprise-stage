@@ -201,7 +201,7 @@ WHERE
     return { sqlQuery, values };
 };
 
-router.get('/emp_band_data',isAuthenticated, async (req, res) => {
+router.get('/emp_band_data', isAuthenticated, async (req, res) => {
     try {
         const college_id = req.user.college || null;
 
@@ -221,40 +221,26 @@ router.get('/emp_band_data',isAuthenticated, async (req, res) => {
             gradPercentage: req.query.gradPercentage,
         };
 
-        
-        const cacheKey = `emp_band_data_${college_id}_${params.degree}_${params.branch}_${params.year}_${params.empBand}_${params.empBestBand}_${params.tenthPercentage}_${params.twelfthPercentage}_${params.gradPercentage}`;
-        const cachedData = await cacheManager.getCachedData(cacheKey);
-
-        if (cachedData) {
-            return res.status(200).json(cachedData);
-        }
-        
-
+        // Log the parameters for debugging
         console.log(params);
 
+        // Generate the SQL query based on the parameters
         const { sqlQuery, values } = createSQLQuery(params);
+
+        // Execute the query and get the results
         const { rows } = await pool.query(sqlQuery, values);
 
-        
-        await cacheManager.setCachedData(cacheKey, rows);
-
-        cacheManager.scheduleCacheRefresh(cacheKey, async () => {
-            const refreshedData = await pool.query(sqlQuery, values);
-            if (refreshedData.rows.length > 0) {
-                await cacheManager.setCachedData(cacheKey, refreshedData.rows);
-                console.log(`Cache refreshed for key ${cacheKey}`);
-            }
-        });
-        
-
+        // Log the length of the result rows for debugging
         console.log(rows.length);
 
+        // Return the data as JSON
         return res.json(rows);
     } catch (error) {
         console.error('Error executing emp_band_data query:', error);
         return res.status(500).json({ error: 'Internal server error.' });
     }
 });
+
 
 // Endpoint for fetching filters
 const fetchFilterData = async (query, college_id, res, filterKey) => {

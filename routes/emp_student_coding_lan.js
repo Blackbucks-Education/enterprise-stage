@@ -8,7 +8,7 @@ const pool = new Pool(dbConfig);
 const isAuthenticated = require('../jwtAuth.js');
 
 // Route to get language data
-router.get('/language_data', isAuthenticated,async (req, res) => {
+router.get('/language_data', isAuthenticated, async (req, res) => {
     try {
         const college_id = req.user.college || null;
 
@@ -16,14 +16,7 @@ router.get('/language_data', isAuthenticated,async (req, res) => {
             return res.status(400).json({ error: 'College code is not set in the session.' });
         }
 
-        const cacheKey = `emp_language_data_${college_id}`;
-        let cachedData = await cacheManager.getCachedData(cacheKey);
-
-        if (cachedData) {
-            // Parse cached data if needed (assuming it's stored as JSON)
-            return res.status(200).json(cachedData);
-        }
-
+        // SQL query to get language data
         const query = `
             SELECT
                 ts.language,
@@ -40,20 +33,13 @@ router.get('/language_data', isAuthenticated,async (req, res) => {
             ORDER BY distinct_users DESC;
         `;
 
+        // Execute the query
         const { rows } = await pool.query(query, [college_id]);
 
-        // Cache the data in DynamoDB (assuming cacheManager handles this)
-        await cacheManager.setCachedData(cacheKey, rows); // Store data as JSON string
+        // Log the length of the result rows for debugging
+        console.log(rows.length);
 
-        // Schedule automatic cache refresh
-        cacheManager.scheduleCacheRefresh(cacheKey, async () => {
-            const refreshedData = await pool.query(query, [college_id]);
-            return refreshedData.rows;
-        });
-
-        console.log('Serving from database and cached: /language_data');
-
-        // Output JSON
+        // Return the data as JSON
         res.json(rows);
     } catch (error) {
         console.error('Error querying database for language data:', error);
@@ -61,21 +47,14 @@ router.get('/language_data', isAuthenticated,async (req, res) => {
     }
 });
 
+
 // Route to get accuracy scores
-router.get('/accuracy_scores',isAuthenticated, async (req, res) => {
+router.get('/accuracy_scores', isAuthenticated, async (req, res) => {
     try {
         const college_id = req.user.college || null;
 
         if (!college_id) {
             return res.status(400).json({ error: 'College code is not set in the session.' });
-        }
-
-        const cacheKey = `accuracy_scores_${college_id}`;
-        let cachedData = await cacheManager.getCachedData(cacheKey);
-
-        if (cachedData) {
-            // Parse cached data if needed (assuming it's stored as JSON)
-            return res.status(200).json(cachedData);
         }
 
         const query = `
@@ -97,25 +76,16 @@ router.get('/accuracy_scores',isAuthenticated, async (req, res) => {
                 accuracy_percentage DESC;
         `;
 
+        // Execute the query
         const { rows } = await pool.query(query, [college_id]);
 
-        // Cache the data in DynamoDB (assuming cacheManager handles this)
-        await cacheManager.setCachedData(cacheKey, rows); // Store data as JSON string
-
-        // Schedule automatic cache refresh
-        cacheManager.scheduleCacheRefresh(cacheKey, async () => {
-            const refreshedData = await pool.query(query, [college_id]);
-            return refreshedData.rows;
-        });
-
-        console.log('Serving from database and cached: /accuracy_scores');
-
-        // Output JSON
+        // Return the data as JSON
         res.json(rows);
     } catch (error) {
         console.error('Error querying database for accuracy scores:', error);
         res.status(500).json({ error: 'Internal Server Error', message: error.message });
     }
 });
+
 
 module.exports = router;

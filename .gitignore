@@ -5,7 +5,7 @@ node_modules/
 /out/
 .next/
 
-index.js
+
 
 # production
 /build

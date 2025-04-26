@@ -16,13 +16,6 @@ router.get('/student-counts/:id', isAuthenticated, async (req, res) => {
   }
 
   try {
-    const cacheKey = `student-counts-${college_id}-${hackathon_id}`;
-    let cachedData = await cacheManager.getCachedData(cacheKey);
-
-    if (cachedData) {
-      return res.status(200).json(cachedData);
-    }
-
     const query = `
       SELECT
         sda.sub_domain,
@@ -42,30 +35,20 @@ router.get('/student-counts/:id', isAuthenticated, async (req, res) => {
       ORDER BY
         count_of_students DESC;
     `;
+
     const { rows } = await pool.query(query, [college_id, hackathon_id]);
-    cachedData = rows;
-    await cacheManager.setCachedData(cacheKey, cachedData);
 
-    // Schedule automatic cache refresh
-    cacheManager.scheduleCacheRefresh(cacheKey, async () => {
-      const { rows: refreshedData } = await pool.query(query, [college_id, hackathon_id]);
-      if (refreshedData.length > 0) {
-        await cacheManager.setCachedData(cacheKey, refreshedData);
-        console.log(`Cache refreshed for key ${cacheKey}`);
-      }
-    });
-
-    res.json(cachedData);
+    res.json(rows);
   } catch (err) {
     console.error('Error fetching student counts:', err);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
+
 // Route to get the list of students for a specific sub_domain with accuracy <= 50
 router.get('/students/:sub_domain/:id', isAuthenticated, async (req, res) => {
   const { sub_domain, id: hackathon_id } = req.params;
-  console.log(`Sub-domain: ${sub_domain}, Hackathon ID: ${hackathon_id}`);  // Logging route parameters
   const college_id = req.user.college || null;
 
   if (!college_id) {
@@ -73,17 +56,9 @@ router.get('/students/:sub_domain/:id', isAuthenticated, async (req, res) => {
   }
 
   try {
-    const cacheKey = `students-${sub_domain}-${college_id}-${hackathon_id}`;
-    let cachedData = await cacheManager.getCachedData(cacheKey);
-    console.log(`Cache key: ${cacheKey}, Cached Data:`, cachedData);  // Logging cache data
-    
-    if (cachedData) {
-      return res.status(200).json(cachedData);
-    }
-
     const query = `
       SELECT
-        concat(u.first_name, ' ', u.last_name) AS name,
+        CONCAT(u.first_name, ' ', u.last_name) AS name,
         u.email,
         ROUND(pro.coding, 2) AS coding,
         ROUND(pro.total_score, 2) AS total_score,
@@ -103,27 +78,16 @@ router.get('/students/:sub_domain/:id', isAuthenticated, async (req, res) => {
         AND sda.sub_domain = $3
         AND sda.accuracy <= 50;
     `;
+    
     const queryParams = [college_id, hackathon_id, sub_domain];
-    console.log('Query:', query);
-    console.log('Query Params:', queryParams);  // Logging query and parameters
     const { rows } = await pool.query(query, queryParams);
-    cachedData = rows;
-    await cacheManager.setCachedData(cacheKey, cachedData);
 
-    // Schedule automatic cache refresh
-    cacheManager.scheduleCacheRefresh(cacheKey, async () => {
-      const { rows: refreshedData } = await pool.query(query, queryParams);
-      if (refreshedData.length > 0) {
-        await cacheManager.setCachedData(cacheKey, refreshedData);
-        console.log(`Cache refreshed for key ${cacheKey}`);
-      }
-    });
-
-    res.json(cachedData);
+    res.json(rows);
   } catch (err) {
     console.error(`Error fetching students for sub_domain ${sub_domain}:`, err);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 module.exports = router;

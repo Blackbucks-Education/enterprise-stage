@@ -18,13 +18,6 @@ router.get('/overview/:domainId', isAuthenticated, async (req, res) => {
       return res.status(400).json({ error: 'College code not found in session.' });
     }
 
-    const cacheKey = `overview_${college_id}_${domainId}`;
-    const cachedData = await cacheManager.getCachedData(cacheKey);
-
-    if (cachedData) {
-      return res.status(200).json(cachedData);
-    }
-
     const overviewQuery = `
       WITH TotalStudents AS (
         SELECT
@@ -79,23 +72,13 @@ router.get('/overview/:domainId', isAuthenticated, async (req, res) => {
     const pool = new Pool(dbConfigWrite);
     const { rows } = await pool.query(overviewQuery, [college_id, domainId, college_id, domainId, domainId]);
 
-    await cacheManager.setCachedData(cacheKey, rows); // Cache data in DynamoDB
-
-    // Schedule automatic cache refresh (assuming this functionality exists in cacheManager)
-    cacheManager.scheduleCacheRefresh(cacheKey, async () => {
-      const refreshedResult = await pool.query(overviewQuery, [college_id, domainId, college_id, domainId, domainId]);
-      if (refreshedResult.rows.length > 0) {
-        await cacheManager.setCachedData(cacheKey, refreshedResult.rows);
-        console.log(`Cache refreshed for key ${cacheKey}`);
-      }
-    });
-
     res.status(200).json(rows);
   } catch (error) {
     console.error('Error fetching overview:', error.message);
     res.status(500).send(`Internal Server Error: ${error.message}`);
   }
 });
+
 
 router.get('/download-absentees/:assessmentId', isAuthenticated, async (req, res) => {
   const assessmentId = req.params.assessmentId;
@@ -104,19 +87,6 @@ router.get('/download-absentees/:assessmentId', isAuthenticated, async (req, res
   try {
     if (!college_id) {
       return res.status(400).json({ error: 'College code not found in session.' });
-    }
-
-    const cacheKey = `absentees_${college_id}_${assessmentId}`;
-    const cachedData = await cacheManager.getCachedData(cacheKey);
-
-    if (cachedData) {
-      // Directly send the cached Excel buffer
-      res.setHeader(
-        'Content-Disposition',
-        `attachment; filename="absentees_event_${assessmentId}.xlsx"`
-      );
-      res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-      return res.status(200).send(cachedData);
     }
 
     const absenteesQuery = `
@@ -185,7 +155,6 @@ router.get('/download-absentees/:assessmentId', isAuthenticated, async (req, res
     ];
 
     const buffer = xlsx.build([{ name: 'Absentees', data }]);
-    await cacheManager.setCachedData(cacheKey, buffer); // Cache Excel buffer in DynamoDB
 
     res.setHeader(
       'Content-Disposition',
@@ -198,6 +167,7 @@ router.get('/download-absentees/:assessmentId', isAuthenticated, async (req, res
     res.status(500).send(`Internal Server Error: ${error.message}`);
   }
 });
+
 
 
 
