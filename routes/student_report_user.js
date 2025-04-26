@@ -56,34 +56,32 @@ const setCachedData = async (key, data) => {
 router.get('/user', async (req, res) => {
   try {
     const { email } = req.query;
+
+    // Check if the email parameter is provided
     if (!email) {
       return res.status(400).json({ error: "Email parameter is missing in the URL query." });
     }
 
-    const cacheKey = `user_${email}`;
-    let cachedData = await getCachedData(cacheKey);
-
-    if (cachedData) {
-      console.log('Serving from cache: /user');
-      return res.json(cachedData);
-    }
-
+    // Query to fetch user ID based on email
     const userIdQuery = `SELECT id FROM public.user WHERE email = $1`;
     const userIdResult = await pool.query(userIdQuery, [email]);
 
     if (userIdResult.rowCount === 0) {
-      return res.status(404).json({ error: "User not found or information not available." });
+      return res.status(404).json({ error: "User not found." });
     }
 
     const userId = userIdResult.rows[0].id;
+
+    // Query to fetch user information
     const userInfoQuery = `
-      SELECT u.first_name || ' ' || u.last_name AS full_name,
-             u.image,
-             u.email,
-             u.phone,
-             c.name AS college_name,
-             d.name AS department_name,
-             u.roll_number
+      SELECT 
+        u.first_name || ' ' || u.last_name AS full_name,
+        u.image,
+        u.email,
+        u.phone,
+        c.name AS college_name,
+        d.name AS department_name,
+        u.roll_number
       FROM public.user u
       LEFT JOIN public.college c ON u.college_id = c.id
       LEFT JOIN public.department d ON u.department_id = d.id
@@ -92,9 +90,10 @@ router.get('/user', async (req, res) => {
     const userInfoResult = await pool.query(userInfoQuery, [userId]);
 
     if (userInfoResult.rowCount === 0) {
-      return res.status(404).json({ error: "User not found or information not available." });
+      return res.status(404).json({ error: "User information not available." });
     }
 
+    // Preparing user data to be sent
     const userData = {
       full_name: userInfoResult.rows[0].full_name,
       email: userInfoResult.rows[0].email,
@@ -105,10 +104,7 @@ router.get('/user', async (req, res) => {
       image: userInfoResult.rows[0].image
     };
 
-    // Cache the data in DynamoDB
-    await setCachedData(cacheKey, userData);
-    console.log('Serving from database and cached: /user');
-    
+    // Send the response without caching
     res.json(userData);
   } catch (error) {
     console.error('Error querying database:', error);
@@ -116,20 +112,14 @@ router.get('/user', async (req, res) => {
   }
 });
 
+
+
 // Route to fetch internship data with DynamoDB caching
 router.get('/data', async (req, res) => {
   try {
     const { email } = req.query;
     if (!email) {
       return res.status(400).json({ error: "Email parameter is missing in the URL query." });
-    }
-
-    const cacheKey = `internships_${email}`;
-    let cachedData = await getCachedData(cacheKey);
-
-    if (cachedData) {
-      console.log('Serving from cache: /data');
-      return res.json(cachedData);
     }
 
     const query = `
@@ -213,10 +203,6 @@ router.get('/data', async (req, res) => {
 
     const internships = result.rows;
 
-    // Cache the data in DynamoDB
-    await setCachedData(cacheKey, internships);
-    console.log('Serving from database and cached: /data');
-
     res.status(200).json(internships);
   } catch (error) {
     console.error('Error fetching internship details:', error);
@@ -224,19 +210,12 @@ router.get('/data', async (req, res) => {
   }
 });
 
+
 // Route to fetch student comment data with DynamoDB caching
 router.get('/student_comment_data/:emailId', async (req, res) => {
   const emailId = req.params.emailId;
 
   try {
-    const cacheKey = `student_comments_${emailId}`;
-    let cachedData = await getCachedData(cacheKey);
-
-    if (cachedData) {
-      console.log('Serving from cache: /student_comment_data');
-      return res.json(cachedData);
-    }
-
     const query = `
       WITH RankedScores AS (
         SELECT
@@ -271,16 +250,13 @@ router.get('/student_comment_data/:emailId', async (req, res) => {
 
     const studentComments = result.rows;
 
-    // Cache the data in DynamoDB
-    await setCachedData(cacheKey, studentComments);
-    console.log('Serving from database and cached: /student_comment_data');
-
     res.status(200).json(studentComments);
   } catch (error) {
     console.error('Error fetching student comment details:', error);
     res.status(500).send('Internal Server Error');
   }
 });
+
 
 module.exports = router;
 

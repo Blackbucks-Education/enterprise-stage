@@ -75,7 +75,7 @@ router.get('/internship_details/:id', async (req, res) => {
 });
 
 
-router.get('/batch_count/:id',isAuthenticated, async (req, res) => {
+router.get('/batch_count/:id', isAuthenticated, async (req, res) => {
   const internshipId = req.params.id;
   const college_id = req.user.college || null;
 
@@ -83,15 +83,7 @@ router.get('/batch_count/:id',isAuthenticated, async (req, res) => {
     return res.status(400).json({ error: 'College code is not set in the session.' });
   }
 
-  const cacheKey = `batch_count_${internshipId}_${college_id}`;
-
   try {
-    const cachedData = await cacheManager.getCachedData(cacheKey);
-  
-    if (cachedData) {
-      return res.status(200).json(cachedData);
-    }
-
     const query = `
       SELECT COUNT(*) as count
       FROM report.batch_data bd
@@ -100,8 +92,8 @@ router.get('/batch_count/:id',isAuthenticated, async (req, res) => {
         INNER JOIN report.internships i ON id.internship_id = i.id
         INNER JOIN report.college c ON bd.college_id = c.id
       WHERE i.id = $1 AND c.id = $2
-      order by count desc
     `;
+    
     const result = await pool.query(query, [internshipId, college_id]);
 
     if (result.rows.length === 0) {
@@ -109,21 +101,8 @@ router.get('/batch_count/:id',isAuthenticated, async (req, res) => {
     }
 
     const batchCount = result.rows[0].count;
-
-    // Cache the data
-    await cacheManager.setCachedData(cacheKey, { batchCount });
-
-    // Schedule automatic cache refresh
-    cacheManager.scheduleCacheRefresh(cacheKey, async () => {
-      const refreshedResult = await pool.query(query, [internshipId, college_id]);
-      if (refreshedResult.rows.length > 0) {
-        const refreshedBatchCount = refreshedResult.rows[0].count;
-        await cacheManager.setCachedData(cacheKey, { batchCount: refreshedBatchCount });
-        console.log(`Cache refreshed for key ${cacheKey}`);
-      }
-    });
-
     res.status(200).json({ batchCount });
+
   } catch (error) {
     console.error('Error fetching batch count:', error);
     res.status(500).send('Internal Server Error');
@@ -131,7 +110,7 @@ router.get('/batch_count/:id',isAuthenticated, async (req, res) => {
 });
 
 
-router.get('/batch_details/:id',isAuthenticated, async (req, res) => {
+router.get('/batch_details/:id', isAuthenticated, async (req, res) => {
   const internshipId = req.params.id;
   const college_id = req.user.college || null;
 
@@ -140,56 +119,37 @@ router.get('/batch_details/:id',isAuthenticated, async (req, res) => {
   }
 
   try {
-    const cacheKey = `batch_details_${internshipId}_${college_id}`;
-    const cachedData = await cacheManager.getCachedData(cacheKey);
-
-    if (cachedData) {
-      return res.status(200).json(cachedData);
-    }
-
     const query = `
       SELECT 
-    b.batch_title AS batch, 
-    COUNT(*) AS count
-FROM 
-    report.batch_data bd
-INNER JOIN 
-    report.batch b ON bd.batch_id = b.id
-INNER JOIN 
-    report.internship_batch ib ON bd.batch_id = ib.batch_id
-INNER JOIN 
-    report.internship_domain id ON ib.domain_id = id.id
-INNER JOIN 
-    report.internships i ON id.internship_id = i.id
-INNER JOIN 
-    report.college c ON bd.college_id = c.id
-WHERE 
-    i.id = $1 AND c.id = $2
-GROUP BY 
-    b.batch_title 
-HAVING 
-    COUNT(*) > 5
-ORDER BY 
-    count DESC;
-
+        b.batch_title AS batch, 
+        COUNT(*) AS count
+      FROM 
+        report.batch_data bd
+      INNER JOIN 
+        report.batch b ON bd.batch_id = b.id
+      INNER JOIN 
+        report.internship_batch ib ON bd.batch_id = ib.batch_id
+      INNER JOIN 
+        report.internship_domain id ON ib.domain_id = id.id
+      INNER JOIN 
+        report.internships i ON id.internship_id = i.id
+      INNER JOIN 
+        report.college c ON bd.college_id = c.id
+      WHERE 
+        i.id = $1 AND c.id = $2
+      GROUP BY 
+        b.batch_title 
+      HAVING 
+        COUNT(*) > 5
+      ORDER BY 
+        count DESC;
     `;
+
     const result = await pool.query(query, [internshipId, college_id]);
 
     if (result.rows.length === 0) {
       return res.status(404).send('Batch Details not found');
     }
-
-    // Cache the result
-    await cacheManager.setCachedData(cacheKey, result.rows);
-
-    // Schedule automatic cache refresh
-    cacheManager.scheduleCacheRefresh(cacheKey, async () => {
-      const refreshedResult = await pool.query(query, [internshipId, college_id]);
-      if (refreshedResult.rows.length > 0) {
-        await cacheManager.setCachedData(cacheKey, refreshedResult.rows);
-        console.log(`Cache refreshed for key ${cacheKey}`);
-      }
-    });
 
     res.status(200).json(result.rows);
   } catch (error) {
@@ -199,7 +159,8 @@ ORDER BY
 });
 
 
-router.get('/batch_students_data/:id',isAuthenticated, async (req, res) => {
+
+router.get('/batch_students_data/:id', isAuthenticated, async (req, res) => {
   const internshipId = req.params.id;
   const college_id = req.user.college || null;
 
@@ -208,40 +169,34 @@ router.get('/batch_students_data/:id',isAuthenticated, async (req, res) => {
   }
 
   try {
-    const cacheKey = `batch_students_data_${internshipId}_${college_id}`;
-    const cachedData = await cacheManager.getCachedData(cacheKey);
-  
-    if (cachedData) {
-      return res.status(200).json(cachedData);
-    }
-
     const query = `
-      SELECT b.batch_title AS batch_name, bd.name AS student_name, bd.email, bd.regno, bd.phone 
-      FROM report.batch_data bd
-        INNER JOIN report.batch b ON bd.batch_id = b.id
-        INNER JOIN report.internship_batch ib ON bd.batch_id = ib.batch_id
-        INNER JOIN report.internship_domain id ON ib.domain_id = id.id
-        INNER JOIN report.internships i ON id.internship_id = i.id
-        INNER JOIN report.college c ON bd.college_id = c.id
-      WHERE i.id = $1 AND c.id = $2;
+      SELECT 
+        b.batch_title AS batch_name, 
+        bd.name AS student_name, 
+        bd.email, 
+        bd.regno, 
+        bd.phone 
+      FROM 
+        report.batch_data bd
+      INNER JOIN 
+        report.batch b ON bd.batch_id = b.id
+      INNER JOIN 
+        report.internship_batch ib ON bd.batch_id = ib.batch_id
+      INNER JOIN 
+        report.internship_domain id ON ib.domain_id = id.id
+      INNER JOIN 
+        report.internships i ON id.internship_id = i.id
+      INNER JOIN 
+        report.college c ON bd.college_id = c.id
+      WHERE 
+        i.id = $1 AND c.id = $2;
     `;
+
     const result = await pool.query(query, [internshipId, college_id]);
 
     if (result.rows.length === 0) {
       return res.status(404).send('Student Details not found');
     }
-
-    // Cache the result
-    await cacheManager.setCachedData(cacheKey, result.rows);
-
-    // Schedule automatic cache refresh
-    cacheManager.scheduleCacheRefresh(cacheKey, async () => {
-      const refreshedResult = await pool.query(query, [internshipId, college_id]);
-      if (refreshedResult.rows.length > 0) {
-        await cacheManager.setCachedData(cacheKey, refreshedResult.rows);
-        console.log(`Cache refreshed for key ${cacheKey}`);
-      }
-    });
 
     res.status(200).json(result.rows);
   } catch (error) {
@@ -249,6 +204,7 @@ router.get('/batch_students_data/:id',isAuthenticated, async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+
 
 router.get('/graph_details/:id', async (req,res) => {
   const internshipId = req.params.id;
@@ -350,13 +306,6 @@ router.get('/table_details/:id', isAuthenticated, async (req, res) => {
   }
 
   try {
-    const cacheKey = `table_details_${internshipId}_${college_id}`;
-    const cachedData = await cacheManager.getCachedData(cacheKey);
-  
-    if (cachedData) {
-      return res.status(200).json(cachedData);
-    }
-
     const query = `
       WITH domain_data AS (
         SELECT
@@ -364,14 +313,18 @@ router.get('/table_details/:id', isAuthenticated, async (req, res) => {
           id.title,
           id.internship_id,
           count(bd.batch_id)
-
         FROM
           report.internship_domain id
-            INNER JOIN report.internship_batch ib on id.id = ib.domain_id
-            INNER JOIN report.batch_data bd on ib.batch_id = bd.batch_id
-            INNER JOIN report.college c on bd.college_id = c.id
-        where c.id = $2
-        group by id.id, id.title, id.internship_id
+        INNER JOIN 
+          report.internship_batch ib ON id.id = ib.domain_id
+        INNER JOIN 
+          report.batch_data bd ON ib.batch_id = bd.batch_id
+        INNER JOIN 
+          report.college c ON bd.college_id = c.id
+        WHERE 
+          c.id = $2
+        GROUP BY 
+          id.id, id.title, id.internship_id
       ),
       assessment_data AS (
         SELECT
@@ -380,12 +333,12 @@ router.get('/table_details/:id', isAuthenticated, async (req, res) => {
           SUM(CASE WHEN h.test_type_id = 13 THEN 1 ELSE 0 END) AS daily_tests,
           SUM(CASE WHEN h.test_type_id = 81 THEN 1 ELSE 0 END) AS grand_tests,
           SUM(CASE WHEN h.test_type_id = 80 THEN 1 ELSE 0 END) AS assignments,
-          SUM(CASE WHEN h.test_type_id in (6,54,12) THEN 1 ELSE 0 END) AS mets
+          SUM(CASE WHEN h.test_type_id IN (6, 54, 12) THEN 1 ELSE 0 END) AS mets
         FROM
           report.internship_assessment ia
-        INNER JOIN
+        INNER JOIN 
           hackathon h ON ia.assessment_id = h.id
-        GROUP BY
+        GROUP BY 
           ia.domain_id
       ),
       live_sessions_data AS (
@@ -394,7 +347,7 @@ router.get('/table_details/:id', isAuthenticated, async (req, res) => {
           COUNT(ils.event_id) AS live_session_count
         FROM
           report.internship_live_sessions ils
-        GROUP BY
+        GROUP BY 
           ils.domain_id
       )
       SELECT
@@ -408,42 +361,29 @@ router.get('/table_details/:id', isAuthenticated, async (req, res) => {
         COALESCE(lsd.live_session_count, 0) AS live_session_count
       FROM
         domain_data dd
-      LEFT JOIN
+      LEFT JOIN 
         assessment_data ad ON dd.id = ad.domain_id
-      LEFT JOIN
+      LEFT JOIN 
         live_sessions_data lsd ON dd.id = lsd.domain_id
-      WHERE
+      WHERE 
         dd.internship_id = $1;
     `;
 
-    const result = await pool.query(query, [internshipId,college_id]);
+    const result = await pool.query(query, [internshipId, college_id]);
 
     if (result.rows.length === 0) {
       return res.status(404).send('Details not found');
     }
 
-    const tableDetails = result.rows;
-
-    // Cache the result
-    await cacheManager.setCachedData(cacheKey, tableDetails);
-
-    // Schedule automatic cache refresh
-    cacheManager.scheduleCacheRefresh(cacheKey, async () => {
-      const refreshedData = await pool.query(query, [internshipId,college_id]);
-      if (refreshedData.rows.length > 0) {
-        await cacheManager.setCachedData(cacheKey, refreshedData.rows);
-        console.log(`Cache refreshed for key ${cacheKey}`);
-      }
-    });
-
-    res.status(200).json(tableDetails);
+    res.status(200).json(result.rows);
   } catch (error) {
     console.error('Error fetching details:', error);
     res.status(500).send('Internal Server Error');
   }
 });
 
-router.get('/top_students/:id',isAuthenticated, async (req, res) => {
+
+router.get('/top_students/:id', isAuthenticated, async (req, res) => {
   const internshipId = req.params.id;
   const college_id = req.user.college || null;
 
@@ -452,13 +392,6 @@ router.get('/top_students/:id',isAuthenticated, async (req, res) => {
   }
 
   try {
-    const cacheKey = `top_students_${internshipId}_${college_id}`;
-    const cachedData = await cacheManager.getCachedData(cacheKey);
-  
-    if (cachedData) {
-      return res.status(200).json(cachedData);
-    }
-
     const query = `
       SELECT
         bd.name,
@@ -506,26 +439,13 @@ router.get('/top_students/:id',isAuthenticated, async (req, res) => {
       return res.status(404).send('Top Students not found');
     }
 
-    const topStudents = result.rows;
-
-    // Cache the result
-    await cacheManager.setCachedData(cacheKey, topStudents);
-
-    // Schedule automatic cache refresh
-    cacheManager.scheduleCacheRefresh(cacheKey, async () => {
-      const refreshedData = await pool1.query(query, [internshipId, college_id]);
-      if (refreshedData.rows.length > 0) {
-        await cacheManager.setCachedData(cacheKey, refreshedData.rows);
-        console.log(`Cache refreshed for key ${cacheKey}`);
-      }
-    });
-
-    res.status(200).json(topStudents);
+    res.status(200).json(result.rows);
   } catch (error) {
     console.error('Error fetching Top Student details:', error);
     res.status(500).send('Internal Server Error');
   }
 });
+
 
 
 

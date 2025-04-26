@@ -77,7 +77,7 @@ async function fetchCodingSubmissionsFromDB(college_id) {
   }
 }
 
-router.get('/data', isAuthenticated,async (req, res) => {
+router.get('/data', isAuthenticated, async (req, res) => {
   try {
     const college_id = req.user.college || null;
 
@@ -85,46 +85,23 @@ router.get('/data', isAuthenticated,async (req, res) => {
       return res.status(400).json({ error: 'college_id is not set in the session.' });
     }
 
-    const cacheKey = `data_empaccuracyanalysis_${college_id}`;
-    let cachedData = await cacheManager.getCachedData(cacheKey);
-
-    if (cachedData) {
-      return res.status(200).json(cachedData);
-    }
-
+    // Fetch data from the database without cache
     const [subDomainStats, codingSubmissions] = await Promise.all([
       fetchSubDomainStatsFromDB(college_id),
       fetchCodingSubmissionsFromDB(college_id)
     ]);
 
-    cachedData = {
+    const responseData = {
       sub_domain_stats: subDomainStats,
       coding_submissions: codingSubmissions
     };
 
-    await cacheManager.setCachedData(cacheKey, cachedData);
-
-    // Schedule automatic cache refresh
-    cacheManager.scheduleCacheRefresh(cacheKey, async () => {
-      const [refreshedSubDomainStats, refreshedCodingSubmissions] = await Promise.all([
-        fetchSubDomainStatsFromDB(college_id),
-        fetchCodingSubmissionsFromDB(college_id)
-      ]);
-
-      const refreshedData = {
-        sub_domain_stats: refreshedSubDomainStats,
-        coding_submissions: refreshedCodingSubmissions
-      };
-
-      await cacheManager.setCachedData(cacheKey, refreshedData);
-      console.log(`Cache refreshed for key ${cacheKey}`);
-    });
-
-    res.json(cachedData);
+    res.json(responseData);
   } catch (error) {
     console.error('Error retrieving data:', error);
     res.status(500).json({ error: 'Internal Server Error', message: error.message });
   }
 });
+
 
 module.exports = router;

@@ -93,42 +93,17 @@ router.get('/data/:id', isAuthenticated, async (req, res) => {
       return res.status(400).json({ error: 'hackathon_id is not provided in the URL.' });
     }
 
-    const cacheKey = `data_empaccuracyanalysis_${college_id}_${hackathon_id}`;
-    let cachedData = await cacheManager.getCachedData(cacheKey);
-
-    if (cachedData) {
-      return res.status(200).json(cachedData);
-    }
-
     const [subDomainStats, codingSubmissions] = await Promise.all([
       fetchSubDomainStatsFromDB(college_id, hackathon_id),
       fetchCodingSubmissionsFromDB(college_id)
     ]);
 
-    cachedData = {
+    const data = {
       sub_domain_stats: subDomainStats,
       coding_submissions: codingSubmissions
     };
 
-    await cacheManager.setCachedData(cacheKey, cachedData);
-
-    // Schedule automatic cache refresh
-    cacheManager.scheduleCacheRefresh(cacheKey, async () => {
-      const [refreshedSubDomainStats, refreshedCodingSubmissions] = await Promise.all([
-        fetchSubDomainStatsFromDB(college_id, hackathon_id),
-        fetchCodingSubmissionsFromDB(college_id)
-      ]);
-
-      const refreshedData = {
-        sub_domain_stats: refreshedSubDomainStats,
-        coding_submissions: refreshedCodingSubmissions
-      };
-
-      await cacheManager.setCachedData(cacheKey, refreshedData);
-      console.log(`Cache refreshed for key ${cacheKey}`);
-    });
-
-    res.json(cachedData);
+    res.json(data);
   } catch (error) {
     console.error('Error retrieving data:', error);
     res.status(500).json({ error: 'Internal Server Error', message: error.message });

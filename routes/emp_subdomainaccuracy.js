@@ -54,7 +54,7 @@ ORDER BY
     };
 }
 
-router.get('/sub_domain_stats',isAuthenticated, async (req, res) => {
+router.get('/sub_domain_stats', isAuthenticated, async (req, res) => {
     try {
         // Retrieve college code from session
         const college_id = req.user.college || null;
@@ -63,25 +63,8 @@ router.get('/sub_domain_stats',isAuthenticated, async (req, res) => {
             return res.status(400).json({ error: 'College code is not set in the session.' });
         }
 
-        // Check if data exists in cache
-        const cacheKey = `sub_domain_stats_${college_id}`;
-        const cachedData = await cacheManager.getCachedData(cacheKey);
-
-        if (cachedData) {
-            return res.status(200).json(cachedData);
-        }
-
         // Fetch data from the database
         const data = await fetchSubDomainStats(college_id);
-
-        await cacheManager.setCachedData(cacheKey, data); // Cache data in DynamoDB
-
-        // Schedule automatic cache refresh
-        cacheManager.scheduleCacheRefresh(cacheKey, async () => {
-            const refreshedData = await fetchSubDomainStats(college_id);
-            await cacheManager.setCachedData(cacheKey, refreshedData);
-            console.log(`Cache refreshed for key ${cacheKey}`);
-        });
 
         // Output JSON
         res.json(data);
@@ -90,5 +73,6 @@ router.get('/sub_domain_stats',isAuthenticated, async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error', message: error.message });
     }
 });
+
 
 module.exports = router;

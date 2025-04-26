@@ -13,13 +13,6 @@ router.get('/overview/:phaseId', isAuthenticated, async (req, res) => {
   const phaseId = req.params.phaseId;
 
   try {
-        const cacheKey = `overview_${phaseId}`;
-        const cachedData = await cacheManager.getCachedData(cacheKey);
-
-    if (cachedData) {
-      return res.status(200).json(cachedData);
-    }
-
     const overviewQuery = `
       WITH TotalStudents AS (
         SELECT
@@ -72,17 +65,7 @@ router.get('/overview/:phaseId', isAuthenticated, async (req, res) => {
     const pool = new Pool(dbConfigWrite);
     const { rows } = await pool.query(overviewQuery, [phaseId, phaseId, phaseId]);
 
-    await cacheManager.setCachedData(cacheKey, rows); // Cache data in DynamoDB
-
-    // Schedule automatic cache refresh (assuming this functionality exists in cacheManager)
-    cacheManager.scheduleCacheRefresh(cacheKey, async () => {
-      const refreshedResult = await pool.query(overviewQuery, [phaseId, phaseId, phaseId]);
-      if (refreshedResult.rows.length > 0) {
-        await cacheManager.setCachedData(cacheKey, refreshedResult.rows);
-        console.log(`Cache refreshed for key ${cacheKey}`);
-      }
-    });
-
+    // Directly return the data without caching
     res.status(200).json(rows);
   } catch (error) {
     console.error('Error fetching overview:', error.message);
@@ -91,24 +74,11 @@ router.get('/overview/:phaseId', isAuthenticated, async (req, res) => {
 });
 
 
+
 router.get('/download-absentees/:assessmentId', isAuthenticated, async (req, res) => {
   const assessmentId = req.params.assessmentId;
 
   try {
-
-    const cacheKey = `absentees_${assessmentId}`;
-    const cachedData = await cacheManager.getCachedData(cacheKey);
-
-    if (cachedData) {
-      // Directly send the cached Excel buffer
-      res.setHeader(
-        'Content-Disposition',
-        `attachment; filename="absentees_event_${assessmentId}.xlsx"`
-      );
-      res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-      return res.status(200).send(cachedData);
-    }
-
     const absenteesQuery = `
       WITH TotalStudents AS (
         SELECT
@@ -169,7 +139,6 @@ router.get('/download-absentees/:assessmentId', isAuthenticated, async (req, res
     ];
 
     const buffer = xlsx.build([{ name: 'Absentees', data }]);
-    await cacheManager.setCachedData(cacheKey, buffer); // Cache Excel buffer in DynamoDB
 
     res.setHeader(
       'Content-Disposition',
@@ -182,5 +151,6 @@ router.get('/download-absentees/:assessmentId', isAuthenticated, async (req, res
     res.status(500).send(`Internal Server Error: ${error.message}`);
   }
 });
+
 
 module.exports = router;

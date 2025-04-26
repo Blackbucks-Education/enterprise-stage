@@ -29,13 +29,6 @@ router.get('/averages', async (req, res) => {
     }
 
     const collegeId = collegeIdResult[0].college_id;
-    const cacheKey = `overall_averages_${collegeId}_${email}`;
-
-    const cachedData = await getCachedData(cacheKey);
-    if (cachedData) {
-      console.log('Serving from cache: /averages');
-      return res.json(cachedData);
-    }
 
     const sql = `
       SELECT
@@ -75,13 +68,6 @@ router.get('/averages', async (req, res) => {
         employability_band_sum: rowAverages.employability_band_sum,
       };
 
-      await setCachedData(cacheKey, data);
-
-      scheduleCacheRefresh(cacheKey, async () => {
-        const refreshedData = await executeQuery(sql, [collegeId]);
-        return refreshedData[0];
-      });
-
       return res.json(data);
     } else {
       return res.status(500).json({ error: 'No data found or an error occurred while calculating averages.' });
@@ -91,6 +77,7 @@ router.get('/averages', async (req, res) => {
     return res.status(500).json({ error: 'Internal Server Error', message: error.message });
   }
 });
+
 
 // Route to fetch user scores
 router.get('/scores', async (req, res) => {
@@ -162,13 +149,6 @@ router.get('/score-differences', async (req, res) => {
 
     const userId = resultUserDetails[0].id;
     const collegeId = resultUserDetails[0].college_id;
-    const cacheKey = `score_differences_${userId}_${collegeId}`;
-
-    const cachedData = await getCachedData(cacheKey);
-    if (cachedData) {
-      console.log('Serving from cache: /score-differences');
-      return res.json(cachedData);
-    }
 
     const queryAverageScores = `
       SELECT AVG(pr1.aptitude) AS average_aptitude,
@@ -214,39 +194,12 @@ router.get('/score-differences', async (req, res) => {
       score_differences: scoreDifferences,
     };
 
-    await setCachedData(cacheKey, response);
-
-    scheduleCacheRefresh(cacheKey, async () => {
-      const refreshedAverageScores = await executeQuery(queryAverageScores, [collegeId]);
-      const refreshedUserScores = await executeQuery(queryUserScores, [userId]);
-
-      if (refreshedAverageScores.length === 0 || refreshedUserScores.length === 0) {
-        throw new Error('Error refreshing cache: No data found');
-      }
-
-      const newAverageScores = refreshedAverageScores[0];
-      const newUserScores = refreshedUserScores[0];
-
-      const newScoreDifferences = {
-        aptitude_difference: parseFloat(newUserScores.aptitude - newAverageScores.average_aptitude).toFixed(2),
-        english_difference: parseFloat(newUserScores.english - newAverageScores.average_english).toFixed(2),
-        coding_difference: parseFloat(newUserScores.coding - newAverageScores.average_coding).toFixed(2),
-        total_score_difference: parseFloat(newUserScores.total_score - newAverageScores.average_score).toFixed(2),
-      };
-
-      return {
-        user_email: email,
-        user_id: userId,
-        college_id: collegeId,
-        score_differences: newScoreDifferences,
-      };
-    });
-
     return res.json(response);
   } catch (error) {
     console.error('Error querying database:', error);
     return res.status(500).json({ error: 'Internal Server Error', message: error.message });
   }
 });
+
 
 module.exports = router;

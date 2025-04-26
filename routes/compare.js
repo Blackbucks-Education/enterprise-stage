@@ -535,21 +535,12 @@ router.get('/accuracy_scores', isAuthenticated, async (req, res) => {
           return res.status(400).json({ error: 'Hackathon ID is not provided.' });
       }
 
-      // Construct a cache key using both the college_id and hackathon_id
-      const cacheKey = `accuracy_scores_${college_id}_${hackathon_id}`;
-      let cachedData = await cacheManager.getCachedData(cacheKey);
-
-      // If cached data is found, return it
-      if (cachedData) {
-          return res.status(200).json(cachedData);
-      }
-
       // SQL query to fetch the accuracy scores
       const query = `
           SELECT
               ts.language,
               ROUND(
-                  (SUM(CASE WHEN ts.status = 'pass' THEN 1 ELSE 0 END) * 1.0 /
+                  (SUM(CASE WHEN ts.status = 'pass' THEN 1 ELSE 0 END) * 1.0 / 
                   COUNT(*)) * 100, 2) AS accuracy_percentage
           FROM
               test_submission ts
@@ -572,17 +563,6 @@ router.get('/accuracy_scores', isAuthenticated, async (req, res) => {
       // Execute the query with parameter binding for both college_id and hackathon_id
       const { rows } = await pool.query(query, [college_id, hackathon_id]);
 
-      // Cache the fetched data
-      await cacheManager.setCachedData(cacheKey, rows);
-
-      // Schedule cache refresh
-      cacheManager.scheduleCacheRefresh(cacheKey, async () => {
-          const refreshedData = await pool.query(query, [college_id, hackathon_id]);
-          return refreshedData.rows;
-      });
-
-      console.log('Serving from database and cached: /accuracy_scores');
-
       // Send the response with the fetched data
       res.json(rows);
   } catch (error) {
@@ -604,14 +584,6 @@ router.get('/sub_domain_stats', isAuthenticated, async (req, res) => {
       return res.status(400).json({ error: 'Hackathon ID is not provided.' });
     }
 
-    // Construct a cache key using the college_id and hackathon_id
-    const cacheKey = `sub_domain_stats_${college_id}_${hackathon_id}`;
-    let cachedData = await cacheManager.getCachedData(cacheKey);
-
-    if (cachedData) {
-      return res.status(200).json(cachedData);
-    }
-
     // Fetch the sub-domain stats data and assessment names
     const { sub_domain_stats, weak_areas, improvement_areas, strong_areas, assessment1Name, assessment2Name } = await fetchSubDomainStats(college_id, hackathon_id);
 
@@ -624,23 +596,14 @@ router.get('/sub_domain_stats', isAuthenticated, async (req, res) => {
       assessment2Name
     };
 
-    // Cache the fetched data
-    await cacheManager.setCachedData(cacheKey, response);
-
-    // Schedule cache refresh
-    cacheManager.scheduleCacheRefresh(cacheKey, async () => {
-      const refreshedData = await fetchSubDomainStats(college_id, hackathon_id);
-      await cacheManager.setCachedData(cacheKey, refreshedData);
-      console.log(`Cache refreshed for key ${cacheKey}`);
-    });
-
-    console.log('Serving from database and cached: /sub_domain_stats');
+    console.log('Serving fresh data from database: /sub_domain_stats');
     res.json(response);
   } catch (error) {
     console.error('Error querying database for sub domain stats:', error);
     res.status(500).json({ error: 'Internal Server Error', message: error.message });
   }
 });
+
 
 // Updated fetchSubDomainStats function to include assessment names
 async function fetchSubDomainStats(college_id, hackathon_id) {

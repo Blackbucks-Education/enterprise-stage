@@ -219,14 +219,14 @@ router.get('/emp_band_data/:id', isAuthenticated, async (req, res) => {
             gradPercentage: req.query.gradPercentage,
         };
 
-        const cacheKey = `emp_band_data_${college_id}_${hackathon_id}_${params.degree}_${params.branch}_${params.year}_${params.empBand}_${params.empBestBand}_${params.tenthPercentage}_${params.twelfthPercentage}_${params.gradPercentage}`;
-        console.log(`Generated cache key: ${cacheKey}`);
+        // const cacheKey = `emp_band_data_${college_id}_${hackathon_id}_${params.degree}_${params.branch}_${params.year}_${params.empBand}_${params.empBestBand}_${params.tenthPercentage}_${params.twelfthPercentage}_${params.gradPercentage}`;
+        // console.log(`Generated cache key: ${cacheKey}`);
 
-        const cachedData = await cacheManager.getCachedData(cacheKey);
-        if (cachedData) {
-            console.log('Returning cached data');
-            return res.status(200).json(cachedData);
-        }
+        // const cachedData = await cacheManager.getCachedData(cacheKey);
+        // if (cachedData) {
+        //     console.log('Returning cached data');
+        //     return res.status(200).json(cachedData);
+        // }
 
         const { sqlQuery, values } = createSQLQuery(params);
         console.log(`Generated SQL query: ${sqlQuery}`);
@@ -235,16 +235,16 @@ router.get('/emp_band_data/:id', isAuthenticated, async (req, res) => {
         const { rows } = await pool.query(sqlQuery, values);
         console.log('Query executed successfully');
 
-        await cacheManager.setCachedData(cacheKey, rows);
-        console.log('Data cached successfully');
+        // await cacheManager.setCachedData(cacheKey, rows);
+        // console.log('Data cached successfully');
 
-        cacheManager.scheduleCacheRefresh(cacheKey, async () => {
-            const refreshedData = await pool.query(sqlQuery, values);
-            if (refreshedData.rows.length > 0) {
-                await cacheManager.setCachedData(cacheKey, refreshedData.rows);
-                console.log(`Cache refreshed for key ${cacheKey}`);
-            }
-        });
+        // cacheManager.scheduleCacheRefresh(cacheKey, async () => {
+        //     const refreshedData = await pool.query(sqlQuery, values);
+        //     if (refreshedData.rows.length > 0) {
+        //         await cacheManager.setCachedData(cacheKey, refreshedData.rows);
+        //         console.log(`Cache refreshed for key ${cacheKey}`);
+        //     }
+        // });
 
         return res.json(rows);
     } catch (error) {
@@ -252,6 +252,7 @@ router.get('/emp_band_data/:id', isAuthenticated, async (req, res) => {
         return res.status(500).json({ error: 'Internal server error.' });
     }
 });
+
 
 
 

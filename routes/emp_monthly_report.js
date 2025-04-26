@@ -8,21 +8,13 @@ const pool = new Pool(dbConfig);
 const cacheManager = require('../utlis/cacheManager.js'); // Ensure this path is correct
 const isAuthenticated = require('../jwtAuth.js');
 
-router.get('/month_wise_progress',isAuthenticated, async (req, res) => {
+router.get('/month_wise_progress', isAuthenticated, async (req, res) => {
   try {
     // Retrieve college code from session
     const college_id = req.user.college || null;
 
     if (!college_id) {
       return res.status(400).json({ error: 'College code is not set in the session.' });
-    }
-
-    // Check if data exists in DynamoDB cache
-    const cacheKey = `month_wise_progress_${college_id}`;
-    const cachedData = await cacheManager.getCachedData(cacheKey);
-
-    if (cachedData) {
-      return res.status(200).json(cachedData);
     }
 
     // Fetch data from the database
@@ -55,19 +47,6 @@ router.get('/month_wise_progress',isAuthenticated, async (req, res) => {
 
     const { rows } = await pool.query(sql_emp_band, [college_id]);
 
-    // Cache the data in DynamoDB with an expiry time
-    await cacheManager.setCachedData(cacheKey, rows);
-
-    // Schedule automatic cache refresh
-    cacheManager.scheduleCacheRefresh(cacheKey, async () => {
-      const refreshedData = await pool.query(sql_emp_band, [college_id]);
-      if (refreshedData.rows.length > 0) {
-        const newCacheData = refreshedData.rows;
-        await cacheManager.setCachedData(cacheKey, newCacheData);
-        console.log(`Cache refreshed for key ${cacheKey}`);
-      }
-    });
-
     // Output JSON
     res.json(rows);
   } catch (error) {
@@ -75,5 +54,6 @@ router.get('/month_wise_progress',isAuthenticated, async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error', message: error.message });
   }
 });
+
 
 module.exports = router;

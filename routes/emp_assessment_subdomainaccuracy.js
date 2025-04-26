@@ -58,42 +58,21 @@ async function fetchSubDomainStats(college_id, hackathon_id) {
 
 router.get('/sub_domain_stats/:id', isAuthenticated, async (req, res) => {
     try {
-        // Retrieve college code from session
-        const college_id = req.user.college || null;
-
-        if (!college_id) {
-            return res.status(400).json({ error: 'College code is not set in the session.' });
-        }
-
-        // Retrieve hackathon_id from URL parameters
-        const hackathon_id = req.params.id;
-
-        // Check if data exists in cache
-        const cacheKey = `sub_domain_stats_${college_id}_${hackathon_id}`;
-        const cachedData = await cacheManager.getCachedData(cacheKey);
-
-        if (cachedData) {
-            return res.status(200).json(cachedData);
-        }
-
-        // Fetch data from the database
-        const data = await fetchSubDomainStats(college_id, hackathon_id);
-
-        await cacheManager.setCachedData(cacheKey, data); // Cache data in DynamoDB
-
-        // Schedule automatic cache refresh
-        cacheManager.scheduleCacheRefresh(cacheKey, async () => {
-            const refreshedData = await fetchSubDomainStats(college_id, hackathon_id);
-            await cacheManager.setCachedData(cacheKey, refreshedData);
-            console.log(`Cache refreshed for key ${cacheKey}`);
-        });
-
-        // Output JSON
-        res.json(data);
+      const college_id = req.user.college || null;
+  
+      if (!college_id) {
+        return res.status(400).json({ error: 'College code is not set in the session.' });
+      }
+  
+      const hackathon_id = req.params.id;
+  
+      const data = await fetchSubDomainStats(college_id, hackathon_id);
+  
+      res.json(data);
     } catch (error) {
-        console.error('Error querying database:', error);
-        res.status(500).json({ error: 'Internal Server Error', message: error.message });
+      console.error('Error querying database:', error);
+      res.status(500).json({ error: 'Internal Server Error', message: error.message });
     }
-});
-
+  });
+  
 module.exports = router;

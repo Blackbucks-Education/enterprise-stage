@@ -58,12 +58,12 @@ router.get('/data', isAuthenticated, async (req, res) => {
       return res.status(400).json({ error: 'college_id is not set in the session.' });
     }
 
-    const cacheKey = `job_insights_${college_id}`;
-    let cachedData = await cacheManager.getCachedData(cacheKey);
+    // const cacheKey = `job_insights_${college_id}`;
+    // let cachedData = await cacheManager.getCachedData(cacheKey);
 
-    if (cachedData) {
-      return res.status(200).json(cachedData);
-    }
+    // if (cachedData) {
+    //   return res.status(200).json(cachedData);
+    // }
 
     const [totalJobPosts, jobPostsByCompany, jobPostsByDriveType, studentRecruitmentCount] = await Promise.all([
       fetchTotalJobPosts(),
@@ -72,36 +72,35 @@ router.get('/data', isAuthenticated, async (req, res) => {
       fetchStudentRecruitmentCount(college_id)
     ]);
 
-    cachedData = {
+    const responseData = {
       total_job_posts: totalJobPosts.total_job_posts,
       job_posts_by_company: jobPostsByCompany,
       job_posts_by_drive_type: jobPostsByDriveType,
       student_recruitment_count: studentRecruitmentCount.recruitment_count
     };
 
-    await cacheManager.setCachedData(cacheKey, cachedData);
+    // await cacheManager.setCachedData(cacheKey, responseData);
 
-    // Schedule automatic cache refresh
-    cacheManager.scheduleCacheRefresh(cacheKey, async () => {
-      const [refreshedTotalJobPosts, refreshedJobPostsByCompany, refreshedJobPostsByDriveType, refreshedStudentRecruitmentCount] = await Promise.all([
-        fetchTotalJobPosts(),
-        fetchJobPostsByCompany(),
-        fetchJobPostsByDriveType(),
-        fetchStudentRecruitmentCount(college_id)
-      ]);
+    // cacheManager.scheduleCacheRefresh(cacheKey, async () => {
+    //   const [refreshedTotalJobPosts, refreshedJobPostsByCompany, refreshedJobPostsByDriveType, refreshedStudentRecruitmentCount] = await Promise.all([
+    //     fetchTotalJobPosts(),
+    //     fetchJobPostsByCompany(),
+    //     fetchJobPostsByDriveType(),
+    //     fetchStudentRecruitmentCount(college_id)
+    //   ]);
 
-      const refreshedData = {
-        total_job_posts: refreshedTotalJobPosts.total_job_posts,
-        job_posts_by_company: refreshedJobPostsByCompany,
-        job_posts_by_drive_type: refreshedJobPostsByDriveType,
-        student_recruitment_count: refreshedStudentRecruitmentCount.recruitment_count
-      };
+    //   const refreshedData = {
+    //     total_job_posts: refreshedTotalJobPosts.total_job_posts,
+    //     job_posts_by_company: refreshedJobPostsByCompany,
+    //     job_posts_by_drive_type: refreshedJobPostsByDriveType,
+    //     student_recruitment_count: refreshedStudentRecruitmentCount.recruitment_count
+    //   };
 
-      await cacheManager.setCachedData(cacheKey, refreshedData);
-      console.log(`Cache refreshed for key ${cacheKey}`);
-    });
+    //   await cacheManager.setCachedData(cacheKey, refreshedData);
+    //   console.log(`Cache refreshed for key ${cacheKey}`);
+    // });
 
-    res.json(cachedData);
+    res.json(responseData);
   } catch (error) {
     console.error('Error retrieving data:', error);
     res.status(500).json({ error: 'Internal Server Error', message: error.message });

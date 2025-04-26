@@ -160,15 +160,9 @@ router.get('/marks_section_stats/:id', isAuthenticated, async (req, res) => {
 
     const hackathon_id = req.params.id;
 
-    const cacheKey = `marks_section_stats-${college_id}_${hackathon_id}`;
-    const cachedData = await cacheManager.getCachedData(cacheKey);
-
-    if (cachedData) {
-      return res.status(200).json(cachedData);
-    }
-
+    // Fetch data directly without cache
     const marksStats = await fetchMarksStats(pool, college_id, hackathon_id);
-    const [aptitudeStats, englishStats, technicalStats] = await Promise.all([
+    const [aptitudeStats, englishStats, technicalStats] = await Promise.all([ 
       fetchSectionStats(pool, college_id, hackathon_id, 'aptitude'),
       fetchSectionStats(pool, college_id, hackathon_id, 'english'),
       fetchSectionStats(pool, college_id, hackathon_id, 'coding')
@@ -181,29 +175,14 @@ router.get('/marks_section_stats/:id', isAuthenticated, async (req, res) => {
       technical_stats: roundValues(technicalStats, true)
     };
 
-    await cacheManager.setCachedData(cacheKey, data);
-
-    cacheManager.scheduleCacheRefresh(cacheKey, async () => {
-      try {
-        const refreshedData = {
-          marks_stats: roundValues(await fetchMarksStats(pool, college_id, hackathon_id), false),
-          aptitude_stats: roundValues(await fetchSectionStats(pool, college_id, hackathon_id, 'aptitude'), true),
-          english_stats: roundValues(await fetchSectionStats(pool, college_id, hackathon_id, 'english'), true),
-          technical_stats: roundValues(await fetchSectionStats(pool, college_id, hackathon_id, 'coding'), true)
-        };
-        await cacheManager.setCachedData(cacheKey, refreshedData);
-        console.log(`Cache refreshed for key ${cacheKey}`);
-      } catch (refreshError) {
-        console.error('Error refreshing cache:', refreshError);
-      }
-    });
-
+    // Send the data directly without caching
     res.json(data);
   } catch (error) {
     console.error('Error in marks_section_stats endpoint:', error);
     res.status(500).json({ error: 'Internal Server Error', message: error.message });
   }
 });
+
 
 async function fetchMarksStats(pool, college_id, hackathon_id) {
   const sqlMarksStats = `
@@ -257,7 +236,7 @@ function roundValues(obj, isSection) {
 
 
 // Route to get language data
-router.get('/language_data/:id', isAuthenticated,async (req, res) => {
+router.get('/language_data/:id', isAuthenticated, async (req, res) => {
   try {
       const college_id = req.user.college || null;
 
@@ -267,14 +246,7 @@ router.get('/language_data/:id', isAuthenticated,async (req, res) => {
 
       const hackathon_id = req.params.id;
 
-      const cacheKey = `emp_language_data_${college_id}_${hackathon_id}`;
-      let cachedData = await cacheManager.getCachedData(cacheKey);
-
-      if (cachedData) {
-          // Parse cached data if needed (assuming it's stored as JSON)
-          return res.status(200).json(cachedData);
-      }
-
+      // Fetch data directly from the database without caching
       const query = `
           SELECT
               ts.language,
@@ -293,20 +265,9 @@ router.get('/language_data/:id', isAuthenticated,async (req, res) => {
           ORDER BY distinct_users DESC;
       `;
 
-      const { rows } = await pool.query(query, [college_id,hackathon_id]);
+      const { rows } = await pool.query(query, [college_id, hackathon_id]);
 
-      // Cache the data in DynamoDB (assuming cacheManager handles this)
-      await cacheManager.setCachedData(cacheKey, rows); // Store data as JSON string
-
-      // Schedule automatic cache refresh
-      cacheManager.scheduleCacheRefresh(cacheKey, async () => {
-          const refreshedData = await pool.query(query, [college_id,hackathon_id]);
-          return refreshedData.rows;
-      });
-
-      console.log('Serving from database and cached: /language_data');
-
-      // Output JSON
+      // Send the data directly without caching
       res.json(rows);
   } catch (error) {
       console.error('Error querying database for language data:', error);
@@ -314,8 +275,9 @@ router.get('/language_data/:id', isAuthenticated,async (req, res) => {
   }
 });
 
+
 // Route to get accuracy scores
-router.get('/accuracy_scores/:id',isAuthenticated, async (req, res) => {
+router.get('/accuracy_scores/:id', isAuthenticated, async (req, res) => {
   try {
       const college_id = req.user.college || null;
 
@@ -325,14 +287,7 @@ router.get('/accuracy_scores/:id',isAuthenticated, async (req, res) => {
 
       const hackathon_id = req.params.id;
 
-      const cacheKey = `accuracy_scores_${college_id}_${hackathon_id}`;
-      let cachedData = await cacheManager.getCachedData(cacheKey);
-
-      if (cachedData) {
-          // Parse cached data if needed (assuming it's stored as JSON)
-          return res.status(200).json(cachedData);
-      }
-
+      // Fetch data directly from the database without caching
       const query = `
           SELECT
               ts.language,
@@ -354,26 +309,16 @@ router.get('/accuracy_scores/:id',isAuthenticated, async (req, res) => {
               accuracy_percentage DESC;
       `;
 
-      const { rows } = await pool.query(query, [college_id,hackathon_id]);
+      const { rows } = await pool.query(query, [college_id, hackathon_id]);
 
-      // Cache the data in DynamoDB (assuming cacheManager handles this)
-      await cacheManager.setCachedData(cacheKey, rows); // Store data as JSON string
-
-      // Schedule automatic cache refresh
-      cacheManager.scheduleCacheRefresh(cacheKey, async () => {
-          const refreshedData = await pool.query(query, [college_id,hackathon_id]);
-          return refreshedData.rows;
-      });
-
-      console.log('Serving from database and cached: /accuracy_scores');
-
-      // Output JSON
+      // Send the data directly without caching
       res.json(rows);
   } catch (error) {
       console.error('Error querying database for accuracy scores:', error);
       res.status(500).json({ error: 'Internal Server Error', message: error.message });
   }
 });
+
 
 router.get('/emp_band_data/:id', isAuthenticated, async (req, res) => {
   try {

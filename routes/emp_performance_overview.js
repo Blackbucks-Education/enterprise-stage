@@ -8,7 +8,7 @@ const cacheManager = require('../utlis/cacheManager'); // Ensure this path is co
 const pool = new Pool(dbConfig);
 const isAuthenticated = require('../jwtAuth.js');
 
-router.get('/marks_section_stats',isAuthenticated, async (req, res) => {
+router.get('/marks_section_stats', isAuthenticated, async (req, res) => {
     try {
         const college_id = req.user.college || null;
 
@@ -16,13 +16,7 @@ router.get('/marks_section_stats',isAuthenticated, async (req, res) => {
             return res.status(400).json({ error: 'College code is not set in the session.' });
         }
 
-        const cacheKey = `marks_section_stats-${college_id}`;
-        const cachedData = await cacheManager.getCachedData(cacheKey);
-
-        if (cachedData) {
-            return res.status(200).json(cachedData);
-        }
-
+        // Fetch the stats for marks and sections
         const marksStats = await fetchMarksStats(pool, college_id);
         const [aptitudeStats, englishStats, technicalStats] = await Promise.all([
             fetchSectionStats(pool, college_id, 'aptitude'),
@@ -30,6 +24,7 @@ router.get('/marks_section_stats',isAuthenticated, async (req, res) => {
             fetchSectionStats(pool, college_id, 'coding')
         ]);
 
+        // Structure the response data
         const data = {
             marks_stats: roundValues(marksStats, false),
             aptitude_stats: roundValues(aptitudeStats, true),
@@ -37,29 +32,14 @@ router.get('/marks_section_stats',isAuthenticated, async (req, res) => {
             technical_stats: roundValues(technicalStats, true)
         };
 
-        await cacheManager.setCachedData(cacheKey, data);
-
-        cacheManager.scheduleCacheRefresh(cacheKey, async () => {
-            try {
-                const refreshedData = {
-                    marks_stats: roundValues(await fetchMarksStats(pool, college_id), false),
-                    aptitude_stats: roundValues(await fetchSectionStats(pool, college_id, 'aptitude'), true),
-                    english_stats: roundValues(await fetchSectionStats(pool, college_id, 'english'), true),
-                    technical_stats: roundValues(await fetchSectionStats(pool, college_id, 'coding'), true)
-                };
-                await cacheManager.setCachedData(cacheKey, refreshedData);
-                console.log(`Cache refreshed for key ${cacheKey}`);
-            } catch (refreshError) {
-                console.error('Error refreshing cache:', refreshError);
-            }
-        });
-
+        // Output the data as JSON
         res.json(data);
     } catch (error) {
         console.error('Error in marks_section_stats endpoint:', error);
         res.status(500).json({ error: 'Internal Server Error', message: error.message });
     }
 });
+
 
 async function fetchMarksStats(pool, college_id) {
     const sqlMarksStats = `

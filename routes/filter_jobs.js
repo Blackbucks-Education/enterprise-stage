@@ -15,16 +15,7 @@ router.get('/all_data', isAuthenticated, async (req, res) => {
     return res.status(400).json({ error: 'college_id is not set in the session.' });
   }
 
-  const cacheKey = `all_data_${college_id}`;
-
   try {
-    // Check if cached data exists
-    let cachedData = await cacheManager.getCachedData(cacheKey);
-
-    if (cachedData) {
-      return res.status(200).json(cachedData);
-    }
-
     const sqlDriveTypes = `
       SELECT DISTINCT jp.drive_type
       FROM job_post jp
@@ -98,43 +89,13 @@ router.get('/all_data', isAuthenticated, async (req, res) => {
       employmentTypes
     };
 
-    // Cache the data in DynamoDB
-    await cacheManager.setCachedData(cacheKey, allData);
-
-    // Schedule automatic cache refresh
-    cacheManager.scheduleCacheRefresh(cacheKey, async () => {
-      const [refreshedDriveTypesResult, refreshedDatePostedResult, refreshedCompaniesResult, refreshedPackageResult, refreshedEmploymentTypesResult] = await Promise.all([
-        pool.query(sqlDriveTypes, queryParams),
-        pool.query(sqlDatePosted, queryParams),
-        pool.query(sqlCompanies, queryParams),
-        pool.query(sqlPackage, queryParams),
-        pool.query(sqlEmploymentTypes, queryParams)
-      ]);
-
-      const refreshedDriveTypes = refreshedDriveTypesResult.rows.map(row => row.drive_type);
-      const refreshedDatePosted = refreshedDatePostedResult.rows.map(row => row.date_posted);
-      const refreshedCompanies = refreshedCompaniesResult.rows.map(row => row.company_title);
-      const refreshedPackage = refreshedPackageResult.rows.map(row => row.salary_range_or_not_disclosed);
-      const refreshedEmploymentTypes = refreshedEmploymentTypesResult.rows.map(row => row.employment_type);
-
-      const refreshedData = {
-        driveTypes: refreshedDriveTypes,
-        datePosted: refreshedDatePosted,
-        companies: refreshedCompanies,
-        package: refreshedPackage,
-        employmentTypes: refreshedEmploymentTypes
-      };
-
-      await cacheManager.setCachedData(cacheKey, refreshedData);
-      console.log(`Cache refreshed for key ${cacheKey}`);
-    });
-
-    // Return all data as JSON
+    // Return all data as JSON without caching
     res.json(allData);
   } catch (error) {
     console.error('Error querying database:', error);
     res.status(500).json({ error: 'Internal Server Error', message: error.message });
   }
 });
+
 
 module.exports = router;
