@@ -35,8 +35,8 @@ jobs:
       - name: Deploy to ECS
         run: |
           aws ecs update-service \
-            --cluster tapdev123 \
-            --service ecs-service \
+            --cluster taptapenterprisedev123 \
+            --service taptapenterprise-taskDefinition-service-5i8l16jd \
             --force-new-deployment \
             --region ap-south-1
         env:
