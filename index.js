@@ -68,7 +68,8 @@ const bypassPaths = [
   "/api/student_report_scores/score-differences",
   "/api/student_report_user/user",
   "/api/student_report_user/data",
-  "/api/student_report_user/data/student_comment_data"
+  "/api/student_report_user/data/student_comment_data",
+  "/health"
 ];
 
 app.use((req, res, next) => {
