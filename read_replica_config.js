@@ -9,5 +9,8 @@ module.exports = {
     database:  process.env.READ_DATABASE,
     password:  process.env.READ_PASSWORD,
     port:  process.env.READ_PORT, // Change this port if necessary
+    ssl: {
+      rejectUnauthorized: false, // Only for dev/self-signed certs
+    },
   };
   

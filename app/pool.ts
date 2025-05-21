@@ -6,6 +6,9 @@ export const pool = new Pool({
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     database: process.env.DB_DATABASE,
+    ssl: {
+        rejectUnauthorized: false, // Only for dev/self-signed certs
+      },
 });
 
 export const readPool = new Pool({
@@ -14,4 +17,7 @@ export const readPool = new Pool({
     host: process.env.READ_HOST,
     port: process.env.DB_PORT,
     database: process.env.READ_DATABASE,
+    ssl: {
+        rejectUnauthorized: false, // Only for dev/self-signed certs
+      },
 });
