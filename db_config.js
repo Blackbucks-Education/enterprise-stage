@@ -1,3 +1,4 @@
+const { faL } = require('@fortawesome/free-solid-svg-icons');
 const dotenv = require('dotenv');
 
 dotenv.config();
@@ -10,4 +11,7 @@ module.exports = {
     database:  process.env.DB_DATABASE,
     password:  process.env.DB_PASSWORD,
     port:  process.env.DB_PORT, // Change this port if necessary
+    ssl: {
+      rejectUnauthorized: false, // Only for dev/self-signed certs
+    },
 };
